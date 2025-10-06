@@ -4,20 +4,9 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:nihonix/core/network/auth_interceptor.dart';
 import 'package:nihonix/core/network/network_info.dart';
 import 'package:nihonix/core/storage/token_store.dart';
-import 'package:nihonix/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:nihonix/features/auth/data/datasources/auth_remote_datasource.dart'
+    as auth_ds;
 
-/// API Client chính của app với AuthInterceptor đã được cấu hình.
-///
-/// Sử dụng:
-/// ```dart
-/// final apiClient = ApiClient(
-///   baseUrl: 'https://api.example.com',
-///   onUnauthorized: () async => navigateToLogin(),
-/// );
-///
-/// // Gọi API
-/// final response = await apiClient.dio.get('/users/me');
-/// ```
 class ApiClient {
   late final Dio dio;
   final HiveTokenStore _tokenStore;
@@ -38,10 +27,10 @@ class ApiClient {
     ));
 
     // 2. Tạo dependencies
-    final authRemote = AuthRemoteDataSourceImpl(authDio);
+    final authRemote = auth_ds.AuthRemoteDataSource.fromDio(authDio);
     final netInfo = networkInfo ?? ConnectivityNetworkInfo();
 
-    // 3. Tạo Dio chính với AuthInterceptor
+    // 3. Create Dio
     dio = Dio(
       BaseOptions(
         baseUrl: baseUrl,
@@ -88,7 +77,6 @@ class ApiClient {
     }
   }
 
-  /// Lưu tokens sau khi login thành công
   Future<void> saveTokens({
     required String accessToken,
     required String refreshToken,
@@ -97,12 +85,10 @@ class ApiClient {
     await _tokenStore.saveRefreshToken(refreshToken);
   }
 
-  /// Clear tokens khi logout
   Future<void> clearTokens() async {
     await _tokenStore.clear();
   }
 
-  /// Kiểm tra xem user đã login chưa
   Future<bool> get isAuthenticated async {
     final accessToken = await _tokenStore.readAccessToken();
     return accessToken != null && accessToken.isNotEmpty;

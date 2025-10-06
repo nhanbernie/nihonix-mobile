@@ -1,96 +1,113 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../shared/widgets/custom_button.dart';
+import '../providers/auth_provider.dart';
 
-/// [LoginPage] là một màn hình (route) có state.
-/// Được dựng (build) bởi Flutter khi bạn điều hướng tới path tương ứng
-/// trong cấu hình GoRouter (xem ví dụ ở cuối).
-class LoginPage extends StatefulWidget {
+/// LoginPage với Clean Architecture & Riverpod.
+///
+/// Pattern 2025:
+/// - ConsumerStatefulWidget để access Riverpod providers
+/// - Không có business logic, chỉ UI và state management
+/// - Delegate authentication logic cho AuthProvider
+///
+/// Architecture flow:
+/// LoginPage (UI) -> AuthProvider -> LoginUseCase -> Repository -> DataSource -> API
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
-  // ↑ Được Flutter gọi ngay sau khi widget được insert vào cây widget
-  //   để tạo ra một đối tượng State quản lý vòng đời & dữ liệu UI.
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  // ↓ Khóa để Form biết cách chạy validate() trên tất cả TextFormField con.
+class _LoginPageState extends ConsumerState<LoginPage> {
+  // Form key để validate tất cả fields
   final _formKey = GlobalKey<FormState>();
 
-  // ↓ Controllers nắm dữ liệu nhập của user.
-  //   Được TextFormField đọc/ghi mỗi khi user gõ, và khi build().
+  // Controllers cho TextFormFields
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  // ↓ State UI cục bộ. setState() sẽ trigger build() lại màn hình.
-  bool _isLoading = false; // Bật tắt loading cho nút đăng nhập
+  // Local UI state
   bool _obscurePassword = true; // Hiển thị/ẩn mật khẩu
 
   @override
   void dispose() {
-    // ↓ Được Flutter gọi khi State sắp bị gỡ khỏi cây (pop route).
-    //   Nơi dọn dẹp tài nguyên để tránh rò rỉ bộ nhớ.
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  /// Hàm được gọi khi user bấm nút "Đăng nhập".
-  /// Nguồn gọi: onPressed của [CustomButton] ở dưới.
+  /// Handle login với Clean Architecture pattern.
+  ///
+  /// Flow:
+  /// 1. Validate form
+  /// 2. Call AuthProvider.login() -> LoginUseCase -> Repository
+  /// 3. Listen to AuthState changes via ref.watch()
+  /// 4. Show success/error messages
   Future<void> _handleLogin() async {
-    // ↓ Gọi validate() trên toàn bộ Form: sẽ chạy từng validator trong các
-    //   TextFormField. Nếu có field trả về chuỗi lỗi != null -> false.
+    // Validate form
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() {
-      _isLoading = true; // Kích hoạt loading UI cho nút
-    });
+    // Get AuthNotifier and call login
+    final authNotifier = ref.read(authProvider.notifier);
 
-    // ↓ Demo: giả lập API call 2 giây.
-    //   Thực tế: bạn thay bằng call vào AuthRepository / usecase (Dio/Riverpod…).
-    await Future.delayed(const Duration(seconds: 2));
+    await authNotifier.login(
+      email: _emailController.text.trim(),
+      password: _passwordController.text,
+    );
 
-    // ↓ "mounted" đảm bảo State còn nằm trong cây (tránh setState sau khi pop).
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
+    // Check result
+    if (!mounted) return;
 
-      // ↓ Hiện thông báo thành công:
-      //   Nguồn gọi: [ScaffoldMessenger] tìm Scaffold gần nhất trong cây.
+    final authState = ref.read(authProvider);
+
+    if (authState.error != null) {
+      // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Đăng nhập thành công!')),
+        SnackBar(
+          content: Text(authState.error!),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } else if (authState.isAuthenticated) {
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              'Đăng nhập thành công! Xin chào ${authState.user?.name ?? ""}'),
+          backgroundColor: Colors.green,
+        ),
       );
 
-      // ↓ Điều hướng: context.pop() là của go_router.
-      //   Nguồn gọi: nó pop route hiện tại, quay về màn trước đó trong stack.
+      // Navigate back or to home
       context.pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // ↓ build() được Flutter gọi:
-    //   - Lần đầu khi widget lên màn
-    //   - Mỗi lần setState()
-    //   - Khi InheritedWidget/Theme thay đổi…
+    // Watch AuthState for reactive UI updates
+    final authState = ref.watch(authProvider);
+    final isLoading = authState.isLoading;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppStrings.login), // Nguồn text: core/constants
+        title: const Text(AppStrings.login),
       ),
       body: Padding(
         padding: const EdgeInsets.all(AppSizes.s16),
         child: Form(
-          key: _formKey, // Nguồn validate(): _formKey.currentState!.validate()
+          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: AppSizes.s32),
 
-              // Icon minh họa ở đầu: chỉ là UI thuần, lấy màu từ Theme hiện tại.
+              // Icon minh họa ở đầu
               Icon(
                 Icons.account_circle,
                 size: 80,
@@ -100,43 +117,37 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: AppSizes.s32),
 
               // === EMAIL FIELD ===
-              // Nguồn dữ liệu: _emailController.text
-              // Nguồn validate: validator bên dưới (được Form gọi)
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
+                enabled: !isLoading, // Disable khi loading
                 decoration: const InputDecoration(
                   labelText: AppStrings.email,
                   prefixIcon: Icon(Icons.email),
                 ),
                 validator: (value) {
-                  // ↓ Được Form gọi khi:
-                  //   - bạn gọi _formKey.currentState!.validate()
-                  //   - hoặc field thay đổi (nếu autovalidateMode bật)
                   if (value == null || value.isEmpty) {
                     return AppStrings.required;
                   }
                   if (!value.contains('@')) {
                     return AppStrings.invalidEmail;
                   }
-                  return null; // null = hợp lệ
+                  return null;
                 },
               ),
 
               const SizedBox(height: AppSizes.s16),
 
               // === PASSWORD FIELD ===
-              // Nguồn dữ liệu: _passwordController.text
-              // suffixIcon gọi setState để toggle hiện/ẩn mật khẩu
               TextFormField(
                 controller: _passwordController,
                 obscureText: _obscurePassword,
+                enabled: !isLoading, // Disable khi loading
                 decoration: InputDecoration(
                   labelText: AppStrings.password,
                   prefixIcon: const Icon(Icons.lock),
                   suffixIcon: IconButton(
                     onPressed: () {
-                      // Nguồn cập nhật UI: setState -> build() chạy lại
                       setState(() {
                         _obscurePassword = !_obscurePassword;
                       });
@@ -149,7 +160,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 validator: (value) {
-                  // ↓ Được Form gọi thông qua _formKey.currentState!.validate()
                   if (value == null || value.isEmpty) {
                     return AppStrings.required;
                   }
@@ -163,17 +173,18 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: AppSizes.s8),
 
               // === Quên mật khẩu ===
-              // Nguồn gọi: onPressed -> hiển thị SnackBar (tạm thời)
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Chức năng đang phát triển!'),
-                      ),
-                    );
-                  },
+                  onPressed: isLoading
+                      ? null
+                      : () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Chức năng đang phát triển!'),
+                            ),
+                          );
+                        },
                   child: const Text(AppStrings.forgotPassword),
                 ),
               ),
@@ -181,11 +192,10 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: AppSizes.s24),
 
               // === Nút ĐĂNG NHẬP ===
-              // Nguồn gọi: onPressed -> _handleLogin()
-              // UI loading đến từ _isLoading
+              // Loading state từ AuthProvider qua ref.watch()
               CustomButton(
-                onPressed: _isLoading ? null : _handleLogin,
-                isLoading: _isLoading,
+                onPressed: isLoading ? null : _handleLogin,
+                isLoading: isLoading,
                 child: const Text(AppStrings.login),
               ),
 

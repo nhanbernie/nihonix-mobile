@@ -21,7 +21,10 @@ abstract class NetworkInfo {
 typedef OnUnauthorized = Future<void> Function();
 
 /// Endpoint & logic refresh token (gọi API thực).
-abstract class AuthRemoteDataSource {
+///
+/// Note: Interface này khác với AuthRemoteDataSource trong features/auth/data/datasources/.
+/// Interface này chỉ dùng cho AuthInterceptor, còn AuthRemoteDataSource trong features là full API client.
+abstract class IAuthRefreshService {
   /// Trả về cặp token mới khi refresh thành công.
   Future<({String accessToken, String refreshToken})> refreshToken(
     String refreshToken,
@@ -42,7 +45,7 @@ class AuthPathsConfig {
 class AuthInterceptor extends Interceptor {
   final TokenStore _tokenStore;
   final NetworkInfo _networkInfo;
-  final AuthRemoteDataSource _authRemote;
+  final IAuthRefreshService _authRemote;
   final OnUnauthorized _onUnauthorized;
   final AuthPathsConfig _paths;
   final List<String> _retryIdempotentMethods;
@@ -58,7 +61,7 @@ class AuthInterceptor extends Interceptor {
   AuthInterceptor({
     required TokenStore tokenStore,
     required NetworkInfo networkInfo,
-    required AuthRemoteDataSource authRemote,
+    required IAuthRefreshService authRemote,
     required OnUnauthorized onUnauthorized,
     required AuthPathsConfig paths,
     List<String> retryIdempotentMethods = const ['GET', 'HEAD', 'OPTIONS'],

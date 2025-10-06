@@ -12,17 +12,18 @@ Future<File> downloadToFile(String url, File out) async {
     }
 
     final sink = out.openWrite(); // StreamSink<List<int>>
-    final total = res.contentLength; // có thể là -1 nếu server không báo
-    var received = 0;
+    // Uncomment below lines to enable progress tracking:
+    // final total = res.contentLength; // có thể là -1 nếu server không báo
+    // var received = 0;
 
     await for (final chunk in res) {
-      received += chunk.length;
+      // received += chunk.length;
       sink.add(chunk);
       // print progress
-      if (total > 0) {
-        final p = ((received / total) * 100).toStringAsFixed(1);
-        // print('Progress: $p%');
-      }
+      // if (total > 0) {
+      //   final p = ((received / total) * 100).toStringAsFixed(1);
+      //   print('Progress: $p%');
+      // }
     }
     await sink.flush();
     await sink.close();

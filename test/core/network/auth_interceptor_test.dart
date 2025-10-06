@@ -45,7 +45,7 @@ class MockNetworkInfo implements NetworkInfo {
   }
 }
 
-class MockAuthRemoteDataSource implements AuthRemoteDataSource {
+class MockAuthRemoteDataSource implements IAuthRefreshService {
   bool shouldFail = false;
   int callCount = 0;
 

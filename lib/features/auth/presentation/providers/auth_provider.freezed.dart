@@ -16,6 +16,7 @@ T _$identity<T>(T value) => value;
 mixin _$AuthState {
   bool get isLoading;
   bool get isAuthenticated;
+  User? get user;
   String? get error;
 
   /// Create a copy of AuthState
@@ -34,16 +35,17 @@ mixin _$AuthState {
                 other.isLoading == isLoading) &&
             (identical(other.isAuthenticated, isAuthenticated) ||
                 other.isAuthenticated == isAuthenticated) &&
+            (identical(other.user, user) || other.user == user) &&
             (identical(other.error, error) || other.error == error));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, isLoading, isAuthenticated, error);
+      Object.hash(runtimeType, isLoading, isAuthenticated, user, error);
 
   @override
   String toString() {
-    return 'AuthState(isLoading: $isLoading, isAuthenticated: $isAuthenticated, error: $error)';
+    return 'AuthState(isLoading: $isLoading, isAuthenticated: $isAuthenticated, user: $user, error: $error)';
   }
 }
 
@@ -52,7 +54,9 @@ abstract mixin class $AuthStateCopyWith<$Res> {
   factory $AuthStateCopyWith(AuthState value, $Res Function(AuthState) _then) =
       _$AuthStateCopyWithImpl;
   @useResult
-  $Res call({bool isLoading, bool isAuthenticated, String? error});
+  $Res call({bool isLoading, bool isAuthenticated, User? user, String? error});
+
+  $UserCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -69,6 +73,7 @@ class _$AuthStateCopyWithImpl<$Res> implements $AuthStateCopyWith<$Res> {
   $Res call({
     Object? isLoading = null,
     Object? isAuthenticated = null,
+    Object? user = freezed,
     Object? error = freezed,
   }) {
     return _then(_self.copyWith(
@@ -80,11 +85,29 @@ class _$AuthStateCopyWithImpl<$Res> implements $AuthStateCopyWith<$Res> {
           ? _self.isAuthenticated
           : isAuthenticated // ignore: cast_nullable_to_non_nullable
               as bool,
+      user: freezed == user
+          ? _self.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as User?,
       error: freezed == error
           ? _self.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
+  }
+
+  /// Create a copy of AuthState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $UserCopyWith<$Res>? get user {
+    if (_self.user == null) {
+      return null;
+    }
+
+    return $UserCopyWith<$Res>(_self.user!, (value) {
+      return _then(_self.copyWith(user: value));
+    });
   }
 }
 
@@ -179,14 +202,16 @@ extension AuthStatePatterns on AuthState {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(bool isLoading, bool isAuthenticated, String? error)?
+    TResult Function(
+            bool isLoading, bool isAuthenticated, User? user, String? error)?
         $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _AuthState() when $default != null:
-        return $default(_that.isLoading, _that.isAuthenticated, _that.error);
+        return $default(
+            _that.isLoading, _that.isAuthenticated, _that.user, _that.error);
       case _:
         return orElse();
     }
@@ -207,13 +232,15 @@ extension AuthStatePatterns on AuthState {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(bool isLoading, bool isAuthenticated, String? error)
+    TResult Function(
+            bool isLoading, bool isAuthenticated, User? user, String? error)
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _AuthState():
-        return $default(_that.isLoading, _that.isAuthenticated, _that.error);
+        return $default(
+            _that.isLoading, _that.isAuthenticated, _that.user, _that.error);
     }
   }
 
@@ -231,13 +258,15 @@ extension AuthStatePatterns on AuthState {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(bool isLoading, bool isAuthenticated, String? error)?
+    TResult? Function(
+            bool isLoading, bool isAuthenticated, User? user, String? error)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _AuthState() when $default != null:
-        return $default(_that.isLoading, _that.isAuthenticated, _that.error);
+        return $default(
+            _that.isLoading, _that.isAuthenticated, _that.user, _that.error);
       case _:
         return null;
     }
@@ -248,7 +277,10 @@ extension AuthStatePatterns on AuthState {
 
 class _AuthState implements AuthState {
   const _AuthState(
-      {this.isLoading = false, this.isAuthenticated = false, this.error});
+      {this.isLoading = false,
+      this.isAuthenticated = false,
+      this.user,
+      this.error});
 
   @override
   @JsonKey()
@@ -256,6 +288,8 @@ class _AuthState implements AuthState {
   @override
   @JsonKey()
   final bool isAuthenticated;
+  @override
+  final User? user;
   @override
   final String? error;
 
@@ -276,16 +310,17 @@ class _AuthState implements AuthState {
                 other.isLoading == isLoading) &&
             (identical(other.isAuthenticated, isAuthenticated) ||
                 other.isAuthenticated == isAuthenticated) &&
+            (identical(other.user, user) || other.user == user) &&
             (identical(other.error, error) || other.error == error));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, isLoading, isAuthenticated, error);
+      Object.hash(runtimeType, isLoading, isAuthenticated, user, error);
 
   @override
   String toString() {
-    return 'AuthState(isLoading: $isLoading, isAuthenticated: $isAuthenticated, error: $error)';
+    return 'AuthState(isLoading: $isLoading, isAuthenticated: $isAuthenticated, user: $user, error: $error)';
   }
 }
 
@@ -297,7 +332,10 @@ abstract mixin class _$AuthStateCopyWith<$Res>
       __$AuthStateCopyWithImpl;
   @override
   @useResult
-  $Res call({bool isLoading, bool isAuthenticated, String? error});
+  $Res call({bool isLoading, bool isAuthenticated, User? user, String? error});
+
+  @override
+  $UserCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -314,6 +352,7 @@ class __$AuthStateCopyWithImpl<$Res> implements _$AuthStateCopyWith<$Res> {
   $Res call({
     Object? isLoading = null,
     Object? isAuthenticated = null,
+    Object? user = freezed,
     Object? error = freezed,
   }) {
     return _then(_AuthState(
@@ -325,11 +364,29 @@ class __$AuthStateCopyWithImpl<$Res> implements _$AuthStateCopyWith<$Res> {
           ? _self.isAuthenticated
           : isAuthenticated // ignore: cast_nullable_to_non_nullable
               as bool,
+      user: freezed == user
+          ? _self.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as User?,
       error: freezed == error
           ? _self.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
+  }
+
+  /// Create a copy of AuthState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $UserCopyWith<$Res>? get user {
+    if (_self.user == null) {
+      return null;
+    }
+
+    return $UserCopyWith<$Res>(_self.user!, (value) {
+      return _then(_self.copyWith(user: value));
+    });
   }
 }
 

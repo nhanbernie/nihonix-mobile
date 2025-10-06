@@ -27,6 +27,7 @@ dependencies:
 
   # HTTP & API calls
   dio:
+  retrofit: ^4.6.0
 
   # Local database (offline storage)
   hive:
@@ -63,6 +64,9 @@ dev_dependencies:
 
   # JSON serialization
   json_serializable: ^6.9.5
+
+  # Retrofit code generation
+  retrofit_generator: ^10.0.0
 
   # Hive code generation (commented out due to analyzer conflict - add back when needed)
   # hive_generator: ^2.0.1

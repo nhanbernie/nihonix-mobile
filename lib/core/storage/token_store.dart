@@ -1,13 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nihonix/core/network/auth_interceptor.dart';
 
-/// Implementation của TokenStore sử dụng Hive để lưu token.
-/// 
-/// Hive được chọn vì:
-/// - Đã có sẵn trong project (không cần thêm dependency)
-/// - Đủ an toàn cho token storage
-/// - Nhanh và đơn giản
-/// - Hỗ trợ encryption nếu cần (HiveAesCipher)
 class HiveTokenStore implements TokenStore {
   static const String _boxName = 'auth_tokens';
   static const String _accessTokenKey = 'access_token';
@@ -62,4 +55,3 @@ class HiveTokenStore implements TokenStore {
     await _box?.close();
   }
 }
-

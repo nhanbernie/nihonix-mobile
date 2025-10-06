@@ -1,27 +1,46 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:nihonix/core/network/providers.dart';
-import 'package:nihonix/core/network/http_exceptions.dart';
+
+import '../../domain/entities/user.dart';
+import 'auth_di.dart'; // Provides: loginUseCaseProvider, logoutUseCaseProvider, getCurrentUserUseCaseProvider
 
 part 'auth_provider.freezed.dart';
 
-/// State cho authentication
+/// State cho authentication với Clean Architecture pattern.
+///
+/// State chứa:
+/// - User entity từ Domain layer (không phải Model từ Data layer)
+/// - Loading, error states cho UI
+/// - Authentication status
 @freezed
 sealed class AuthState with _$AuthState {
   const factory AuthState({
     @Default(false) bool isLoading,
     @Default(false) bool isAuthenticated,
+    User? user,
     String? error,
   }) = _AuthState;
 }
 
-/// Provider cho authentication logic
+/// AuthNotifier với Clean Architecture pattern.
+///
+/// Responsibilities:
+/// - Quản lý AuthState (UI state)
+/// - Delegate business logic cho UseCases
+/// - Không biết về Data layer (Repository, API, Models)
+/// - Chỉ làm việc với Domain entities và UseCases
+///
+/// Pattern 2025: Inject UseCases thông qua Riverpod providers.
 class AuthNotifier extends Notifier<AuthState> {
   @override
-  AuthState build() => const AuthState();
+  AuthState build() {
+    return const AuthState();
+  }
 
-  /// Login với email và password
+  /// Login với email và password.
+  ///
+  /// Clean Architecture flow:
+  /// UI -> AuthNotifier -> LoginUseCase -> AuthRepository -> AuthRemoteDataSource -> API
   Future<void> login({
     required String email,
     required String password,
@@ -29,65 +48,98 @@ class AuthNotifier extends Notifier<AuthState> {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      final apiClient = ref.read(apiClientProvider);
+      // Get UseCase from Riverpod DI
+      final loginUseCase = ref.read(loginUseCaseProvider);
 
-      // Gọi API login
-      final response = await apiClient.dio.post(
-        '/auth/login',
-        data: {
-          'email': email,
-          'password': password,
-        },
-      );
-
-      // Parse response
-      final data = response.data as Map<String, dynamic>;
-      final accessToken = data['access_token'] as String;
-      final refreshToken = data['refresh_token'] as String;
-
-      // Lưu tokens
-      await apiClient.saveTokens(
-        accessToken: accessToken,
-        refreshToken: refreshToken,
+      // Delegate business logic to UseCase
+      final user = await loginUseCase(
+        email: email,
+        password: password,
       );
 
       state = state.copyWith(
         isLoading: false,
         isAuthenticated: true,
+        user: user,
+        error: null,
       );
-    } on DioException catch (e) {
-      String errorMessage = 'Đã xảy ra lỗi';
-
-      if (e.error is NoInternetException) {
-        errorMessage = 'Không có kết nối mạng';
-      } else if (e.error is UnauthorizedException) {
-        errorMessage = 'Email hoặc mật khẩu không đúng';
-      } else if (e.error is BadRequestException) {
-        final exception = e.error as BadRequestException;
-        errorMessage = exception.message;
-      } else if (e.error is ServerException) {
-        errorMessage = 'Lỗi máy chủ. Vui lòng thử lại sau';
-      }
+    } catch (e) {
+      // Map domain exceptions to user-friendly messages
+      String errorMessage = _mapErrorToMessage(e);
 
       state = state.copyWith(
         isLoading: false,
+        isAuthenticated: false,
+        user: null,
         error: errorMessage,
       );
     }
   }
 
-  /// Logout
+  /// Logout user.
+  ///
+  /// Clears tokens and resets state.
   Future<void> logout() async {
-    final apiClient = ref.read(apiClientProvider);
-    await apiClient.clearTokens();
-    state = const AuthState();
+    try {
+      final logoutUseCase = ref.read(logoutUseCaseProvider);
+      await logoutUseCase();
+      state = const AuthState();
+    } catch (e) {
+      // Even if logout fails on server, clear local state
+      state = const AuthState(
+        error: 'Đăng xuất thất bại nhưng đã xóa phiên cục bộ',
+      );
+    }
   }
 
-  /// Kiểm tra authentication status
+  /// Kiểm tra authentication status.
+  ///
+  /// Loads current user nếu có token hợp lệ.
   Future<void> checkAuth() async {
-    final apiClient = ref.read(apiClientProvider);
-    final isAuth = await apiClient.isAuthenticated;
-    state = state.copyWith(isAuthenticated: isAuth);
+    state = state.copyWith(isLoading: true);
+
+    try {
+      final getCurrentUserUseCase = ref.read(getCurrentUserUseCaseProvider);
+      final user = await getCurrentUserUseCase();
+
+      if (user != null) {
+        state = state.copyWith(
+          isLoading: false,
+          isAuthenticated: true,
+          user: user,
+        );
+      } else {
+        state = state.copyWith(
+          isLoading: false,
+          isAuthenticated: false,
+          user: null,
+        );
+      }
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        isAuthenticated: false,
+        user: null,
+      );
+    }
+  }
+
+  /// Map exceptions to user-friendly error messages.
+  ///
+  /// Pattern: Centralized error handling cho UI.
+  String _mapErrorToMessage(Object error) {
+    // TODO: Import proper exception types from core/network
+    if (error.toString().contains('NoInternetException')) {
+      return 'Không có kết nối mạng';
+    } else if (error.toString().contains('UnauthorizedException')) {
+      return 'Email hoặc mật khẩu không đúng';
+    } else if (error.toString().contains('ValidationException')) {
+      return 'Dữ liệu không hợp lệ';
+    } else if (error.toString().contains('ServerException')) {
+      return 'Lỗi máy chủ. Vui lòng thử lại sau';
+    } else {
+      return 'Đã xảy ra lỗi: ${error.toString()}';
+    }
   }
 }
 

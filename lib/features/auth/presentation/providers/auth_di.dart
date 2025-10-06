@@ -23,18 +23,12 @@ import '../../domain/usecases/logout.dart';
 
 part 'auth_di.g.dart';
 
-// =============================================================================
-// DATA LAYER PROVIDERS
-// =============================================================================
-
 /// Provider cho Dio instance (không có AuthInterceptor).
-///
-/// Dùng cho auth endpoints để tránh circular dependency.
 @riverpod
 Dio authDio(Ref ref) {
   return Dio(
     BaseOptions(
-      baseUrl: 'https://api.example.com', // TODO: Move to config
+      baseUrl: 'https://api.example.com',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 20),
       headers: {
@@ -79,12 +73,7 @@ AuthRepository authRepository(Ref ref) {
   );
 }
 
-// =============================================================================
-// DOMAIN LAYER PROVIDERS (USE CASES)
-// =============================================================================
-
 /// Provider cho LoginUseCase.
-///
 /// Clean Architecture: UI không biết về Repository implementation.
 @riverpod
 LoginUseCase loginUseCase(Ref ref) {

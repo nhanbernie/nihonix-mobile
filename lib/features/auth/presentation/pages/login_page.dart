@@ -83,7 +83,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         ),
       );
 
-      // Navigate back or to home
       context.pop();
     }
   }
@@ -107,7 +106,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             children: [
               const SizedBox(height: AppSizes.s32),
 
-              // Icon minh họa ở đầu
               Icon(
                 Icons.account_circle,
                 size: 80,

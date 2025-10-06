@@ -1,13 +1,7 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-
-// Import HTTP exceptions từ file riêng
 import 'http_exceptions.dart';
-
-// ============================================================================
-// ABSTRACT INTERFACES / CONTRACTS
-// ============================================================================
 
 /// Lưu/đọc token an toàn (có thể dùng FlutterSecureStorage ở implementation khác).
 abstract class TokenStore {
@@ -36,9 +30,8 @@ abstract class AuthRemoteDataSource {
 
 /// Cho phép cấu hình danh sách path không gắn Bearer, và path liên quan auth.
 class AuthPathsConfig {
-  /// Ví dụ: ['/auth/login', '/auth/refresh']
-  final List<String> excludedPaths; // không gắn Authorization
-  final String refreshPath; // path refresh token (để tránh vòng lặp)
+  final List<String> excludedPaths;
+  final String refreshPath;
 
   AuthPathsConfig({
     required this.excludedPaths,
@@ -46,33 +39,6 @@ class AuthPathsConfig {
   });
 }
 
-// ============================================================================
-// AUTH INTERCEPTOR
-// ============================================================================
-
-/// Interceptor xử lý authentication tự động cho Dio client.
-///
-/// Chức năng chính:
-/// - Tự động gắn Bearer token vào mọi request (trừ excluded paths)
-/// - Kiểm tra kết nối mạng trước khi gửi request
-/// - Tự động refresh token khi nhận 401 (với single-flight pattern)
-/// - Queue và replay các request bị 401 sau khi refresh thành công
-/// - Retry logic cho idempotent requests với exponential backoff
-/// - Map DioException sang custom exceptions thân thiện
-///
-/// Example:
-/// ```dart
-/// dio.interceptors.add(AuthInterceptor(
-///   tokenStore: tokenStore,
-///   networkInfo: networkInfo,
-///   authRemote: authRemoteDataSource,
-///   onUnauthorized: () async => navigateToLogin(),
-///   paths: AuthPathsConfig(
-///     excludedPaths: ['/auth/login', '/auth/refresh'],
-///     refreshPath: '/auth/refresh',
-///   ),
-/// ));
-/// ```
 class AuthInterceptor extends Interceptor {
   final TokenStore _tokenStore;
   final NetworkInfo _networkInfo;
@@ -154,7 +120,6 @@ class AuthInterceptor extends Interceptor {
 
     _logDebug('Error ${err.type} - Status: $statusCode - Path: $path');
 
-    // 1. Xử lý 401 Unauthorized với refresh token logic
     if (statusCode == 401 && !_isRefreshPath(path)) {
       _logDebug('Attempting to refresh token...');
       try {
@@ -274,7 +239,6 @@ class AuthInterceptor extends Interceptor {
     }
   }
 
-  /// Xử lý khi refresh token thất bại.
   /// Clear token và gọi onUnauthorized callback (debounced).
   Future<void> _handleRefreshFailure() async {
     await _tokenStore.clear();

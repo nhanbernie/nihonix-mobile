@@ -1,0 +1,9 @@
+{
+  "unknown_error": "Đã xảy ra lỗi không xác định",
+  "network_error": "Lỗi mạng. Vui lòng kiểm tra kết nối.",
+  "server_error": "Lỗi máy chủ. Vui lòng thử lại sau.",
+  "validation_error": "Vui lòng kiểm tra thông tin nhập vào",
+  "not_found": "Không tìm thấy",
+  "unauthorized": "Truy cập không được phép",
+  "forbidden": "Truy cập bị cấm"
+}

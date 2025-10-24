@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/constants/app_strings.dart';
@@ -8,6 +9,9 @@ import 'core/storage/token_store.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Khởi tạo EasyLocalization
+  await EasyLocalization.ensureInitialized();
 
   // Khởi tạo Hive
   await Hive.initFlutter();
@@ -17,8 +21,19 @@ void main() async {
   await tokenStore.init();
 
   runApp(
-    const ProviderScope(
-      child: MainApp(),
+    EasyLocalization(
+      supportedLocales: const [
+        Locale('en'), // English
+        Locale('vi'), // Tiếng Việt
+        Locale('ja'), // 日本語
+      ],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      startLocale: const Locale('vi'), // Mặc định tiếng Việt
+      useOnlyLangCode: true, // Use multi-files structure (en/, vi/, ja/)
+      child: const ProviderScope(
+        child: MainApp(),
+      ),
     ),
   );
 }
@@ -35,6 +50,10 @@ class MainApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       routerConfig: AppRouter.router,
       debugShowCheckedModeBanner: false,
+      // EasyLocalization integration
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
     );
   }
 }

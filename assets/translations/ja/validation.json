@@ -1,0 +1,6 @@
+{
+  "required": "この項目は必須です",
+  "email_invalid": "無効なメールアドレス",
+  "password_too_short": "パスワードは6文字以上である必要があります",
+  "passwords_dont_match": "パスワードが一致しません"
+}

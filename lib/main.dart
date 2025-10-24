@@ -7,9 +7,13 @@ import 'core/theme/app_theme.dart';
 import 'core/constants/app_strings.dart';
 import 'core/storage/token_store.dart';
 import 'core/l10n/multiple_json_asset_loader.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Set system UI overlay style (status bar & navigation bar)
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
   // Khởi tạo EasyLocalization
   await EasyLocalization.ensureInitialized();

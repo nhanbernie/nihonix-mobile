@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_sizes.dart';
 
@@ -79,6 +80,14 @@ class AppTheme {
         titleTextStyle: appTextTheme.titleMedium
             ?.copyWith(color: lightColorScheme.onSurface),
         iconTheme: IconThemeData(color: lightColorScheme.onSurface),
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness:
+              Brightness.dark, // Dark icons for light theme
+          statusBarBrightness: Brightness.light, // For iOS
+          systemNavigationBarColor: lightColorScheme.surface,
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -172,6 +181,14 @@ class AppTheme {
         titleTextStyle: appTextTheme.titleMedium
             ?.copyWith(color: darkColorScheme.onSurface),
         iconTheme: IconThemeData(color: darkColorScheme.onSurface),
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness:
+              Brightness.light, // Light icons for dark theme
+          statusBarBrightness: Brightness.dark, // For iOS
+          systemNavigationBarColor: darkColorScheme.surface,
+          systemNavigationBarIconBrightness: Brightness.light,
+        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(

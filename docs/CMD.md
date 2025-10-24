@@ -1,4 +1,6 @@
 flutter analyze lib/core/network/ --no-fatal-infos
+flutter clean
+flutter get
 flutter analyze
 flutter test
 flutter build apk

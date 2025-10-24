@@ -1,5 +1,5 @@
 /// Generated locale keys for easy_localization
-/// 
+///
 /// Usage:
 /// ```dart
 /// Text(LocaleKeys.common_ok).tr()
@@ -84,6 +84,6 @@ class LocaleKeys {
   static const validation_required = 'validation.required';
   static const validation_email_invalid = 'validation.email_invalid';
   static const validation_password_too_short = 'validation.password_too_short';
-  static const validation_passwords_dont_match = 'validation.passwords_dont_match';
+  static const validation_passwords_dont_match =
+      'validation.passwords_dont_match';
 }
-

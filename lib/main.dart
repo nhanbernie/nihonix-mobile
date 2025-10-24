@@ -6,6 +6,7 @@ import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/constants/app_strings.dart';
 import 'core/storage/token_store.dart';
+import 'core/l10n/multiple_json_asset_loader.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +31,8 @@ void main() async {
       path: 'assets/translations',
       fallbackLocale: const Locale('en'),
       startLocale: const Locale('vi'), // Mặc định tiếng Việt
-      useOnlyLangCode: true, // Use multi-files structure (en/, vi/, ja/)
+      // Sử dụng MultipleJsonAssetLoader để load nhiều file JSON
+      assetLoader: const MultipleJsonAssetLoader(),
       child: const ProviderScope(
         child: MainApp(),
       ),

@@ -15,5 +15,16 @@ copy vào setting.json để không hiện file gen khỏi bị rối
 },
 "search.exclude": {
 "\*\*/_.g.dart": true,
-"\*_/_.freezed.dart": true
+"\*_/_.freezed.dart": true,
 },
+
+
+<!-- cho cursor -->
+    "files.exclude": {
+      "**/*.g.dart": true,
+      "**/*.freezed.dart": true
+    },
+    "search.exclude": {
+      "**/*.g.dart": true,
+      "**/*.freezed.dart": true
+    }

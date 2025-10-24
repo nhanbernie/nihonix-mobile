@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'http_exceptions.dart';
 
-/// Lưu/đọc token an toàn (có thể dùng FlutterSecureStorage ở implementation khác).
 abstract class TokenStore {
   Future<String?> readAccessToken();
   Future<String?> readRefreshToken();

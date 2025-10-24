@@ -8,8 +8,6 @@ import '../../../../shared/widgets/custom_button.dart';
 import '../providers/auth_provider.dart';
 
 /// LoginPage với Clean Architecture & Riverpod.
-///
-/// Pattern 2025:
 /// - ConsumerStatefulWidget để access Riverpod providers
 /// - Không có business logic, chỉ UI và state management
 /// - Delegate authentication logic cho AuthProvider
@@ -51,7 +49,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Future<void> _handleLogin() async {
     // Validate form
     if (!_formKey.currentState!.validate()) return;
-
     // Get AuthNotifier and call login
     final authNotifier = ref.read(authProvider.notifier);
 

@@ -20,8 +20,8 @@ copy vào setting.json để không hiện file gen khỏi bị rối
 "\*_/_.freezed.dart": true,
 },
 
-
 <!-- cho cursor -->
+
     "files.exclude": {
       "**/*.g.dart": true,
       "**/*.freezed.dart": true
@@ -30,3 +30,7 @@ copy vào setting.json để không hiện file gen khỏi bị rối
       "**/*.g.dart": true,
       "**/*.freezed.dart": true
     }
+
+dart run flutter_launcher_icons:main
+flutter pub run flutter_launcher_icons
+dùng lệnh này để load lại icon cho cả app

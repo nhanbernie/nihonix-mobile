@@ -95,15 +95,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         title: const Text(AppStrings.login),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height -
-                  AppBar().preferredSize.height -
-                  MediaQuery.of(context).padding.top -
-                  MediaQuery.of(context).padding.bottom,
-            ),
-            child: IntrinsicHeight(
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
               child: Padding(
                 padding: const EdgeInsets.all(AppSizes.s16),
                 child: Form(
@@ -251,7 +246,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

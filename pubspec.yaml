@@ -86,6 +86,7 @@ flutter:
   # Assets
   assets:
     - assets/translations/
+    - assets/images/
     - .env.develop
     - .env.production
 
@@ -94,7 +95,7 @@ flutter_launcher_icons:
   ios: true
   image_path: "assets/icons/app_icon.png"
 
-flutter_                              
+flutter_native_splash:
   # Light mode - dùng background_image (fullscreen)
   color: "#FFFFFF"
   background_image: assets/icons/splash_fullscreen.png
@@ -108,7 +109,7 @@ flutter_
 
   # Scaling - fill toàn màn hình, KHÔNG crop vì đã đúng tỷ lệ
   android_gravity: fill
-  ios_content_mode: scaleAspectFill45
+  ios_content_mode: scaleAspectFill
 
   # Android specific settings
   android: true

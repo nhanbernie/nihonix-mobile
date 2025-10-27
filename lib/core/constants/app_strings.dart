@@ -1,8 +1,8 @@
 /// App string constants
 class AppStrings {
   // App
-  static const String appName = 'Flutter App 2025';
-  static const String appDescription = 'Modern Flutter architecture demo';
+  static const String appName = 'Nihonix';
+  static const String appDescription = 'Học tiếng Nhật một cách hiệu quả và thú vị';
 
   // Navigation
   static const String home = 'Trang chủ';
@@ -51,6 +51,6 @@ class AppStrings {
 
   // Welcome messages
   static const String welcome = 'Chào mừng bạn!';
-  static const String welcomeMessage = 'Chào mừng bạn đến với Flutter App 2025';
+  static const String welcomeMessage = 'Chào mừng bạn đến với Nihonix';
   static const String getStarted = 'Bắt đầu';
 }

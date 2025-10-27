@@ -2,135 +2,185 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/storage/welcome_preferences.dart';
+import '../widgets/welcome_slide_1.dart';
+import '../widgets/welcome_slide_2.dart';
+import '../widgets/welcome_slide_3.dart';
+import '../widgets/page_indicator.dart';
+import '../widgets/test_slide.dart';
 
-class WelcomePage extends StatelessWidget {
+class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
 
-  Future<void> _handleGetStarted(BuildContext context) async {
+  @override
+  State<WelcomePage> createState() => _WelcomePageState();
+}
+
+class _WelcomePageState extends State<WelcomePage> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+  static const int _totalPages = 3;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleFinish() async {
     final prefs = WelcomePreferences();
     await prefs.setNotFirstTime();
 
-    if (context.mounted) {
+    if (mounted) {
       context.go(AppRouter.home);
     }
   }
 
-  Future<void> _handleSkip(BuildContext context) async {
-    final prefs = WelcomePreferences();
-    await prefs.setNotFirstTime();
-
-    if (context.mounted) {
-      context.go(AppRouter.home);
+  void _handleNext() {
+    if (_currentPage < _totalPages - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      _handleFinish();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isLastPage = _currentPage == _totalPages - 1;
     
     return AnnotatedRegion<SystemUiOverlayStyle>(
-    value: const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      statusBarBrightness: Brightness.light,
-      // TRANSPARENT - Let gradient show through
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarIconBrightness: Brightness.dark,
-      systemNavigationBarContrastEnforced: false, // Important!
-    ),
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarContrastEnforced: false,
+      ),
       child: Scaffold(
         backgroundColor: AppColors.background,
         extendBody: true,
         body: Stack(
-        children: [
-          // Background gradient
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  AppColors.background,
-                  AppColors.primary.withOpacity(0.03), // Ultra light orange gradient
-                ],
+          children: [
+            // Background gradient
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    AppColors.background,
+                    AppColors.primary.withOpacity(0.03),
+                  ],
+                ),
               ),
             ),
-          ),
 
-          // Decorative curved shapes (bottom right)
-          Positioned(
-            right: -50,
-            bottom: size.height * 0.15,
-            child: CustomPaint(
-              size: Size(size.width * 0.8, size.height * 0.4),
-              painter: _DecorativeCurvesPainter(),
-            ),
-          ),
-
-          // Main content
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSizes.s24,
-                vertical: AppSizes.s32,
+            // Decorative curved shapes (bottom right)
+            Positioned(
+              right: -50,
+              bottom: size.height * 0.15,
+              child: CustomPaint(
+                size: Size(size.width * 0.8, size.height * 0.4),
+                painter: _DecorativeCurvesPainter(),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+
+            // Main content
+            Positioned.fill(
+              child: SafeArea(
+                child: Column(
                 children: [
-                  const SizedBox(height: AppSizes.s48),
+                  // PageView with slides
+                  Expanded(
+                    child: PageView(
+                      controller: _pageController,
+                      onPageChanged: (index) {
+                        setState(() {
+                          _currentPage = index;
+                        });
+                      },
+                      children: const [
+                        // TestSlide(title: 'Slide 1', color: Colors.blue),
+                        // TestSlide(title: 'Slide 2', color: Colors.green),
+                        // TestSlide(title: 'Slide 3', color: Colors.orange),
+                        WelcomeSlide1(),
+                        WelcomeSlide2(),
+                        WelcomeSlide3(),
+                      ],
+                    ),
+                  ),
 
-                  // Headline text
-                  Text(
-                    'Empower\nYourself With\nQuick\nKnowledge',
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          height: 1.2,
-                          color: AppColors.textPrimary,
-                        ),
+                  // Page Indicator
+                  PageIndicator(
+                    currentPage: _currentPage,
+                    pageCount: _totalPages,
                   ),
 
                   const SizedBox(height: AppSizes.s32),
 
-                  // Floating Action Button
-                  FloatingActionButton(
-                    onPressed: () => _handleGetStarted(context),
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    child: const Icon(
-                      Icons.arrow_forward,
-                      color: AppColors.onPrimary,
+                  // Bottom navigation bar
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSizes.s24,
+                      vertical: AppSizes.s16,
                     ),
-                  ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Skip button
+                        TextButton(
+                          onPressed: _handleFinish,
+                          child: Text(
+                            'Skip',
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: AppColors.textSecondary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                          ),
+                        ),
 
-                  const Spacer(),
-
-                  // Skip button
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: TextButton(
-                      onPressed: () => _handleSkip(context),
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                      ),
-                      child: Text(
-                        'Skip',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: AppColors.textPrimary,
-                              fontWeight: FontWeight.w500,
+                        // Next/Get Started button (with icon + text)
+                        ElevatedButton.icon(
+                          onPressed: _handleNext,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: AppColors.onPrimary,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 12,
                             ),
-                      ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            minimumSize: const Size(0, 48),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          icon: isLastPage
+                              ? const Icon(Icons.check, size: 20)
+                              : const Icon(Icons.arrow_forward, size: 20),
+                          label: Text(
+                            isLastPage ? 'Get Started' : 'Next',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-
-                  const SizedBox(height: AppSizes.s16),
                 ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
         ),
       ),
     );

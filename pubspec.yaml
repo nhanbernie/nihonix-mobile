@@ -75,6 +75,7 @@ dev_dependencies:
 
   # Retrofit code generation
   retrofit_generator: ^10.0.0
+  image: ^4.5.4
 
   # Hive code generation (commented out due to analyzer conflict - add back when needed)
   # hive_generator: ^2.0.1
@@ -85,27 +86,42 @@ flutter:
   # Assets
   assets:
     - assets/translations/
+    - .env.develop
+    - .env.production
 
 flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/icons/app_icon.png"
 
-flutter_native_splash:
-  # Background color (white - phù hợp với AppColors.background)
+flutter_                              
+  # Light mode - dùng background_image (fullscreen)
   color: "#FFFFFF"
-  
-  # Splash image (icon)
-  image: assets/icons/app_icon.png
-  
+  background_image: assets/icons/splash_fullscreen.png
+
+  # Dark mode
+  color_dark: "#000000"
+  background_image_dark: assets/icons/splash_fullscreen.png
+
+  # Fullscreen mode
+  fullscreen: true
+
+  # Scaling - fill toàn màn hình, KHÔNG crop vì đã đúng tỷ lệ
+  android_gravity: fill
+  ios_content_mode: scaleAspectFill45
+
   # Android specific settings
   android: true
   android_12:
+    # Light mode
     color: "#FFFFFF"
-    image: assets/icons/app_icon.png
-  
+    image: assets/icons/app_icon_round_full.png
+    # Dark mode
+    color_dark: "#000000"
+    image_dark: assets/icons/app_icon_round_full.png
+
   # iOS specific settings
   ios: true
-  
-  # Web specific settings (optional)
+
+  # Web specific settings
   web: false

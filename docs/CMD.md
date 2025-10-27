@@ -34,3 +34,7 @@ copy vào setting.json để không hiện file gen khỏi bị rối
 dart run flutter_launcher_icons:main
 flutter pub run flutter_launcher_icons
 dùng lệnh này để load lại icon cho cả app
+
+
+flutter pub run flutter_native_splash:create
+dùng lệnh này để config vào splash

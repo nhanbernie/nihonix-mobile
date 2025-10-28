@@ -87,26 +87,40 @@ class _SplashPageState extends ConsumerState<SplashPage>
   }
 
   Future<void> _startSplashSequence() async {
-    // Check authentication status first
-    final authNotifier = ref.read(authProvider.notifier);
-    await authNotifier.checkAuth();
+    try {
+      // Check authentication status first - delay to avoid widget tree building issue
+      await Future.delayed(const Duration(milliseconds: 100));
+      final authNotifier = ref.read(authProvider.notifier);
+      await authNotifier.checkAuth();
+    } catch (e) {
+      // If auth check fails, continue anyway
+      print('Auth check failed: $e');
+    }
 
     // Wait 4 seconds
     await Future.delayed(const Duration(seconds: 4));
 
     if (!mounted) return;
 
-    // Check if first time to determine where to go
-    final prefs = WelcomePreferences();
-    final isFirstTime = await prefs.isFirstTime();
+    try {
+      // Check if first time to determine where to go
+      final prefs = WelcomePreferences();
+      final isFirstTime = await prefs.isFirstTime();
 
-    if (!mounted) return;
+      if (!mounted) return;
 
-    // Navigate - Router redirect will handle protection
-    if (isFirstTime) {
-      context.go(AppRouter.welcome);
-    } else {
-      context.go(AppRouter.home);
+      // Navigate - Router redirect will handle protection
+      if (isFirstTime) {
+        context.go(AppRouter.welcome);
+      } else {
+        context.go(AppRouter.home);
+      }
+    } catch (e) {
+      // If navigation fails, go to welcome as fallback
+      print('Navigation failed: $e');
+      if (mounted) {
+        context.go(AppRouter.welcome);
+      }
     }
   }
 

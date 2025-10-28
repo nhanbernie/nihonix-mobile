@@ -29,19 +29,31 @@ class _RememberMeCheckboxState extends State<RememberMeCheckbox> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Checkbox(
-          value: _isChecked,
-          onChanged: (value) {
-            setState(() {
-              _isChecked = value ?? false;
-            });
-            widget.onChanged?.call(_isChecked);
-          },
+        SizedBox(
+          width: 18,
+          height: 18,
+          child: Checkbox(
+            value: _isChecked,
+            onChanged: (value) {
+              setState(() {
+                _isChecked = value ?? false;
+              });
+              widget.onChanged?.call(_isChecked);
+            },
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            visualDensity: VisualDensity.compact,
+          ),
         ),
+        const SizedBox(width: 8),
         Text(
           LocaleKeys.auth_remember_me.tr(),
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: const TextStyle(
+            fontSize: 14,
+            color: Color(0xFF333333),
+            fontWeight: FontWeight.w400,
+          ),
         ),
       ],
     );

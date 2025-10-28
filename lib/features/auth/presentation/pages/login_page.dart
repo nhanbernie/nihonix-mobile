@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import '../../../../core/l10n/locale_keys.dart';
+import '../../../../core/router/app_router.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/validation/models/username.dart';
 import '../../../../core/validation/models/password.dart';
 import '../../../../core/validation/validation_errors.dart';
@@ -12,6 +14,7 @@ import '../../../../shared/widgets/custom_input_field.dart';
 import '../../../../shared/widgets/auth_form.dart';
 import '../../../../shared/layouts/auth_layout.dart';
 import '../widgets/remember_me_checkbox.dart';
+import '../widgets/social_login_buttons.dart';
 import '../providers/auth_provider.dart';
 
 /// LoginPage với Clean Architecture & Riverpod.
@@ -145,22 +148,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   /// Handle sign up navigation
   void _handleSignUp() {
-    // TODO: Navigate to register page
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Chức năng đăng ký đang phát triển!'),
-      ),
-    );
+    context.go(AppRouter.register);
   }
 
   /// Handle forgot password
   void _handleForgotPassword() {
-    // TODO: Navigate to forgot password page
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Chức năng quên mật khẩu đang phát triển!'),
-      ),
-    );
+    context.go(AppRouter.forgotPassword);
   }
 
   @override
@@ -173,59 +166,150 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       title: LocaleKeys.auth_welcome_back.tr(),
       subtitle: LocaleKeys.auth_sign_in_to_access.tr(),
       illustrationPath: 'assets/images/login_illustration.png',
-      showSocialLogin: true,
-      child: AuthForm(
-        formKey: _formKey,
-        onSubmit: _handleLogin,
-        submitButtonText: LocaleKeys.auth_sign_in.tr(),
-        isLoading: isLoading,
-        secondaryButtonText: LocaleKeys.auth_dont_have_account.tr(),
-        onSecondaryPressed: _handleSignUp,
-        children: [
-          // Username field
-          CustomInputField(
-            controller: _usernameController,
-            labelText: LocaleKeys.auth_username.tr(),
-            prefixIcon: Icons.person,
-            validator: (value) => _username.error?.message,
-            onChanged: _onUsernameChanged,
-          ),
+      showSocialLogin: false, // Tắt social login trong AuthLayout
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            // Username field
+            CustomInputField(
+              controller: _usernameController,
+              labelText: LocaleKeys.auth_username.tr(),
+              hintText: LocaleKeys.auth_username.tr(),
+              validator: (value) => _username.error?.message,
+              onChanged: _onUsernameChanged,
+            ),
+            const SizedBox(height: 16),
 
-          // Password field
-          CustomInputField(
-            controller: _passwordController,
-            labelText: LocaleKeys.auth_password.tr(),
-            prefixIcon: Icons.lock,
-            obscureText: _obscurePassword,
-            suffixIcon: IconButton(
-              onPressed: () {
-                setState(() {
-                  _obscurePassword = !_obscurePassword;
-                });
-              },
-              icon: Icon(
-                _obscurePassword ? Icons.visibility : Icons.visibility_off,
+            // Password field
+            CustomInputField(
+              controller: _passwordController,
+              labelText: LocaleKeys.auth_password.tr(),
+              hintText: LocaleKeys.auth_password.tr(),
+              obscureText: _obscurePassword,
+              suffixIcon: IconButton(
+                onPressed: () {
+                  setState(() {
+                    _obscurePassword = !_obscurePassword;
+                  });
+                },
+                icon: Icon(
+                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                  color: const Color(0xFF666666),
+                  size: 20,
+                ),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+              validator: (value) => _password.error?.message,
+              onChanged: _onPasswordChanged,
+            ),
+            const SizedBox(height: 16),
+
+            // Remember me and Forgot password in same row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Remember me checkbox
+                RememberMeCheckbox(
+                  initialValue: _rememberMe,
+                  onChanged: _onRememberMeChanged,
+                ),
+                // Forgot password link
+                TextButton(
+                  onPressed: isLoading ? null : _handleForgotPassword,
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: Text(
+                    LocaleKeys.auth_forgot_password.tr(),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.red,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            // Social login buttons (includes divider)
+            const Padding(
+              padding: EdgeInsets.only(top: 32),
+              child: SocialLoginButtons(),
+            ),
+            const SizedBox(height: 24),
+
+            // Login button
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: isLoading ? null : _handleLogin,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary.withOpacity(0.8),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  elevation: 0,
+                ),
+                child: isLoading
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      )
+                    : Text(
+                        LocaleKeys.auth_sign_in.tr(),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
               ),
             ),
-            validator: (value) => _password.error?.message,
-            onChanged: _onPasswordChanged,
-          ),
+            const SizedBox(height: 24),
 
-          // Remember me checkbox
-          RememberMeCheckbox(
-            initialValue: _rememberMe,
-            onChanged: _onRememberMeChanged,
-          ),
-
-          // Forgot password link
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: isLoading ? null : _handleForgotPassword,
-              child: Text(LocaleKeys.auth_forgot_password.tr()),
+            // Don't have account? Sign up
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  LocaleKeys.auth_dont_have_account.tr(),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                TextButton(
+                  onPressed: isLoading ? null : _handleSignUp,
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: Text(
+                    LocaleKeys.auth_sign_up.tr(),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

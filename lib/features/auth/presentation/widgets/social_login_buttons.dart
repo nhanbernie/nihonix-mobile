@@ -28,23 +28,21 @@ class SocialLoginButtons extends StatelessWidget {
           ],
         ),
 
-        const SizedBox(height: AppSizes.s24),
+        const SizedBox(height: 16),
 
         // Social login buttons
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildSocialButton(
+            _buildIconButton(
               context,
-              icon: Icons.g_mobiledata,
-              label: 'Google',
+              icon: _buildGoogleIcon(),
               onPressed: _handleGoogleLogin,
             ),
             const SizedBox(width: AppSizes.s16),
-            _buildSocialButton(
+            _buildIconButton(
               context,
-              icon: Icons.facebook,
-              label: 'Facebook',
+              icon: _buildFacebookIcon(),
               onPressed: _handleFacebookLogin,
             ),
           ],
@@ -53,25 +51,59 @@ class SocialLoginButtons extends StatelessWidget {
     );
   }
 
-  Widget _buildSocialButton(
+  Widget _buildIconButton(
     BuildContext context, {
-    required IconData icon,
-    required String label,
+    required Widget icon,
     required VoidCallback onPressed,
   }) {
-    return Expanded(
-      child: OutlinedButton.icon(
-        onPressed: onPressed,
-        icon: Icon(icon),
-        label: Text(label),
-        style: OutlinedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSizes.s16,
-            vertical: AppSizes.s12,
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: 80,
+        height: 80,
+        child: Center(child: icon),
+      ),
+    );
+  }
+
+  Widget _buildGoogleIcon() {
+    return Container(
+      width: 30,
+      height: 30,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
           ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-          ),
+        ],
+      ),
+      child: const Center(
+        child: Icon(
+          Icons.g_mobiledata,
+          color: Color(0xFF4285F4), // Google blue
+          size: 20,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFacebookIcon() {
+    return Container(
+      width: 30,
+      height: 30,
+      decoration: const BoxDecoration(
+        color: Color(0xFF1877F2), // Facebook blue
+        shape: BoxShape.circle,
+      ),
+      child: const Center(
+        child: Icon(
+          Icons.facebook,
+          color: Colors.white,
+          size: 20,
         ),
       ),
     );

@@ -20,6 +20,7 @@ import '../../domain/repositories/auth_repository.dart';
 import '../../domain/usecases/get_current_user.dart';
 import '../../domain/usecases/login.dart';
 import '../../domain/usecases/logout.dart';
+import '../../domain/usecases/register.dart';
 
 part 'auth_di.g.dart';
 
@@ -93,4 +94,11 @@ LogoutUseCase logoutUseCase(Ref ref) {
 GetCurrentUserUseCase getCurrentUserUseCase(Ref ref) {
   final repository = ref.watch(authRepositoryProvider);
   return GetCurrentUserUseCase(repository);
+}
+
+/// Provider cho RegisterUseCase.
+@riverpod
+RegisterUseCase registerUseCase(Ref ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return RegisterUseCase(repository);
 }

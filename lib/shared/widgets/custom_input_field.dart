@@ -67,7 +67,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
     if (_hasBeenTouched && widget.validateOnChange) {
       _validateField();
     }
-    
+
     widget.onChanged?.call(value);
   }
 
@@ -92,61 +92,74 @@ class _CustomInputFieldState extends State<CustomInputField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextFormField(
-          controller: widget.controller,
-          focusNode: _focusNode,
-          obscureText: widget.obscureText,
-          keyboardType: widget.keyboardType,
-          enabled: widget.enabled,
-          maxLines: widget.maxLines,
-          maxLength: widget.maxLength,
-          onChanged: _onChanged,
-          onTap: _onTap,
-          decoration: InputDecoration(
-            labelText: widget.labelText,
-            hintText: widget.hintText,
-            prefixIcon: widget.prefixIcon != null 
-                ? Icon(widget.prefixIcon)
-                : null,
-            suffixIcon: widget.suffixIcon,
-            errorText: _errorText,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-              borderSide: BorderSide(
-                color: Theme.of(context).colorScheme.outline,
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: const Color(0xFFE6E6E6), // Light gray background
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
+            ],
+          ),
+          child: TextFormField(
+            controller: widget.controller,
+            focusNode: _focusNode,
+            obscureText: widget.obscureText,
+            keyboardType: widget.keyboardType,
+            enabled: widget.enabled,
+            maxLines: widget.maxLines,
+            maxLength: widget.maxLength,
+            onChanged: _onChanged,
+            onTap: _onTap,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+              color: Color(0xFF333333), // Dark text color
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-              borderSide: BorderSide(
-                color: Theme.of(context).colorScheme.primary,
-                width: 2,
+            decoration: InputDecoration(
+              hintText: widget.hintText ?? widget.labelText,
+              hintStyle: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF666666), // Dark gray placeholder
               ),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-              borderSide: BorderSide(
-                color: Theme.of(context).colorScheme.error,
+              prefixIcon: widget.prefixIcon != null
+                  ? Icon(
+                      widget.prefixIcon,
+                      color: const Color(0xFF666666),
+                      size: 20,
+                    )
+                  : null,
+              suffixIcon: widget.suffixIcon,
+              errorText: null, // Don't show error in InputDecoration
+              border: InputBorder.none, // No visible borders
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              focusedErrorBorder: InputBorder.none,
+              filled:
+                  false, // Don't use filled since we have container background
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
               ),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-              borderSide: BorderSide(
-                color: Theme.of(context).colorScheme.error,
-                width: 2,
-              ),
-            ),
-            filled: true,
-            fillColor: Theme.of(context).colorScheme.surface,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: AppSizes.s16,
-              vertical: AppSizes.s12,
             ),
           ),
         ),
+        if (_errorText != null) ...[
+          const SizedBox(height: 8),
+          Text(
+            _errorText!,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.error,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
       ],
     );
   }

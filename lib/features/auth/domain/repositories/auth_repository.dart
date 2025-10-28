@@ -28,9 +28,10 @@ abstract class AuthRepository {
   Future<bool> isLoggedIn();
 
   Future<User> register({
+    required String username,
     required String email,
     required String password,
-    required String name,
+    String? fullName,
   });
 
   Future<void> forgotPassword({required String email});

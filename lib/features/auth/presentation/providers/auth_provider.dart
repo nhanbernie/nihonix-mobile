@@ -45,7 +45,10 @@ class AuthNotifier extends Notifier<AuthState> {
     required String email,
     required String password,
   }) async {
-    state = state.copyWith(isLoading: true, error: null);
+    // Only set loading if not already loading
+    if (!state.isLoading) {
+      state = state.copyWith(isLoading: true, error: null);
+    }
 
     try {
       // Get UseCase from Riverpod DI
@@ -55,6 +58,52 @@ class AuthNotifier extends Notifier<AuthState> {
       final user = await loginUseCase(
         email: email,
         password: password,
+      );
+
+      state = state.copyWith(
+        isLoading: false,
+        isAuthenticated: true,
+        user: user,
+        error: null,
+      );
+    } catch (e) {
+      // Map domain exceptions to user-friendly messages
+      String errorMessage = _mapErrorToMessage(e);
+
+      state = state.copyWith(
+        isLoading: false,
+        isAuthenticated: false,
+        user: null,
+        error: errorMessage,
+      );
+    }
+  }
+
+  /// Register với username, email, password và fullName.
+  ///
+  /// Clean Architecture flow:
+  /// UI -> AuthNotifier -> RegisterUseCase -> AuthRepository -> AuthRemoteDataSource -> API
+  Future<void> register({
+    required String username,
+    required String email,
+    required String password,
+    String? fullName,
+  }) async {
+    // Only set loading if not already loading
+    if (!state.isLoading) {
+      state = state.copyWith(isLoading: true, error: null);
+    }
+
+    try {
+      // Get UseCase from Riverpod DI
+      final registerUseCase = ref.read(registerUseCaseProvider);
+
+      // Delegate business logic to UseCase
+      final user = await registerUseCase(
+        username: username,
+        email: email,
+        password: password,
+        fullName: fullName,
       );
 
       state = state.copyWith(
@@ -96,7 +145,10 @@ class AuthNotifier extends Notifier<AuthState> {
   ///
   /// Loads current user nếu có token hợp lệ.
   Future<void> checkAuth() async {
-    state = state.copyWith(isLoading: true);
+    // Don't set loading if already loading to avoid UI flicker
+    if (!state.isLoading) {
+      state = state.copyWith(isLoading: true);
+    }
 
     try {
       final getCurrentUserUseCase = ref.read(getCurrentUserUseCaseProvider);
@@ -107,12 +159,14 @@ class AuthNotifier extends Notifier<AuthState> {
           isLoading: false,
           isAuthenticated: true,
           user: user,
+          error: null,
         );
       } else {
         state = state.copyWith(
           isLoading: false,
           isAuthenticated: false,
           user: null,
+          error: null,
         );
       }
     } catch (e) {
@@ -120,6 +174,7 @@ class AuthNotifier extends Notifier<AuthState> {
         isLoading: false,
         isAuthenticated: false,
         user: null,
+        error: null,
       );
     }
   }

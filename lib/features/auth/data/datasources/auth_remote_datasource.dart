@@ -62,15 +62,17 @@ class AuthRemoteDataSource implements IAuthRefreshService {
   }
 
   Future<LoginResponse> register({
+    required String username,
     required String email,
     required String password,
-    required String name,
+    String? fullName,
   }) async {
     try {
       final body = {
+        'username': username,
         'email': email,
         'password': password,
-        'name': name,
+        if (fullName != null) 'full_name': fullName,
       };
       return await _api.register(body);
     } on DioException {

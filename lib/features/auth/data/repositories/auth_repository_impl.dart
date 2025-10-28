@@ -96,15 +96,17 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<User> register({
+    required String username,
     required String email,
     required String password,
-    required String name,
+    String? fullName,
   }) async {
     try {
       final loginResponse = await _remoteDataSource.register(
+        username: username,
         email: email,
         password: password,
-        name: name,
+        fullName: fullName,
       );
 
       await _tokenStore.saveAccessToken(loginResponse.accessToken);

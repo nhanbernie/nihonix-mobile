@@ -3,16 +3,67 @@ import 'package:flutter/material.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/welcome/presentation/pages/welcome_page.dart';
+import '../../features/splash/presentation/pages/splash_page.dart';
+import '../storage/welcome_preferences.dart';
 
 /// App routes configuration using GoRouter
 class AppRouter {
-  static const String home = '/';
+  static const String splash = '/';
+  static const String home = '/home';
+  static const String welcome = '/welcome';
   static const String login = '/login';
   static const String profile = '/profile';
 
   static final GoRouter router = GoRouter(
-    initialLocation: home,
+    initialLocation: splash,
+    redirect: (context, state) async {
+      final location = state.matchedLocation;
+      final prefs = WelcomePreferences();
+      final isFirstTime = await prefs.isFirstTime();
+      
+      // Splash logic: Only show on first app start
+      if (location == splash) {
+        // If already seen welcome, skip splash and go directly to home
+        if (!isFirstTime) {
+          return home;
+        }
+        // First time: allow splash to show
+        return null;
+      }
+
+      // Welcome page protection
+      if (location == welcome) {
+        // If already seen welcome, redirect to home
+        if (!isFirstTime) {
+          return home;
+        }
+        return null;
+      }
+
+      // Home and other routes protection
+      if (isFirstTime && location != splash && location != welcome) {
+        // First time user trying to access other routes → show welcome
+        return welcome;
+      }
+
+      return null;
+    },
     routes: [
+      // Splash route
+      GoRoute(
+        path: splash,
+        name: 'splash',
+        builder: (context, state) => const SplashPage(),
+      ),
+
+      // Welcome route
+      GoRoute(
+        path: welcome,
+        name: 'welcome',
+        builder: (context, state) => const WelcomePage(),
+      ),
+
       // Home route
       GoRoute(
         path: home,

@@ -10,7 +10,8 @@ Future<Map<String, dynamic>> loginRaw(String email, String password) async {
     final req = await client.postUrl(uri);
 
     // BẮT BUỘC khi gửi JSON: content-type + accept
-    req.headers.set(HttpHeaders.contentTypeHeader, 'application/json; charset=utf-8');
+    req.headers
+        .set(HttpHeaders.contentTypeHeader, 'application/json; charset=utf-8');
     req.headers.set(HttpHeaders.acceptHeader, 'application/json');
 
     // Viết body: add() nhận bytes → encode chuỗi JSON sang UTF8
@@ -20,7 +21,8 @@ Future<Map<String, dynamic>> loginRaw(String email, String password) async {
     // Kết thúc ghi & nhận response
     final res = await req.close();
 
-    if (res.statusCode != HttpStatus.ok && res.statusCode != HttpStatus.created) {
+    if (res.statusCode != HttpStatus.ok &&
+        res.statusCode != HttpStatus.created) {
       final err = await res.transform(utf8.decoder).join();
       throw HttpException('HTTP ${res.statusCode}: $err', uri: uri);
     }

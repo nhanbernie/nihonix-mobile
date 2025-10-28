@@ -1,0 +1,10 @@
+{
+  "unknown_error": "An unknown error occurred",
+  "network_error": "Network error. Please check your connection.",
+  "server_error": "Server error. Please try again later.",
+  "validation_error": "Please check your input",
+  "not_found": "Not found",
+  "unauthorized": "Unauthorized access",
+  "forbidden": "Access forbidden"
+}
+

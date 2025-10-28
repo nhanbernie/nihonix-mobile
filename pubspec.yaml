@@ -15,29 +15,43 @@ dependencies:
     sdk: flutter
 
   # State management
-  flutter_riverpod:
+  flutter_riverpod: ^3.0.1
+  riverpod_annotation: ^3.0.1
+
+  # Code generation annotations
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.9.0
 
   # Navigation & routing
   go_router:
 
   # HTTP & API calls
   dio:
+  retrofit: ^4.6.0
 
   # Local database (offline storage)
   hive:
   hive_flutter:
 
   # Utilities
-  equatable:         # Object equality
-  logger:            # Simple logging
+  equatable: # Object equality
+  logger: # Simple logging
   pretty_dio_logger: # HTTP request/response logs
   connectivity_plus: # Network status check
-  intl:              # Internationalization utils
+  intl: # Internationalization utils
   package_info_plus: # App info (name, version)
-  url_launcher:      # Open URLs, calls, emails
+  url_launcher: # Open URLs, calls, emails
 
   # iOS-style icons
   cupertino_icons: ^1.0.8
+  easy_localization: ^3.0.8
+  easy_localization_loader: ^2.0.2
+
+  # env
+  flutter_dotenv: ^5.1.0
+  shared_preferences: ^2.5.3
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.3
 
 dev_dependencies:
   flutter_test:
@@ -47,8 +61,68 @@ dev_dependencies:
   flutter_lints: ^6.0.0
 
   # Code generation tools
-  hive_generator: ^2.0.1
-  build_runner: ^2.4.7
+  build_runner: ^2.5.4
+
+  # Riverpod code generation
+  riverpod_generator: ^3.0.1
+  riverpod_lint: ^3.0.1
+
+  # Freezed for immutable models
+  freezed: ^3.2.3
+
+  # JSON serialization
+  json_serializable: ^6.9.5
+
+  # Retrofit code generation
+  retrofit_generator: ^10.0.0
+  image: ^4.5.4
+
+  # Hive code generation (commented out due to analyzer conflict - add back when needed)
+  # hive_generator: ^2.0.1
 
 flutter:
   uses-material-design: true
+
+  # Assets
+  assets:
+    - assets/translations/
+    - assets/images/
+    - .env.develop
+    - .env.production
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/app_icon.png"
+
+flutter_native_splash:
+  # Light mode - dùng background_image (fullscreen)
+  color: "#FFFFFF"
+  background_image: assets/icons/splash_fullscreen.png
+
+  # Dark mode
+  color_dark: "#000000"
+  background_image_dark: assets/icons/splash_fullscreen.png
+
+  # Fullscreen mode
+  fullscreen: true
+
+  # Scaling - fill toàn màn hình, KHÔNG crop vì đã đúng tỷ lệ
+  android_gravity: fill
+  ios_content_mode: scaleAspectFill
+
+  # Android specific settings
+  android: true
+  android_12:
+    # Light mode
+    color: "#FFFFFF"
+    image: assets/icons/app_icon_round_full.png
+    # Dark mode
+    color_dark: "#000000"
+    image_dark: assets/icons/app_icon_round_full.png
+
+  # iOS specific settings
+  ios: true
+
+  # Web specific settings
+  web: false

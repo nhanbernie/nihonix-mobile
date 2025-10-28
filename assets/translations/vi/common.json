@@ -1,0 +1,25 @@
+{
+  "ok": "Đồng ý",
+  "cancel": "Hủy",
+  "confirm": "Xác nhận",
+  "save": "Lưu",
+  "delete": "Xóa",
+  "edit": "Sửa",
+  "close": "Đóng",
+  "back": "Quay lại",
+  "next": "Tiếp theo",
+  "previous": "Trước đó",
+  "loading": "Đang tải...",
+  "error": "Lỗi",
+  "success": "Thành công",
+  "warning": "Cảnh báo",
+  "info": "Thông tin",
+  "retry": "Thử lại",
+  "refresh": "Làm mới",
+  "search": "Tìm kiếm",
+  "filter": "Lọc",
+  "sort": "Sắp xếp",
+  "yes": "Có",
+  "no": "Không"
+}
+

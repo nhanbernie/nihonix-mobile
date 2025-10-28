@@ -1,37 +1,66 @@
 import 'package:flutter/material.dart';
 
-/// App color constants
 class AppColors {
-  // Primary colors
-  static const Color primary = Color(0xFF2196F3);
-  static const Color primaryDark = Color(0xFF1976D2);
-  static const Color primaryLight = Color(0xFFBBDEFB);
+  // Primary
+  // static const Color primary = Color(0xFFFF6B35);
+  static const Color primary = Color(0xFFE6661A);
+  static const Color onPrimary = Color(0xFFFFFFFF);
 
-  // Secondary colors
-  static const Color secondary = Color(0xFFFF9800);
-  static const Color secondaryDark = Color(0xFFF57C00);
-  static const Color secondaryLight = Color(0xFFFFE0B2);
+  // Background
+  static const Color background = Color(0xFFFFFFFF);
+  static const Color backgroundDark = Color(0xFF000000);
+  static const Color onBackground = Color(0xFF000000);
+  static const Color onBackgroundDark = Color(0xFFFFFFFF);
 
-  // Neutral colors
-  static const Color white = Color(0xFFFFFFFF);
-  static const Color black = Color(0xFF000000);
-  static const Color grey = Color(0xFF9E9E9E);
-  static const Color greyLight = Color(0xFFF5F5F5);
-  static const Color greyDark = Color(0xFF424242);
-
-  // Status colors
-  static const Color success = Color(0xFF4CAF50);
-  static const Color error = Color(0xFFF44336);
-  static const Color warning = Color(0xFFFF9800);
-  static const Color info = Color(0xFF2196F3);
-
-  // Text colors
-  static const Color textPrimary = Color(0xFF212121);
-  static const Color textSecondary = Color(0xFF757575);
-  static const Color textHint = Color(0xFFBDBDBD);
-
-  // Background colors
-  static const Color background = Color(0xFFFAFAFA);
+  // Surface
   static const Color surface = Color(0xFFFFFFFF);
-  static const Color surfaceVariant = Color(0xFFF5F5F5);
+  static const Color surfaceDark = Color(0xFF1A1A1A);
+  static const Color onSurface = Color(0xFF000000);
+  static const Color onSurfaceDark = Color(0xFFFFFFFF);
+
+  // Accent
+  static const Color accent1 = Color(0xFFDCC1FF);
+  static const Color accent2 = Color(0xFFF5F378);
+  static const Color accent3 = Color(0xFF4EF4A5);
+  static const Color onAccent = Color(0xFF000000);
+
+  // Semantic
+  static const Color error = Color(0xFFFF3B30);
+  static const Color onError = Color(0xFFFFFFFF);
+
+  static const Color success = Color(0xFF4EF4A5);
+  static const Color onSuccess = Color(0xFF000000);
+
+  static const Color warning = Color(0xFFF5F378);
+  static const Color onWarning = Color(0xFF000000);
+
+  // Neutral
+  static const Color neutral = Color(0xFF000000);
+  static const Color neutralLight = Color(0xFFFFFFFF);
+  static const Color neutralGrey = Color(0xFF808080);
+  static const Color neutralGreyLight = Color(0xFFE0E0E0);
+  static const Color neutralGreyDark = Color(0xFF404040);
+
+  // Legacy aliases
+  static const Color white = neutralLight;
+  static const Color black = neutral;
+  static const Color grey = neutralGrey;
+  static const Color greyLight = neutralGreyLight;
+  static const Color greyDark = neutralGreyDark;
+
+  static const Color textPrimary = onBackground;
+  static const Color textSecondary = neutralGrey;
+  static const Color textHint = neutralGreyLight;
+
+  static const Color secondary = primary;
+  static const Color secondaryDark = primary;
+  static const Color secondaryLight = primary;
+
+  static const Color surfaceVariant = surface;
+  static const Color surfaceVariantDark = surfaceDark;
+
+  static const Color primaryDark = primary;
+  static const Color primaryLight = primary;
+
+  static const Color info = primary;
 }

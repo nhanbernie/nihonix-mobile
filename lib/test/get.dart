@@ -6,8 +6,8 @@ Future<Map<String, dynamic>> getUserRaw() async {
   // 1) Tạo client cấp app (nên tái sử dụng, đừng tạo mỗi lần 1 cái)
   final client = HttpClient()
     ..connectionTimeout = const Duration(seconds: 10) // timeout cho kết nối TCP
-    ..idleTimeout = const Duration(seconds: 15)       // giữ kết nối rảnh tối đa
-    ..autoUncompress = true;                          // giải nén nếu server gửi gzip
+    ..idleTimeout = const Duration(seconds: 15) // giữ kết nối rảnh tối đa
+    ..autoUncompress = true; // giải nén nếu server gửi gzip
 
   try {
     // 2) Tạo Uri với query params "đúng chuẩn" (tránh nối chuỗi thủ công)
@@ -23,7 +23,8 @@ Future<Map<String, dynamic>> getUserRaw() async {
     req.headers.set(HttpHeaders.userAgentHeader, 'MyApp/1.0 (Flutter)');
 
     // 5) Gửi request đi: close() sẽ "kết thúc ghi" và bắt đầu nhận response
-    final HttpClientResponse res = await req.close()
+    final HttpClientResponse res = await req
+        .close()
         .timeout(const Duration(seconds: 20)); // timeout nhận phản hồi
 
     // 6) Kiểm tra mã trạng thái chuẩn (dùng HttpStatus constants cho dễ đọc)

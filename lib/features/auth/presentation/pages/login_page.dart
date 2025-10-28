@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-import '../../../../core/constants/app_strings.dart';
-import '../../../../core/constants/app_sizes.dart';
-import '../../../../shared/widgets/custom_button.dart';
+import '../../../../core/l10n/locale_keys.dart';
+import '../../../../core/validation/models/username.dart';
+import '../../../../core/validation/models/password.dart';
+import '../../../../core/validation/validation_errors.dart';
+import '../../../../core/storage/username_storage.dart';
+import '../../../../shared/widgets/custom_input_field.dart';
+import '../../../../shared/widgets/auth_form.dart';
+import '../../../../shared/layouts/auth_layout.dart';
+import '../widgets/remember_me_checkbox.dart';
 import '../providers/auth_provider.dart';
 
 /// LoginPage với Clean Architecture & Riverpod.
@@ -26,17 +33,61 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers cho TextFormFields
-  final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  // Formz models for validation
+  Username _username = const Username.pure();
+  Password _password = const Password.pure();
+
   // Local UI state
-  bool _obscurePassword = true; // Hiển thị/ẩn mật khẩu
+  bool _obscurePassword = true;
+  bool _rememberMe = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRememberedUsername();
+  }
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  /// Load remembered username from storage
+  Future<void> _loadRememberedUsername() async {
+    final rememberedUsername = await UsernameStorage.getUsername();
+    if (rememberedUsername != null) {
+      _usernameController.text = rememberedUsername;
+      _rememberMe = true;
+      setState(() {
+        _username = Username.dirty(rememberedUsername);
+      });
+    }
+  }
+
+  /// Handle username change with formz validation
+  void _onUsernameChanged(String value) {
+    setState(() {
+      _username = Username.dirty(value);
+    });
+  }
+
+  /// Handle password change with formz validation
+  void _onPasswordChanged(String value) {
+    setState(() {
+      _password = Password.dirty(value);
+    });
+  }
+
+  /// Handle remember me checkbox change
+  void _onRememberMeChanged(bool value) {
+    setState(() {
+      _rememberMe = value;
+    });
   }
 
   /// Handle login với Clean Architecture pattern.
@@ -49,11 +100,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Future<void> _handleLogin() async {
     // Validate form
     if (!_formKey.currentState!.validate()) return;
+
     // Get AuthNotifier and call login
     final authNotifier = ref.read(authProvider.notifier);
 
     await authNotifier.login(
-      email: _emailController.text.trim(),
+      email: _usernameController.text.trim(),
       password: _passwordController.text,
     );
 
@@ -71,6 +123,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         ),
       );
     } else if (authState.isAuthenticated) {
+      // Handle remember me
+      if (_rememberMe) {
+        await UsernameStorage.saveUsername(_usernameController.text.trim());
+      } else {
+        await UsernameStorage.clearUsername();
+      }
+
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -84,170 +143,89 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     }
   }
 
+  /// Handle sign up navigation
+  void _handleSignUp() {
+    // TODO: Navigate to register page
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Chức năng đăng ký đang phát triển!'),
+      ),
+    );
+  }
+
+  /// Handle forgot password
+  void _handleForgotPassword() {
+    // TODO: Navigate to forgot password page
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Chức năng quên mật khẩu đang phát triển!'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Watch AuthState for reactive UI updates
     final authState = ref.watch(authProvider);
     final isLoading = authState.isLoading;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(AppStrings.login),
-      ),
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Padding(
-                padding: const EdgeInsets.all(AppSizes.s16),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: AppSizes.s32),
+    return AuthLayout(
+      title: LocaleKeys.auth_welcome_back.tr(),
+      subtitle: LocaleKeys.auth_sign_in_to_access.tr(),
+      illustrationPath: 'assets/images/login_illustration.png',
+      showSocialLogin: true,
+      child: AuthForm(
+        formKey: _formKey,
+        onSubmit: _handleLogin,
+        submitButtonText: LocaleKeys.auth_sign_in.tr(),
+        isLoading: isLoading,
+        secondaryButtonText: LocaleKeys.auth_dont_have_account.tr(),
+        onSecondaryPressed: _handleSignUp,
+        children: [
+          // Username field
+          CustomInputField(
+            controller: _usernameController,
+            labelText: LocaleKeys.auth_username.tr(),
+            prefixIcon: Icons.person,
+            validator: (value) => _username.error?.message,
+            onChanged: _onUsernameChanged,
+          ),
 
-                      Icon(
-                        Icons.account_circle,
-                        size: 80,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-
-                      const SizedBox(height: AppSizes.s32),
-
-                      // === EMAIL FIELD ===
-                      TextFormField(
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        enabled: !isLoading, // Disable khi loading
-                        decoration: const InputDecoration(
-                          labelText: AppStrings.email,
-                          prefixIcon: Icon(Icons.email),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return AppStrings.required;
-                          }
-                          if (!value.contains('@')) {
-                            return AppStrings.invalidEmail;
-                          }
-                          return null;
-                        },
-                      ),
-
-                      const SizedBox(height: AppSizes.s16),
-
-                      // === PASSWORD FIELD ===
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: _obscurePassword,
-                        enabled: !isLoading, // Disable khi loading
-                        decoration: InputDecoration(
-                          labelText: AppStrings.password,
-                          prefixIcon: const Icon(Icons.lock),
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
-                            icon: Icon(
-                              _obscurePassword
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                            ),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return AppStrings.required;
-                          }
-                          if (value.length < 6) {
-                            return AppStrings.passwordTooShort;
-                          }
-                          return null;
-                        },
-                      ),
-
-                      const SizedBox(height: AppSizes.s8),
-
-                      // === Quên mật khẩu ===
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: isLoading
-                              ? null
-                              : () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content:
-                                          Text('Chức năng đang phát triển!'),
-                                    ),
-                                  );
-                                },
-                          child: const Text(AppStrings.forgotPassword),
-                        ),
-                      ),
-
-                      const SizedBox(height: AppSizes.s24),
-
-                      // === Nút ĐĂNG NHẬP ===
-                      // Loading state từ AuthProvider qua ref.watch()
-                      CustomButton(
-                        onPressed: isLoading ? null : _handleLogin,
-                        isLoading: isLoading,
-                        child: const Text(AppStrings.login),
-                      ),
-
-                      const SizedBox(height: AppSizes.s16),
-
-                      // === Nút ĐĂNG KÝ (demo) ===
-                      // Nguồn gọi: onPressed -> hiện SnackBar (placeholder)
-                      OutlinedButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content:
-                                  Text('Chức năng đăng ký đang phát triển!'),
-                            ),
-                          );
-                        },
-                        child: const Text(AppStrings.register),
-                      ),
-
-                      const Spacer(),
-
-                      // === Hộp thông tin tài khoản demo ===
-                      // Thuần UI, không có logic. Dùng Theme để phối màu.
-                      Container(
-                        padding: const EdgeInsets.all(AppSizes.s16),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .surfaceContainerHighest,
-                          borderRadius:
-                              BorderRadius.circular(AppSizes.radiusMedium),
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Demo Credentials',
-                              style: Theme.of(context).textTheme.titleSmall,
-                            ),
-                            const SizedBox(height: AppSizes.s8),
-                            const Text('Email: demo@example.com'),
-                            const Text('Password: 123456'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+          // Password field
+          CustomInputField(
+            controller: _passwordController,
+            labelText: LocaleKeys.auth_password.tr(),
+            prefixIcon: Icons.lock,
+            obscureText: _obscurePassword,
+            suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  _obscurePassword = !_obscurePassword;
+                });
+              },
+              icon: Icon(
+                _obscurePassword ? Icons.visibility : Icons.visibility_off,
               ),
             ),
-          ],
-        ),
+            validator: (value) => _password.error?.message,
+            onChanged: _onPasswordChanged,
+          ),
+
+          // Remember me checkbox
+          RememberMeCheckbox(
+            initialValue: _rememberMe,
+            onChanged: _onRememberMeChanged,
+          ),
+
+          // Forgot password link
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: isLoading ? null : _handleForgotPassword,
+              child: Text(LocaleKeys.auth_forgot_password.tr()),
+            ),
+          ),
+        ],
       ),
     );
   }

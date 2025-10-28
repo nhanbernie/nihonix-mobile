@@ -20,11 +20,11 @@ class EnvConfig {
 
   // Print config (debug only)
   static void printConfig() {
-    if (enableDebug) {
-      print('Environment: $appEnv');
-      print('API URL: $apiBaseUrl');
-      print('Timeout: ${apiTimeout}ms');
-    }
+    // if (enableDebug) {
+    //   print('Environment: $appEnv');
+    //   print('API URL: $apiBaseUrl');
+    //   print('Timeout: ${apiTimeout}ms');
+    // }
   }
 }
 

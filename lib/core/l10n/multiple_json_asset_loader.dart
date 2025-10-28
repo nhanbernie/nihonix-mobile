@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 
 /// Custom asset loader that loads multiple JSON files and merges them
-/// 
+///
 /// Structure:
 /// assets/translations/
 /// ├── en/
@@ -25,14 +25,9 @@ class MultipleJsonAssetLoader extends AssetLoader {
 
   const MultipleJsonAssetLoader({
     this.fileNames = const [
-      'app',
-      'common',
       'auth',
-      'home',
-      'lessons',
-      'profile',
-      'errors',
-      'validation',
+      'common',
+      'app',
     ],
   });
 
@@ -44,18 +39,26 @@ class MultipleJsonAssetLoader extends AssetLoader {
     for (final fileName in fileNames) {
       try {
         final filePath = '$path/${locale.languageCode}/$fileName.json';
+
         final jsonString = await rootBundle.loadString(filePath);
+
         final Map<String, dynamic> jsonData = json.decode(jsonString);
 
-        // Merge data with key prefix (file name)
-        mergedData[fileName] = jsonData;
+        // Handle different JSON structures:
+        // 1. If JSON has a single key that matches fileName, use that content
+        // 2. Otherwise, merge directly
+        if (jsonData.length == 1 && jsonData.containsKey(fileName)) {
+          // Case 1: {"auth": {...}} -> keep the nested structure
+          mergedData[fileName] = jsonData[fileName];
+        } else {
+          // Case 2: Direct flat structure -> merge directly
+          mergedData.addAll(jsonData);
+        }
       } catch (e) {
         // If file doesn't exist, skip it
-        print('Warning: Could not load $path/${locale.languageCode}/$fileName.json');
       }
     }
 
     return mergedData;
   }
 }
-

@@ -16,7 +16,7 @@ void main() async {
 
   // DEVELOPMENT: Uncomment dòng này khi dev
   await dotenv.load(fileName: ".env.develop");
-  
+
   // PRODUCTION: Uncomment dòng này khi build production
   // await dotenv.load(fileName: ".env.production");
 
@@ -39,9 +39,9 @@ void main() async {
   runApp(
     EasyLocalization(
       supportedLocales: const [
-        Locale('en'), 
-        Locale('vi'), 
-        Locale('ja'), 
+        Locale('en'),
+        Locale('vi'),
+        Locale('ja'),
       ],
       path: 'assets/translations',
       fallbackLocale: const Locale('en'),

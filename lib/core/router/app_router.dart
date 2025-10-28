@@ -1,10 +1,12 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/welcome/presentation/pages/welcome_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
+import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../storage/welcome_preferences.dart';
 
 /// App routes configuration using GoRouter
@@ -21,14 +23,15 @@ class AppRouter {
       final location = state.matchedLocation;
       final prefs = WelcomePreferences();
       final isFirstTime = await prefs.isFirstTime();
-      
-      // Splash logic: Only show on first app start
+
+      // Get auth state from Riverpod
+      final container = ProviderScope.containerOf(context);
+      final authState = container.read(authProvider);
+
       if (location == splash) {
-        // If already seen welcome, skip splash and go directly to home
         if (!isFirstTime) {
           return home;
         }
-        // First time: allow splash to show
         return null;
       }
 
@@ -45,6 +48,19 @@ class AppRouter {
       if (isFirstTime && location != splash && location != welcome) {
         // First time user trying to access other routes → show welcome
         return welcome;
+      }
+
+      // Authentication guard
+      if (location == home || location == profile) {
+        // If not authenticated, redirect to login
+        if (!authState.isAuthenticated) {
+          return login;
+        }
+      }
+
+      // If authenticated and trying to access login, redirect to home
+      if (location == login && authState.isAuthenticated) {
+        return home;
       }
 
       return null;

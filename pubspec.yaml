@@ -41,6 +41,7 @@ dependencies:
   intl: # Internationalization utils
   package_info_plus: # App info (name, version)
   url_launcher: # Open URLs, calls, emails
+  formz: ^0.7.0 # Form validation
 
   # iOS-style icons
   cupertino_icons: ^1.0.8
@@ -86,6 +87,9 @@ flutter:
   # Assets
   assets:
     - assets/translations/
+    - assets/translations/vi/
+    - assets/translations/en/
+    - assets/translations/ja/
     - assets/images/
     - .env.develop
     - .env.production

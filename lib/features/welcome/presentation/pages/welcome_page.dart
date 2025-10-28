@@ -9,7 +9,7 @@ import '../widgets/welcome_slide_1.dart';
 import '../widgets/welcome_slide_2.dart';
 import '../widgets/welcome_slide_3.dart';
 import '../widgets/page_indicator.dart';
-import '../widgets/test_slide.dart';
+// import '../widgets/test_slide.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -53,7 +53,7 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isLastPage = _currentPage == _totalPages - 1;
-    
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -96,87 +96,85 @@ class _WelcomePageState extends State<WelcomePage> {
             Positioned.fill(
               child: SafeArea(
                 child: Column(
-                children: [
-                  // PageView with slides
-                  Expanded(
-                    child: PageView(
-                      controller: _pageController,
-                      onPageChanged: (index) {
-                        setState(() {
-                          _currentPage = index;
-                        });
-                      },
-                      children: const [
-                        // TestSlide(title: 'Slide 1', color: Colors.blue),
-                        // TestSlide(title: 'Slide 2', color: Colors.green),
-                        // TestSlide(title: 'Slide 3', color: Colors.orange),
-                        WelcomeSlide1(),
-                        WelcomeSlide2(),
-                        WelcomeSlide3(),
-                      ],
+                  children: [
+                    // PageView with slides giống như carosel bên web
+                    Expanded(
+                      child: PageView(
+                        controller: _pageController,
+                        onPageChanged: (index) {
+                          setState(() {
+                            _currentPage = index;
+                          });
+                        },
+                        children: const [
+                          WelcomeSlide1(),
+                          WelcomeSlide2(),
+                          WelcomeSlide3(),
+                        ],
+                      ),
                     ),
-                  ),
 
-                  // Page Indicator
-                  PageIndicator(
-                    currentPage: _currentPage,
-                    pageCount: _totalPages,
-                  ),
-
-                  const SizedBox(height: AppSizes.s32),
-
-                  // Bottom navigation bar
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSizes.s24,
-                      vertical: AppSizes.s16,
+                    // Page Indicator
+                    PageIndicator(
+                      currentPage: _currentPage,
+                      pageCount: _totalPages,
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Skip button
-                        TextButton(
-                          onPressed: _handleFinish,
-                          child: Text(
-                            'Skip',
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: AppColors.textSecondary,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                          ),
-                        ),
 
-                        // Next/Get Started button (with icon + text)
-                        ElevatedButton.icon(
-                          onPressed: _handleNext,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: AppColors.onPrimary,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 12,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            minimumSize: const Size(0, 48),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          icon: isLastPage
-                              ? const Icon(Icons.check, size: 20)
-                              : const Icon(Icons.arrow_forward, size: 20),
-                          label: Text(
-                            isLastPage ? 'Get Started' : 'Next',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
+                    const SizedBox(height: AppSizes.s32),
+
+                    // Bottom navigation bar
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSizes.s24,
+                        vertical: AppSizes.s16,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                            onPressed: _handleFinish,
+                            child: Text(
+                              'Skip',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    color: AppColors.textSecondary,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                             ),
                           ),
-                        ),
-                      ],
+                          
+                          ElevatedButton.icon(
+                            onPressed: _handleNext,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: AppColors.onPrimary,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 12,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              minimumSize: const Size(0, 48),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            icon: isLastPage
+                                ? const Icon(Icons.check, size: 20)
+                                : const Icon(Icons.arrow_forward, size: 20),
+                            label: Text(
+                              isLastPage ? 'Get Started' : 'Next',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
                 ),
               ),
             ),

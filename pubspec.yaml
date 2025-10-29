@@ -32,6 +32,7 @@ dependencies:
   # Local database (offline storage)
   hive:
   hive_flutter:
+  flutter_secure_storage: ^9.2.4 # Secure token storage
 
   # Utilities
   equatable: # Object equality
@@ -41,10 +42,12 @@ dependencies:
   intl: # Internationalization utils
   package_info_plus: # App info (name, version)
   url_launcher: # Open URLs, calls, emails
+  formz: ^0.7.0 # Form validation
 
   # iOS-style icons
   cupertino_icons: ^1.0.8
   easy_localization: ^3.0.8
+  pin_code_fields: ^8.0.1 # OTP input field
   easy_localization_loader: ^2.0.2
 
   # env
@@ -52,6 +55,7 @@ dependencies:
   shared_preferences: ^2.5.3
   flutter_launcher_icons: ^0.14.4
   flutter_native_splash: ^2.4.3
+  flutter_svg: ^2.2.1
 
 dev_dependencies:
   flutter_test:
@@ -86,7 +90,11 @@ flutter:
   # Assets
   assets:
     - assets/translations/
+    - assets/translations/vi/
+    - assets/translations/en/
+    - assets/translations/ja/
     - assets/images/
+    - assets/icons/svg/
     - .env.develop
     - .env.production
 

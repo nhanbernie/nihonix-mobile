@@ -7,7 +7,6 @@ import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/constants/app_strings.dart';
 import 'core/constants/env_config.dart';
-import 'core/storage/token_store.dart';
 import 'core/l10n/multiple_json_asset_loader.dart';
 import 'package:flutter/services.dart';
 
@@ -16,7 +15,7 @@ void main() async {
 
   // DEVELOPMENT: Uncomment dòng này khi dev
   await dotenv.load(fileName: ".env.develop");
-  
+
   // PRODUCTION: Uncomment dòng này khi build production
   // await dotenv.load(fileName: ".env.production");
 
@@ -29,19 +28,17 @@ void main() async {
   // Khởi tạo EasyLocalization
   await EasyLocalization.ensureInitialized();
 
-  // Khởi tạo Hive
+  // Khởi tạo Hive (cho các storage khác nếu cần)
   await Hive.initFlutter();
 
-  // Khởi tạo TokenStore
-  final tokenStore = HiveTokenStore();
-  await tokenStore.init();
+  // TokenStore không cần init() vì sử dụng flutter_secure_storage
 
   runApp(
     EasyLocalization(
       supportedLocales: const [
-        Locale('en'), 
-        Locale('vi'), 
-        Locale('ja'), 
+        Locale('en'),
+        Locale('vi'),
+        Locale('ja'),
       ],
       path: 'assets/translations',
       fallbackLocale: const Locale('en'),

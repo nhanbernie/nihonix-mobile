@@ -1,6 +1,6 @@
 library;
 
-import 'package:nihonix/features/auth/domain/entities/user.dart';
+import 'package:nihonix/features/auth/domain/entities/login_result.dart';
 import 'package:nihonix/features/auth/domain/repositories/auth_repository.dart';
 
 /// Use Case: Thực hiện login operation.
@@ -27,25 +27,21 @@ class LoginUseCase {
   /// ```
   ///
   /// Parameters:
-  /// - [email]: Email address
+  /// - [username]: Username hoặc email
   /// - [password]: Plain text password (sẽ được hash ở backend)
   ///
-  /// Returns: [User] object nếu thành công
+  /// Returns: [LoginResult] object với user và accessToken nếu thành công
   ///
   /// Throws:
   /// - [UnauthorizedException]: Sai credentials
   /// - [NoInternetException]: Không có internet
   /// - [ServerException]: Lỗi server
-  Future<User> call({
-    required String email,
+  Future<LoginResult> call({
+    required String username,
     required String password,
   }) async {
-    if (email.isEmpty || password.isEmpty) {
-      throw ArgumentError('Email và password không được để trống');
-    }
-
-    if (!email.contains('@')) {
-      throw ArgumentError('Email không hợp lệ');
+    if (username.isEmpty || password.isEmpty) {
+      throw ArgumentError('Username và password không được để trống');
     }
 
     if (password.length < 6) {
@@ -53,7 +49,7 @@ class LoginUseCase {
     }
 
     return await _repository.login(
-      email: email.trim().toLowerCase(),
+      username: username.trim(),
       password: password,
     );
   }

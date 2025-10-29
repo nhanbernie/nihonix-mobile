@@ -13,7 +13,7 @@
   "error": "Error",
   "success": "Success",
   "warning": "Warning",
-  "info": "Information",
+  "info": "Info",
   "retry": "Retry",
   "refresh": "Refresh",
   "search": "Search",
@@ -22,4 +22,3 @@
   "yes": "Yes",
   "no": "No"
 }
-

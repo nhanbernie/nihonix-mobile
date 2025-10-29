@@ -18,6 +18,7 @@ sealed class AuthState with _$AuthState {
     @Default(false) bool isLoading,
     @Default(false) bool isAuthenticated,
     User? user,
+    String? accessToken, // ← Lưu accessToken trong RAM
     String? error,
   }) = _AuthState;
 }
@@ -37,24 +38,74 @@ class AuthNotifier extends Notifier<AuthState> {
     return const AuthState();
   }
 
-  /// Login với email và password.
+  /// Login với username và password.
   ///
   /// Clean Architecture flow:
   /// UI -> AuthNotifier -> LoginUseCase -> AuthRepository -> AuthRemoteDataSource -> API
   Future<void> login({
-    required String email,
+    required String username,
     required String password,
   }) async {
-    state = state.copyWith(isLoading: true, error: null);
+    // Only set loading if not already loading
+    if (!state.isLoading) {
+      state = state.copyWith(isLoading: true, error: null);
+    }
 
     try {
       // Get UseCase from Riverpod DI
       final loginUseCase = ref.read(loginUseCaseProvider);
 
       // Delegate business logic to UseCase
-      final user = await loginUseCase(
+      final loginResult = await loginUseCase(
+        username: username,
+        password: password,
+      );
+
+      state = state.copyWith(
+        isLoading: false,
+        isAuthenticated: true,
+        user: loginResult.user,
+        accessToken: loginResult.accessToken, // ← Lưu accessToken vào state
+        error: null,
+      );
+    } catch (e) {
+      // Map domain exceptions to user-friendly messages
+      String errorMessage = _mapErrorToMessage(e);
+
+      state = state.copyWith(
+        isLoading: false,
+        isAuthenticated: false,
+        user: null,
+        error: errorMessage,
+      );
+    }
+  }
+
+  /// Register với username, email, password và fullName.
+  ///
+  /// Clean Architecture flow:
+  /// UI -> AuthNotifier -> RegisterUseCase -> AuthRepository -> AuthRemoteDataSource -> API
+  Future<void> register({
+    required String username,
+    required String email,
+    required String password,
+    String? fullName,
+  }) async {
+    // Only set loading if not already loading
+    if (!state.isLoading) {
+      state = state.copyWith(isLoading: true, error: null);
+    }
+
+    try {
+      // Get UseCase from Riverpod DI
+      final registerUseCase = ref.read(registerUseCaseProvider);
+
+      // Delegate business logic to UseCase
+      final user = await registerUseCase(
+        username: username,
         email: email,
         password: password,
+        fullName: fullName,
       );
 
       state = state.copyWith(
@@ -76,13 +127,12 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  /// Logout user.
-  ///
   /// Clears tokens and resets state.
   Future<void> logout() async {
     try {
       final logoutUseCase = ref.read(logoutUseCaseProvider);
-      await logoutUseCase();
+      // TODO: Get refresh token from storage
+      await logoutUseCase(refreshToken: '');
       state = const AuthState();
     } catch (e) {
       // Even if logout fails on server, clear local state
@@ -96,7 +146,10 @@ class AuthNotifier extends Notifier<AuthState> {
   ///
   /// Loads current user nếu có token hợp lệ.
   Future<void> checkAuth() async {
-    state = state.copyWith(isLoading: true);
+    // Don't set loading if already loading to avoid UI flicker
+    if (!state.isLoading) {
+      state = state.copyWith(isLoading: true);
+    }
 
     try {
       final getCurrentUserUseCase = ref.read(getCurrentUserUseCaseProvider);
@@ -107,12 +160,14 @@ class AuthNotifier extends Notifier<AuthState> {
           isLoading: false,
           isAuthenticated: true,
           user: user,
+          error: null,
         );
       } else {
         state = state.copyWith(
           isLoading: false,
           isAuthenticated: false,
           user: null,
+          error: null,
         );
       }
     } catch (e) {
@@ -120,6 +175,7 @@ class AuthNotifier extends Notifier<AuthState> {
         isLoading: false,
         isAuthenticated: false,
         user: null,
+        error: null,
       );
     }
   }
@@ -128,7 +184,6 @@ class AuthNotifier extends Notifier<AuthState> {
   ///
   /// Pattern: Centralized error handling cho UI.
   String _mapErrorToMessage(Object error) {
-    // TODO: Import proper exception types from core/network
     if (error.toString().contains('NoInternetException')) {
       return 'Không có kết nối mạng';
     } else if (error.toString().contains('UnauthorizedException')) {

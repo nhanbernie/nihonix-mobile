@@ -6,9 +6,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/network/auth_interceptor.dart'
     show IAuthRefreshService;
 import '../../../../core/network/http_exceptions.dart';
-import '../models/login_request.dart';
 import '../models/login_response.dart';
 import '../models/user_model.dart';
+import '../models/reset_password_request.dart';
 import 'auth_api.dart';
 
 part 'auth_remote_datasource.g.dart';
@@ -32,22 +32,25 @@ class AuthRemoteDataSource implements IAuthRefreshService {
     return AuthRemoteDataSource(AuthApi(dio));
   }
 
+  // NOTE: nó tự động fromJson ở đây
   Future<LoginResponse> login({
-    required String email,
+    required String username,
     required String password,
   }) async {
     try {
-      final request = LoginRequest(email: email, password: password);
-      return await _api.login(request);
+      return await _api.login({
+        'username': username,
+        'password': password,
+      });
     } on DioException {
       // AuthInterceptor đã map errors sang custom exceptions
       rethrow;
     }
   }
 
-  Future<void> logout() async {
+  Future<void> logout({required String refreshToken}) async {
     try {
-      await _api.logout();
+      await _api.logout({'refreshToken': refreshToken});
     } on DioException {
       rethrow;
     }
@@ -61,16 +64,18 @@ class AuthRemoteDataSource implements IAuthRefreshService {
     }
   }
 
-  Future<LoginResponse> register({
+  Future<UserModel> register({
+    required String username,
     required String email,
     required String password,
-    required String name,
+    String? fullName,
   }) async {
     try {
       final body = {
+        'username': username,
         'email': email,
         'password': password,
-        'name': name,
+        if (fullName != null) 'full_name': fullName,
       };
       return await _api.register(body);
     } on DioException {
@@ -86,15 +91,35 @@ class AuthRemoteDataSource implements IAuthRefreshService {
     }
   }
 
+  Future<Map<String, dynamic>> verifyResetCode({required String code}) async {
+    try {
+      final response = await _api.verifyResetCode({'code': code});
+      return {
+        'valid': response.valid,
+        'token': response.token,
+      };
+    } on DioException {
+      rethrow;
+    }
+  }
+
   Future<void> resetPassword({
     required String token,
-    required String newPassword,
+    required String password,
   }) async {
     try {
-      await _api.resetPassword({
-        'token': token,
-        'new_password': newPassword,
-      });
+      await _api.resetPassword(ResetPasswordRequest(
+        token: token,
+        password: password,
+      ));
+    } on DioException {
+      rethrow;
+    }
+  }
+
+  Future<void> resendCode({required String email}) async {
+    try {
+      await _api.resendCode({'email': email});
     } on DioException {
       rethrow;
     }
@@ -106,12 +131,12 @@ class AuthRemoteDataSource implements IAuthRefreshService {
   ) async {
     try {
       final response = await _api.refreshToken({
-        'refresh_token': refreshToken,
+        'refreshToken': refreshToken,
       });
 
       return (
-        accessToken: response['access_token']!,
-        refreshToken: response['refresh_token']!,
+        accessToken: response['accessToken'] as String,
+        refreshToken: response['refreshToken'] as String,
       );
     } on DioException catch (e) {
       // Nếu refresh thất bại, throw UnauthorizedException

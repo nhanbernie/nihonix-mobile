@@ -11,7 +11,7 @@ library;
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../core/network/auth_interceptor.dart' show TokenStore;
+import '../../../../core/constants/env_config.dart';
 import '../../../../core/storage/token_store.dart';
 import '../../data/datasources/auth_api.dart';
 import '../../data/datasources/auth_remote_datasource.dart';
@@ -20,6 +20,7 @@ import '../../domain/repositories/auth_repository.dart';
 import '../../domain/usecases/get_current_user.dart';
 import '../../domain/usecases/login.dart';
 import '../../domain/usecases/logout.dart';
+import '../../domain/usecases/register.dart';
 
 part 'auth_di.g.dart';
 
@@ -28,9 +29,9 @@ part 'auth_di.g.dart';
 Dio authDio(Ref ref) {
   return Dio(
     BaseOptions(
-      baseUrl: 'https://api.example.com',
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 20),
+      baseUrl: EnvConfig.apiBaseUrl, // Sử dụng EnvConfig
+      connectTimeout: Duration(milliseconds: EnvConfig.apiTimeout),
+      receiveTimeout: Duration(milliseconds: EnvConfig.apiTimeout),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -56,7 +57,7 @@ AuthRemoteDataSource authRemoteDataSource(Ref ref) {
 /// Provider cho TokenStore.
 @riverpod
 TokenStore tokenStore(Ref ref) {
-  return HiveTokenStore();
+  return SecureTokenStore();
 }
 
 /// Provider cho AuthRepository.
@@ -93,4 +94,11 @@ LogoutUseCase logoutUseCase(Ref ref) {
 GetCurrentUserUseCase getCurrentUserUseCase(Ref ref) {
   final repository = ref.watch(authRepositoryProvider);
   return GetCurrentUserUseCase(repository);
+}
+
+/// Provider cho RegisterUseCase.
+@riverpod
+RegisterUseCase registerUseCase(Ref ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return RegisterUseCase(repository);
 }

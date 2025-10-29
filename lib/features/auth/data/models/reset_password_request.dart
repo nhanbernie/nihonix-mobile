@@ -1,15 +1,21 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+// import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'reset_password_request.freezed.dart';
-part 'reset_password_request.g.dart';
+// part 'reset_password_request.freezed.dart';
+// part 'reset_password_request.g.dart';
 
-@freezed
-sealed class ResetPasswordRequest with _$ResetPasswordRequest {
-  const factory ResetPasswordRequest({
-    required String token,
-    required String password,
-  }) = _ResetPasswordRequest;
+class ResetPasswordRequest {
+  final String token;
+  final String password;
 
-  factory ResetPasswordRequest.fromJson(Map<String, dynamic> json) =>
-      _$ResetPasswordRequestFromJson(json);
+  const ResetPasswordRequest({
+    required this.token,
+    required this.password,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'token': token,
+      'password': password,
+    };
+  }
 }

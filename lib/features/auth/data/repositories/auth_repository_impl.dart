@@ -129,7 +129,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Map<String, String>> verifyResetCode({required String code}) async {
+  Future<Map<String, dynamic>> verifyResetCode({required String code}) async {
     try {
       return await _remoteDataSource.verifyResetCode(code: code);
     } catch (e) {

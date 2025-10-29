@@ -37,7 +37,7 @@ abstract class AuthRepository {
 
   Future<void> forgotPassword({required String email});
 
-  Future<Map<String, String>> verifyResetCode({required String code});
+  Future<Map<String, dynamic>> verifyResetCode({required String code});
 
   Future<void> resetPassword({
     required String token,

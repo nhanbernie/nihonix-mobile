@@ -8,6 +8,7 @@ import '../../../../core/network/auth_interceptor.dart'
 import '../../../../core/network/http_exceptions.dart';
 import '../models/login_response.dart';
 import '../models/user_model.dart';
+import '../models/reset_password_request.dart';
 import 'auth_api.dart';
 
 part 'auth_remote_datasource.g.dart';
@@ -90,9 +91,13 @@ class AuthRemoteDataSource implements IAuthRefreshService {
     }
   }
 
-  Future<Map<String, String>> verifyResetCode({required String code}) async {
+  Future<Map<String, dynamic>> verifyResetCode({required String code}) async {
     try {
-      return await _api.verifyResetCode({'code': code});
+      final response = await _api.verifyResetCode({'code': code});
+      return {
+        'valid': response.valid,
+        'token': response.token,
+      };
     } on DioException {
       rethrow;
     }
@@ -103,10 +108,10 @@ class AuthRemoteDataSource implements IAuthRefreshService {
     required String password,
   }) async {
     try {
-      await _api.resetPassword({
-        'token': token,
-        'password': password,
-      });
+      await _api.resetPassword(ResetPasswordRequest(
+        token: token,
+        password: password,
+      ));
     } on DioException {
       rethrow;
     }

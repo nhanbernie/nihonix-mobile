@@ -10,6 +10,8 @@ import '../../features/splash/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../storage/welcome_preferences.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
+import '../../features/auth/presentation/pages/verify_code_page.dart';
+import '../../features/auth/presentation/pages/reset_password_page.dart';
 
 /// App routes configuration using GoRouter
 class AppRouter {
@@ -20,6 +22,8 @@ class AppRouter {
   static const String register = '/register';
   static const String profile = '/profile';
   static const String forgotPassword = '/forgotPassword';
+  static const String verifyCode = '/verifyCode';
+  static const String resetPassword = '/resetPassword';
 
   static final GoRouter router = GoRouter(
     initialLocation: splash,
@@ -111,6 +115,23 @@ class AppRouter {
         path: forgotPassword,
         name: 'forgotPassword',
         builder: (context, state) => const ForgotPasswordPage(),
+      ),
+
+      // Verify code route
+      GoRoute(
+        path: verifyCode,
+        name: 'verifyCode',
+        builder: (context, state) {
+          final email = state.uri.queryParameters['email'] ?? '';
+          return VerifyCodePage(email: email);
+        },
+      ),
+
+      // Reset password route
+      GoRoute(
+        path: resetPassword,
+        name: 'resetPassword',
+        builder: (context, state) => const ResetPasswordPage(),
       ),
 
       // Profile route

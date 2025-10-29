@@ -5,6 +5,8 @@ import 'package:retrofit/retrofit.dart';
 
 import '../models/login_response.dart';
 import '../models/user_model.dart';
+import '../models/verify_code_response.dart';
+import '../models/reset_password_request.dart';
 
 part 'auth_api.g.dart';
 
@@ -32,10 +34,10 @@ abstract class AuthApi {
   Future<Map<String, String>> forgotPassword(@Body() Map<String, String> body);
 
   @POST('/auth/verify-reset-code')
-  Future<Map<String, String>> verifyResetCode(@Body() Map<String, String> body);
+  Future<VerifyCodeResponse> verifyResetCode(@Body() Map<String, String> body);
 
   @POST('/auth/reset-password')
-  Future<Map<String, String>> resetPassword(@Body() Map<String, String> body);
+  Future<Map<String, String>> resetPassword(@Body() ResetPasswordRequest body);
 
   @POST('/auth/resend-code')
   Future<Map<String, String>> resendCode(@Body() Map<String, String> body);

@@ -94,7 +94,6 @@ class _SplashPageState extends ConsumerState<SplashPage>
       await authNotifier.checkAuth();
     } catch (e) {
       // If auth check fails, continue anyway
-      print('Auth check failed: $e');
     }
 
     // Wait 4 seconds
@@ -117,7 +116,6 @@ class _SplashPageState extends ConsumerState<SplashPage>
       }
     } catch (e) {
       // If navigation fails, go to welcome as fallback
-      print('Navigation failed: $e');
       if (mounted) {
         context.go(AppRouter.welcome);
       }

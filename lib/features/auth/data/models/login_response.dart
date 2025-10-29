@@ -1,6 +1,5 @@
 library;
 
-import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'user_model.dart';
 
@@ -31,15 +30,11 @@ sealed class LoginResponse with _$LoginResponse {
   ///   "statusCode": 200
   /// }
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
-    debugPrint('🔍 [LoginResponse] Parsing JSON: $json');
-
     // Lấy data object từ response
     final data = json['data'] as Map<String, dynamic>?;
     if (data == null) {
       throw FormatException('Data field is null in login response');
     }
-
-    debugPrint('🔍 [LoginResponse] Data object: $data');
 
     // Lấy user object từ data
     final userData = data['user'] as Map<String, dynamic>?;
@@ -47,16 +42,9 @@ sealed class LoginResponse with _$LoginResponse {
       throw FormatException('User data is null in login response');
     }
 
-    debugPrint('🔍 [LoginResponse] User data: $userData');
-
     // Lấy tokens từ data (API dùng accessToken, refreshToken chứ không phải access_token, refresh_token)
     final accessToken = data['accessToken'] as String? ?? '';
     final refreshToken = data['refreshToken'] as String? ?? '';
-
-    debugPrint(
-        '🔍 [LoginResponse] Access token: ${accessToken.substring(0, 20)}...');
-    debugPrint(
-        '🔍 [LoginResponse] Refresh token: ${refreshToken.substring(0, 20)}...');
 
     return LoginResponse(
       user: UserModel.fromJson(userData),

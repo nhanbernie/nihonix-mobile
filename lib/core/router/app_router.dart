@@ -33,10 +33,6 @@ class AppRouter {
         final container = ProviderScope.containerOf(context);
         final authState = container.read(authProvider);
 
-        // Debug logging
-        print(
-            'Router redirect: location=$location, isFirstTime=$isFirstTime, isAuthenticated=${authState.isAuthenticated}');
-
         if (location == splash) {
           // Splash page should handle its own navigation
           return null;
@@ -72,7 +68,6 @@ class AppRouter {
 
         return null;
       } catch (e) {
-        print('Router redirect error: $e');
         // Fallback to welcome page
         return welcome;
       }

@@ -31,6 +31,7 @@ class AuthRemoteDataSource implements IAuthRefreshService {
     return AuthRemoteDataSource(AuthApi(dio));
   }
 
+  // NOTE: nó tự động fromJson ở đây
   Future<LoginResponse> login({
     required String username,
     required String password,

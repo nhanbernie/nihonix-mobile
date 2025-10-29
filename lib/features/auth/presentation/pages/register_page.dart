@@ -231,7 +231,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             ),
             const SizedBox(height: 24),
 
-            // Already have account? Sign in
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

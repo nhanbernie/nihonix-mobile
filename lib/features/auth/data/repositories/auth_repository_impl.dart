@@ -1,9 +1,10 @@
 library;
 
 import 'package:nihonix/core/network/http_exceptions.dart';
-import 'package:nihonix/core/network/auth_interceptor.dart' show TokenStore;
+import 'package:nihonix/core/storage/token_store.dart';
 import 'package:nihonix/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:nihonix/features/auth/domain/entities/user.dart';
+import 'package:nihonix/features/auth/domain/entities/login_result.dart';
 import 'package:nihonix/features/auth/domain/repositories/auth_repository.dart';
 
 /// Concrete implementation của AuthRepository.
@@ -24,7 +25,7 @@ class AuthRepositoryImpl implements AuthRepository {
         _tokenStore = tokenStore;
 
   @override
-  Future<User> login({
+  Future<LoginResult> login({
     required String username,
     required String password,
   }) async {
@@ -35,14 +36,17 @@ class AuthRepositoryImpl implements AuthRepository {
         password: password,
       );
 
-      // 2. Save tokens
-      await _tokenStore.saveAccessToken(loginResponse.accessToken);
+      // 2. Save refreshToken to secure storage
       await _tokenStore.saveRefreshToken(loginResponse.refreshToken);
+      // Note: accessToken sẽ được lưu vào AuthState (RAM) bởi AuthProvider
 
-      // 3. Convert Data Model -> Domain Entity
-      return loginResponse.user.toDomain();
+      // 3. Convert Data Model -> Domain Entity và return LoginResult
+      return LoginResult(
+        user: loginResponse.user.toDomain(),
+        accessToken: loginResponse.accessToken,
+      );
 
-      // Note: Tokens đã được lưu vào TokenStore
+      // Note: refreshToken đã được lưu vào SecureStorage
     } catch (e) {
       // Re-throw domain exceptions
       // Data layer exceptions đã được map sang HttpException bởi AuthInterceptor

@@ -5,8 +5,8 @@ import 'package:nihonix/core/network/network_info.dart';
 import 'package:nihonix/core/storage/token_store.dart';
 
 /// Provider cho TokenStore
-final tokenStoreProvider = Provider<HiveTokenStore>((ref) {
-  return HiveTokenStore();
+final tokenStoreProvider = Provider<TokenStore>((ref) {
+  return SecureTokenStore();
 });
 
 /// Provider cho NetworkInfo

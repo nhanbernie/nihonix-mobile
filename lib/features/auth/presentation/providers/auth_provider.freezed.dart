@@ -17,6 +17,7 @@ mixin _$AuthState {
   bool get isLoading;
   bool get isAuthenticated;
   User? get user;
+  String? get accessToken; // ← Lưu accessToken trong RAM
   String? get error;
 
   /// Create a copy of AuthState
@@ -36,16 +37,18 @@ mixin _$AuthState {
             (identical(other.isAuthenticated, isAuthenticated) ||
                 other.isAuthenticated == isAuthenticated) &&
             (identical(other.user, user) || other.user == user) &&
+            (identical(other.accessToken, accessToken) ||
+                other.accessToken == accessToken) &&
             (identical(other.error, error) || other.error == error));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, isLoading, isAuthenticated, user, error);
+  int get hashCode => Object.hash(
+      runtimeType, isLoading, isAuthenticated, user, accessToken, error);
 
   @override
   String toString() {
-    return 'AuthState(isLoading: $isLoading, isAuthenticated: $isAuthenticated, user: $user, error: $error)';
+    return 'AuthState(isLoading: $isLoading, isAuthenticated: $isAuthenticated, user: $user, accessToken: $accessToken, error: $error)';
   }
 }
 
@@ -54,7 +57,12 @@ abstract mixin class $AuthStateCopyWith<$Res> {
   factory $AuthStateCopyWith(AuthState value, $Res Function(AuthState) _then) =
       _$AuthStateCopyWithImpl;
   @useResult
-  $Res call({bool isLoading, bool isAuthenticated, User? user, String? error});
+  $Res call(
+      {bool isLoading,
+      bool isAuthenticated,
+      User? user,
+      String? accessToken,
+      String? error});
 
   $UserCopyWith<$Res>? get user;
 }
@@ -74,6 +82,7 @@ class _$AuthStateCopyWithImpl<$Res> implements $AuthStateCopyWith<$Res> {
     Object? isLoading = null,
     Object? isAuthenticated = null,
     Object? user = freezed,
+    Object? accessToken = freezed,
     Object? error = freezed,
   }) {
     return _then(_self.copyWith(
@@ -89,6 +98,10 @@ class _$AuthStateCopyWithImpl<$Res> implements $AuthStateCopyWith<$Res> {
           ? _self.user
           : user // ignore: cast_nullable_to_non_nullable
               as User?,
+      accessToken: freezed == accessToken
+          ? _self.accessToken
+          : accessToken // ignore: cast_nullable_to_non_nullable
+              as String?,
       error: freezed == error
           ? _self.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -202,16 +215,16 @@ extension AuthStatePatterns on AuthState {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            bool isLoading, bool isAuthenticated, User? user, String? error)?
+    TResult Function(bool isLoading, bool isAuthenticated, User? user,
+            String? accessToken, String? error)?
         $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _AuthState() when $default != null:
-        return $default(
-            _that.isLoading, _that.isAuthenticated, _that.user, _that.error);
+        return $default(_that.isLoading, _that.isAuthenticated, _that.user,
+            _that.accessToken, _that.error);
       case _:
         return orElse();
     }
@@ -232,15 +245,15 @@ extension AuthStatePatterns on AuthState {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            bool isLoading, bool isAuthenticated, User? user, String? error)
+    TResult Function(bool isLoading, bool isAuthenticated, User? user,
+            String? accessToken, String? error)
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _AuthState():
-        return $default(
-            _that.isLoading, _that.isAuthenticated, _that.user, _that.error);
+        return $default(_that.isLoading, _that.isAuthenticated, _that.user,
+            _that.accessToken, _that.error);
     }
   }
 
@@ -258,15 +271,15 @@ extension AuthStatePatterns on AuthState {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            bool isLoading, bool isAuthenticated, User? user, String? error)?
+    TResult? Function(bool isLoading, bool isAuthenticated, User? user,
+            String? accessToken, String? error)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _AuthState() when $default != null:
-        return $default(
-            _that.isLoading, _that.isAuthenticated, _that.user, _that.error);
+        return $default(_that.isLoading, _that.isAuthenticated, _that.user,
+            _that.accessToken, _that.error);
       case _:
         return null;
     }
@@ -280,6 +293,7 @@ class _AuthState implements AuthState {
       {this.isLoading = false,
       this.isAuthenticated = false,
       this.user,
+      this.accessToken,
       this.error});
 
   @override
@@ -290,6 +304,9 @@ class _AuthState implements AuthState {
   final bool isAuthenticated;
   @override
   final User? user;
+  @override
+  final String? accessToken;
+// ← Lưu accessToken trong RAM
   @override
   final String? error;
 
@@ -311,16 +328,18 @@ class _AuthState implements AuthState {
             (identical(other.isAuthenticated, isAuthenticated) ||
                 other.isAuthenticated == isAuthenticated) &&
             (identical(other.user, user) || other.user == user) &&
+            (identical(other.accessToken, accessToken) ||
+                other.accessToken == accessToken) &&
             (identical(other.error, error) || other.error == error));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, isLoading, isAuthenticated, user, error);
+  int get hashCode => Object.hash(
+      runtimeType, isLoading, isAuthenticated, user, accessToken, error);
 
   @override
   String toString() {
-    return 'AuthState(isLoading: $isLoading, isAuthenticated: $isAuthenticated, user: $user, error: $error)';
+    return 'AuthState(isLoading: $isLoading, isAuthenticated: $isAuthenticated, user: $user, accessToken: $accessToken, error: $error)';
   }
 }
 
@@ -332,7 +351,12 @@ abstract mixin class _$AuthStateCopyWith<$Res>
       __$AuthStateCopyWithImpl;
   @override
   @useResult
-  $Res call({bool isLoading, bool isAuthenticated, User? user, String? error});
+  $Res call(
+      {bool isLoading,
+      bool isAuthenticated,
+      User? user,
+      String? accessToken,
+      String? error});
 
   @override
   $UserCopyWith<$Res>? get user;
@@ -353,6 +377,7 @@ class __$AuthStateCopyWithImpl<$Res> implements _$AuthStateCopyWith<$Res> {
     Object? isLoading = null,
     Object? isAuthenticated = null,
     Object? user = freezed,
+    Object? accessToken = freezed,
     Object? error = freezed,
   }) {
     return _then(_AuthState(
@@ -368,6 +393,10 @@ class __$AuthStateCopyWithImpl<$Res> implements _$AuthStateCopyWith<$Res> {
           ? _self.user
           : user // ignore: cast_nullable_to_non_nullable
               as User?,
+      accessToken: freezed == accessToken
+          ? _self.accessToken
+          : accessToken // ignore: cast_nullable_to_non_nullable
+              as String?,
       error: freezed == error
           ? _self.error
           : error // ignore: cast_nullable_to_non_nullable

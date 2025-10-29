@@ -1,6 +1,6 @@
 library;
 
-import 'package:nihonix/features/auth/domain/entities/user.dart';
+import 'package:nihonix/features/auth/domain/entities/login_result.dart';
 import 'package:nihonix/features/auth/domain/repositories/auth_repository.dart';
 
 /// Use Case: Thực hiện login operation.
@@ -30,13 +30,13 @@ class LoginUseCase {
   /// - [username]: Username hoặc email
   /// - [password]: Plain text password (sẽ được hash ở backend)
   ///
-  /// Returns: [User] object nếu thành công
+  /// Returns: [LoginResult] object với user và accessToken nếu thành công
   ///
   /// Throws:
   /// - [UnauthorizedException]: Sai credentials
   /// - [NoInternetException]: Không có internet
   /// - [ServerException]: Lỗi server
-  Future<User> call({
+  Future<LoginResult> call({
     required String username,
     required String password,
   }) async {

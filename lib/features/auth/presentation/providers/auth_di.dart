@@ -12,7 +12,6 @@ import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/constants/env_config.dart';
-import '../../../../core/network/auth_interceptor.dart' show TokenStore;
 import '../../../../core/storage/token_store.dart';
 import '../../data/datasources/auth_api.dart';
 import '../../data/datasources/auth_remote_datasource.dart';
@@ -58,7 +57,7 @@ AuthRemoteDataSource authRemoteDataSource(Ref ref) {
 /// Provider cho TokenStore.
 @riverpod
 TokenStore tokenStore(Ref ref) {
-  return HiveTokenStore();
+  return SecureTokenStore();
 }
 
 /// Provider cho AuthRepository.

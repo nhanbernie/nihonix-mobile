@@ -3,14 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'http_exceptions.dart';
 import 'api_response.dart';
-
-abstract class TokenStore {
-  Future<String?> readAccessToken();
-  Future<String?> readRefreshToken();
-  Future<void> saveAccessToken(String token);
-  Future<void> saveRefreshToken(String token);
-  Future<void> clear(); // khi logout
-}
+import '../storage/token_store.dart';
 
 /// Kiểm tra kết nối mạng (implementation sẽ dùng connectivity_plus).
 abstract class NetworkInfo {

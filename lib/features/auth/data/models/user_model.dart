@@ -9,6 +9,7 @@
 /// - Extension method để convert sang Domain Entity
 library;
 
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:nihonix/features/auth/domain/entities/user.dart';
 
@@ -50,13 +51,24 @@ sealed class UserModel with _$UserModel {
   /// Factory constructor từ JSON.
   ///
   /// Custom mapping vì API trả về field names khác với model:
-  /// - user_id → id
+  /// - id (int) → id (String)
   /// - full_name → name
   /// - avatar_url → avatar
   /// - created_at → createdAt
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    debugPrint('🔍 [UserModel] Parsing JSON: $json');
+
+    // API trả về id là int, cần convert sang String
+    final idValue = json['id'];
+    final idString =
+        idValue is int ? idValue.toString() : (idValue as String? ?? '');
+
+    debugPrint('🔍 [UserModel] Parsed id: $idString');
+    debugPrint('🔍 [UserModel] Parsed email: ${json['email']}');
+    debugPrint('🔍 [UserModel] Parsed full_name: ${json['full_name']}');
+
     return UserModel(
-      id: json['user_id'] as String? ?? '',
+      id: idString,
       email: json['email'] as String? ?? '',
       name: json['full_name'] as String? ?? '',
       avatar: json['avatar_url'] as String?,

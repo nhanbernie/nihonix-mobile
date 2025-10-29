@@ -18,6 +18,7 @@ sealed class AuthState with _$AuthState {
     @Default(false) bool isLoading,
     @Default(false) bool isAuthenticated,
     User? user,
+    String? accessToken, // ← Lưu accessToken trong RAM
     String? error,
   }) = _AuthState;
 }
@@ -55,7 +56,7 @@ class AuthNotifier extends Notifier<AuthState> {
       final loginUseCase = ref.read(loginUseCaseProvider);
 
       // Delegate business logic to UseCase
-      final user = await loginUseCase(
+      final loginResult = await loginUseCase(
         username: username,
         password: password,
       );
@@ -63,7 +64,8 @@ class AuthNotifier extends Notifier<AuthState> {
       state = state.copyWith(
         isLoading: false,
         isAuthenticated: true,
-        user: user,
+        user: loginResult.user,
+        accessToken: loginResult.accessToken, // ← Lưu accessToken vào state
         error: null,
       );
     } catch (e) {
@@ -125,8 +127,6 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  /// Logout user.
-  ///
   /// Clears tokens and resets state.
   Future<void> logout() async {
     try {
@@ -184,7 +184,6 @@ class AuthNotifier extends Notifier<AuthState> {
   ///
   /// Pattern: Centralized error handling cho UI.
   String _mapErrorToMessage(Object error) {
-    // TODO: Import proper exception types from core/network
     if (error.toString().contains('NoInternetException')) {
       return 'Không có kết nối mạng';
     } else if (error.toString().contains('UnauthorizedException')) {

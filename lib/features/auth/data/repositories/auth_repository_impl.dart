@@ -25,13 +25,13 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<User> login({
-    required String email,
+    required String username,
     required String password,
   }) async {
     try {
       // 1. Gọi remote data source để login
       final loginResponse = await _remoteDataSource.login(
-        email: email,
+        username: username,
         password: password,
       );
 
@@ -51,10 +51,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> logout() async {
+  Future<void> logout({required String refreshToken}) async {
     try {
       try {
-        await _remoteDataSource.logout();
+        await _remoteDataSource.logout(refreshToken: refreshToken);
       } catch (e) {
         // Vẫn xóa local tokens dù API fail
       }
@@ -102,17 +102,14 @@ class AuthRepositoryImpl implements AuthRepository {
     String? fullName,
   }) async {
     try {
-      final loginResponse = await _remoteDataSource.register(
+      final userModel = await _remoteDataSource.register(
         username: username,
         email: email,
         password: password,
         fullName: fullName,
       );
 
-      await _tokenStore.saveAccessToken(loginResponse.accessToken);
-      await _tokenStore.saveRefreshToken(loginResponse.refreshToken);
-
-      return loginResponse.user.toDomain();
+      return userModel.toDomain();
     } catch (e) {
       rethrow;
     }
@@ -128,15 +125,33 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Map<String, String>> verifyResetCode({required String code}) async {
+    try {
+      return await _remoteDataSource.verifyResetCode(code: code);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
   Future<void> resetPassword({
     required String token,
-    required String newPassword,
+    required String password,
   }) async {
     try {
       await _remoteDataSource.resetPassword(
         token: token,
-        newPassword: newPassword,
+        password: password,
       );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> resendCode({required String email}) async {
+    try {
+      await _remoteDataSource.resendCode(email: email);
     } catch (e) {
       rethrow;
     }

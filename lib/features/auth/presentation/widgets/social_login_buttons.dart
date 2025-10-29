@@ -58,7 +58,7 @@ class SocialLoginButtons extends StatelessWidget {
   }) {
     return GestureDetector(
       onTap: onPressed,
-      child: Container(
+      child: SizedBox(
         width: 80,
         height: 80,
         child: Center(child: icon),

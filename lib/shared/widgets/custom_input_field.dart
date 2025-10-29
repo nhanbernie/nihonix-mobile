@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_sizes.dart';
 
 /// Custom input field widget with real-time validation
 class CustomInputField extends StatefulWidget {

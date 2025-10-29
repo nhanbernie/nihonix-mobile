@@ -17,10 +17,16 @@ sealed class LoginResponse with _$LoginResponse {
 
   /// Factory constructor từ JSON với custom mapping.
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
+    // Kiểm tra null trước khi ép kiểu
+    final userData = json['user'];
+    if (userData == null) {
+      throw FormatException('User data is null in login response');
+    }
+
     return LoginResponse(
-      user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
-      accessToken: json['access_token'] as String,
-      refreshToken: json['refresh_token'] as String,
+      user: UserModel.fromJson(userData as Map<String, dynamic>),
+      accessToken: json['access_token'] as String? ?? '',
+      refreshToken: json['refresh_token'] as String? ?? '',
     );
   }
 

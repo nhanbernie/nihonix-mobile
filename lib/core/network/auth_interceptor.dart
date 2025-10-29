@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'http_exceptions.dart';
+import 'api_response.dart';
 
 abstract class TokenStore {
   Future<String?> readAccessToken();
@@ -79,7 +80,10 @@ class AuthInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     try {
-      // 1. Kiểm tra kết nối mạng trước khi gửi request
+      // 1. Log full URL để debug
+      _logDebug('Full URL: ${options.uri}');
+
+      // 2. Kiểm tra kết nối mạng trước khi gửi request
       final isConnected = await _networkInfo.isConnected;
       if (!isConnected) {
         _logDebug('No internet connection');
@@ -109,6 +113,34 @@ class AuthInterceptor extends Interceptor {
           error: e,
         ),
       );
+    }
+  }
+
+  @override
+  Future<void> onResponse(
+    Response response,
+    ResponseInterceptorHandler handler,
+  ) async {
+    try {
+      _logDebug(
+          'Response ${response.statusCode} - ${response.requestOptions.path}');
+
+      if (response.data is Map<String, dynamic>) {
+        final data = response.data as Map<String, dynamic>;
+
+        if (!data.containsKey('success') || !data.containsKey('message')) {
+          response.data = ApiResponseSuccess.create(
+            data: data,
+            message: 'Success',
+            statusCode: response.statusCode,
+          ).toJson((data) => data);
+        }
+      }
+
+      handler.next(response);
+    } catch (e) {
+      _logDebug('Error in onResponse: $e');
+      handler.next(response);
     }
   }
 
@@ -314,10 +346,23 @@ class AuthInterceptor extends Interceptor {
 
     // Extract message từ response nếu có
     String? extractedMessage;
+    dynamic errors;
+    int? responseStatusCode;
+
     if (data is Map<String, dynamic>) {
-      extractedMessage = data['message'] as String? ??
-          data['error'] as String? ??
-          data['msg'] as String?;
+      // Kiểm tra nếu response đã có format ApiResponse
+      if (data.containsKey('success') && data.containsKey('message')) {
+        extractedMessage = data['message'] as String?;
+        errors = data['errors'];
+        responseStatusCode = data['statusCode'] as int?;
+      } else {
+        // Fallback cho response cũ
+        extractedMessage = data['message'] as String? ??
+            data['error'] as String? ??
+            data['msg'] as String?;
+        errors = data['errors'] ?? data['validation_errors'];
+        responseStatusCode = statusCode;
+      }
     }
 
     // Handle specific status codes
@@ -325,25 +370,25 @@ class AuthInterceptor extends Interceptor {
       return BadRequestException(
         message: extractedMessage,
         requestOptions: requestOptions,
-        data: data,
+        data: errors ?? data,
       );
     } else if (statusCode == 401) {
       return UnauthorizedException(
         message: extractedMessage,
         requestOptions: requestOptions,
-        data: data,
+        data: errors ?? data,
       );
     } else if (statusCode == 403) {
       return ForbiddenException(
         message: extractedMessage,
         requestOptions: requestOptions,
-        data: data,
+        data: errors ?? data,
       );
     } else if (statusCode == 404) {
       return NotFoundException(
         message: extractedMessage,
         requestOptions: requestOptions,
-        data: data,
+        data: errors ?? data,
       );
     } else if (statusCode == 408) {
       return RequestTimeoutException(
@@ -353,9 +398,9 @@ class AuthInterceptor extends Interceptor {
     } else if (statusCode != null && statusCode >= 500 && statusCode < 600) {
       return ServerException(
         message: extractedMessage,
-        statusCode: statusCode,
+        statusCode: responseStatusCode ?? statusCode,
         requestOptions: requestOptions,
-        data: data,
+        data: errors ?? data,
       );
     }
 
@@ -375,9 +420,9 @@ class AuthInterceptor extends Interceptor {
 
     return UnknownHttpException(
       message: extractedMessage ?? err.message,
-      statusCode: statusCode,
+      statusCode: responseStatusCode ?? statusCode,
       requestOptions: requestOptions,
-      data: data,
+      data: errors ?? data,
     );
   }
 

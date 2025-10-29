@@ -56,12 +56,13 @@ sealed class UserModel with _$UserModel {
   /// - created_at → createdAt
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['user_id'] as String,
-      email: json['email'] as String,
-      name: json['full_name'] as String,
+      id: json['user_id'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      name: json['full_name'] as String? ?? '',
       avatar: json['avatar_url'] as String?,
       role: json['role'] as String? ?? 'user',
-      createdAt: DateTime.parse(json['created_at'] as String),
+      createdAt: DateTime.tryParse(json['created_at'] as String? ?? '') ??
+          DateTime.now(),
     );
   }
 

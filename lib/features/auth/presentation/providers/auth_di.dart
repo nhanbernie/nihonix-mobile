@@ -11,6 +11,7 @@ library;
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/constants/env_config.dart';
 import '../../../../core/network/auth_interceptor.dart' show TokenStore;
 import '../../../../core/storage/token_store.dart';
 import '../../data/datasources/auth_api.dart';
@@ -29,9 +30,9 @@ part 'auth_di.g.dart';
 Dio authDio(Ref ref) {
   return Dio(
     BaseOptions(
-      baseUrl: 'https://api.example.com',
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 20),
+      baseUrl: EnvConfig.apiBaseUrl, // Sử dụng EnvConfig
+      connectTimeout: Duration(milliseconds: EnvConfig.apiTimeout),
+      receiveTimeout: Duration(milliseconds: EnvConfig.apiTimeout),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

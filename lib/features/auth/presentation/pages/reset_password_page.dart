@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:formz/formz.dart';
-
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/validation/models/password.dart';
 import '../../../../core/validation/validation_errors.dart';
 import '../../../../shared/widgets/custom_input_field.dart';
@@ -26,28 +23,19 @@ class ResetPasswordPage extends ConsumerStatefulWidget {
 class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
   final _formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
 
   // Formz model
   Password _password = const Password.pure();
-  Password _confirmPassword = const Password.pure();
 
   @override
   void dispose() {
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   void _onPasswordChanged(String value) {
     setState(() {
       _password = Password.dirty(value);
-    });
-  }
-
-  void _onConfirmPasswordChanged(String value) {
-    setState(() {
-      _confirmPassword = Password.dirty(value);
     });
   }
 
@@ -103,12 +91,14 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
 
           // Confirm password field
           CustomInputField(
-            controller: _confirmPasswordController,
+            controller: _passwordController,
             labelText: 'Xác nhận mật khẩu',
             prefixIcon: Icons.lock_outline,
             obscureText: true,
             validator: _validateConfirmPassword,
-            onChanged: _onConfirmPasswordChanged,
+            onChanged: (value) {
+              // Handle confirm password change if needed
+            },
           ),
         ],
       ),

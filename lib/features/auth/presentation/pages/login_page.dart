@@ -11,7 +11,6 @@ import '../../../../core/validation/models/password.dart';
 import '../../../../core/validation/validation_errors.dart';
 import '../../../../core/storage/username_storage.dart';
 import '../../../../shared/widgets/custom_input_field.dart';
-import '../../../../shared/widgets/auth_form.dart';
 import '../../../../shared/layouts/auth_layout.dart';
 import '../widgets/remember_me_checkbox.dart';
 import '../widgets/social_login_buttons.dart';
@@ -108,7 +107,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final authNotifier = ref.read(authProvider.notifier);
 
     await authNotifier.login(
-      email: _usernameController.text.trim(),
+      username: _usernameController.text.trim(),
       password: _passwordController.text,
     );
 

@@ -27,7 +27,7 @@ class LoginUseCase {
   /// ```
   ///
   /// Parameters:
-  /// - [email]: Email address
+  /// - [username]: Username hoặc email
   /// - [password]: Plain text password (sẽ được hash ở backend)
   ///
   /// Returns: [User] object nếu thành công
@@ -37,15 +37,11 @@ class LoginUseCase {
   /// - [NoInternetException]: Không có internet
   /// - [ServerException]: Lỗi server
   Future<User> call({
-    required String email,
+    required String username,
     required String password,
   }) async {
-    if (email.isEmpty || password.isEmpty) {
-      throw ArgumentError('Email và password không được để trống');
-    }
-
-    if (!email.contains('@')) {
-      throw ArgumentError('Email không hợp lệ');
+    if (username.isEmpty || password.isEmpty) {
+      throw ArgumentError('Username và password không được để trống');
     }
 
     if (password.length < 6) {
@@ -53,7 +49,7 @@ class LoginUseCase {
     }
 
     return await _repository.login(
-      email: email.trim().toLowerCase(),
+      username: username.trim(),
       password: password,
     );
   }

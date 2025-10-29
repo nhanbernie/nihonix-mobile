@@ -17,11 +17,11 @@ abstract class AuthRepository {
   /// - [NoInternetException]: Không có internet
   /// - [ServerException]: Lỗi server
   Future<User> login({
-    required String email,
+    required String username,
     required String password,
   });
 
-  Future<void> logout();
+  Future<void> logout({required String refreshToken});
 
   Future<User?> getCurrentUser();
 
@@ -36,8 +36,12 @@ abstract class AuthRepository {
 
   Future<void> forgotPassword({required String email});
 
+  Future<Map<String, String>> verifyResetCode({required String code});
+
   Future<void> resetPassword({
     required String token,
-    required String newPassword,
+    required String password,
   });
+
+  Future<void> resendCode({required String email});
 }

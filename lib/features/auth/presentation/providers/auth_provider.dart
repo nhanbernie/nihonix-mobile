@@ -37,12 +37,12 @@ class AuthNotifier extends Notifier<AuthState> {
     return const AuthState();
   }
 
-  /// Login với email và password.
+  /// Login với username và password.
   ///
   /// Clean Architecture flow:
   /// UI -> AuthNotifier -> LoginUseCase -> AuthRepository -> AuthRemoteDataSource -> API
   Future<void> login({
-    required String email,
+    required String username,
     required String password,
   }) async {
     // Only set loading if not already loading
@@ -56,7 +56,7 @@ class AuthNotifier extends Notifier<AuthState> {
 
       // Delegate business logic to UseCase
       final user = await loginUseCase(
-        email: email,
+        username: username,
         password: password,
       );
 
@@ -131,7 +131,8 @@ class AuthNotifier extends Notifier<AuthState> {
   Future<void> logout() async {
     try {
       final logoutUseCase = ref.read(logoutUseCaseProvider);
-      await logoutUseCase();
+      // TODO: Get refresh token from storage
+      await logoutUseCase(refreshToken: '');
       state = const AuthState();
     } catch (e) {
       // Even if logout fails on server, clear local state

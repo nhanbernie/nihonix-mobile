@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/l10n/locale_keys.dart';
 
@@ -39,7 +40,6 @@ class SocialLoginButtons extends StatelessWidget {
               icon: _buildGoogleIcon(),
               onPressed: _handleGoogleLogin,
             ),
-            const SizedBox(width: AppSizes.s16),
             _buildIconButton(
               context,
               icon: _buildFacebookIcon(),
@@ -68,11 +68,11 @@ class SocialLoginButtons extends StatelessWidget {
 
   Widget _buildGoogleIcon() {
     return Container(
-      width: 30,
-      height: 30,
+      width: 40,
+      height: 40,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(AppSizes.radiusXXLarge),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -81,11 +81,11 @@ class SocialLoginButtons extends StatelessWidget {
           ),
         ],
       ),
-      child: const Center(
-        child: Icon(
-          Icons.g_mobiledata,
-          color: Color(0xFF4285F4), // Google blue
-          size: 20,
+      child: Center(
+        child: SvgPicture.asset(
+          'assets/icons/svg/google-logo.svg',
+          width: 30,
+          height: 30,
         ),
       ),
     );
@@ -93,17 +93,25 @@ class SocialLoginButtons extends StatelessWidget {
 
   Widget _buildFacebookIcon() {
     return Container(
-      width: 30,
-      height: 30,
-      decoration: const BoxDecoration(
-        color: Color(0xFF1877F2), // Facebook blue
-        shape: BoxShape.circle,
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: Colors.white, // Facebook blue
+        // shape: BoxShape.circle,
+        borderRadius: BorderRadius.circular(AppSizes.radiusXXLarge),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      child: const Center(
-        child: Icon(
-          Icons.facebook,
-          color: Colors.white,
-          size: 20,
+      child: Center(
+        child: SvgPicture.asset(
+          'assets/icons/svg/facebook-logo.svg',
+          width: 30,
+          height: 30,
         ),
       ),
     );

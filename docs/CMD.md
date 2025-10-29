@@ -40,3 +40,23 @@ dùng lệnh này để load lại icon cho cả app
 
 flutter pub run flutter_native_splash:create
 dùng lệnh này để config vào splash
+
+
+
+
+
+
+
+khai bóa hình trong assets 
+@svg/ 2 cái logo svg này nhé
+sau đó cài thư viện
+flutter pub add flutter_svg
+
+SvgPicture.asset(
+  'assets/icons/google.svg',
+  width: 32,
+  height: 32,
+)
+
+đây là cách dùng thay vì
+dùng cách tôi vào 

@@ -34,4 +34,6 @@ abstract class AuthApi {
 
   @POST('/auth/refresh')
   Future<Map<String, String>> refreshToken(@Body() Map<String, String> body);
+
+  
 }

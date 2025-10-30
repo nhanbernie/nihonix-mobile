@@ -16,7 +16,7 @@ import '../widgets/remember_me_checkbox.dart';
 import '../widgets/social_login_buttons.dart';
 import '../providers/auth_provider.dart';
 
-/// LoginPage với Clean Architecture & Riverpod.
+/// LoginPage với Riverpod.
 /// - ConsumerStatefulWidget để access Riverpod providers
 /// - Không có business logic, chỉ UI và state management
 /// - Delegate authentication logic cho AuthProvider
@@ -31,7 +31,6 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
-  // Form key để validate tất cả fields
   final _formKey = GlobalKey<FormState>();
 
   // Controllers cho TextFormFields
@@ -71,30 +70,24 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     }
   }
 
-  /// Handle username change with formz validation
   void _onUsernameChanged(String value) {
     setState(() {
       _username = Username.dirty(value);
     });
   }
 
-  /// Handle password change with formz validation
   void _onPasswordChanged(String value) {
     setState(() {
       _password = Password.dirty(value);
     });
   }
 
-  /// Handle remember me checkbox change
   void _onRememberMeChanged(bool value) {
     setState(() {
       _rememberMe = value;
     });
   }
 
-  /// Handle login với Clean Architecture pattern.
-  ///
-  /// Flow:
   /// 1. Validate form
   /// 2. Call AuthProvider.login() -> LoginUseCase -> Repository
   /// 3. Listen to AuthState changes via ref.watch()
@@ -103,12 +96,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     // Validate form
     if (!_formKey.currentState!.validate()) return;
 
-    // Get AuthNotifier and call login
+    // Get AuthNotifier and call login giống như dispatch
     final authNotifier = ref.read(authProvider.notifier);
 
     await authNotifier.login(
       username: _usernameController.text.trim(),
-      password: _passwordController.text,
+      password: _passwordController.text.trim(),
     );
 
     // Check result
@@ -157,7 +150,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Watch AuthState for reactive UI updates
     final authState = ref.watch(authProvider);
     final isLoading = authState.isLoading;
 
@@ -165,7 +157,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       title: LocaleKeys.auth_welcome_back.tr(),
       subtitle: LocaleKeys.auth_sign_in_to_access.tr(),
       illustrationPath: 'assets/images/login_illustration.png',
-      showSocialLogin: false, // Tắt social login trong AuthLayout
+      showSocialLogin: false,
       child: Form(
         key: _formKey,
         child: Column(
@@ -209,8 +201,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Remember me checkbox
-                RememberMeCheckbox(
+                  RememberMeCheckbox(
                   initialValue: _rememberMe,
                   onChanged: _onRememberMeChanged,
                 ),

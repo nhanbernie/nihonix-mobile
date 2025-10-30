@@ -15,20 +15,6 @@ sealed class LoginResponse with _$LoginResponse {
     required String refreshToken,
   }) = _LoginResponse;
 
-  /// Factory constructor từ JSON với custom mapping.
-  ///
-  /// API Response structure:
-  /// {
-  ///   "success": true,
-  ///   "message": "...",
-  ///   "data": {
-  ///     "user": { "id": 1, "username": "...", "email": "...", "full_name": "..." },
-  ///     "accessToken": "...",
-  ///     "refreshToken": "..."
-  ///   },
-  ///   "errors": null,
-  ///   "statusCode": 200
-  /// }
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     // Lấy data object từ response
     final data = json['data'] as Map<String, dynamic>?;

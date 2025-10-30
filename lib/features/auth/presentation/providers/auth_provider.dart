@@ -6,8 +6,6 @@ import 'auth_di.dart'; // Provides: loginUseCaseProvider, logoutUseCaseProvider,
 
 part 'auth_provider.freezed.dart';
 
-/// State cho authentication với Clean Architecture pattern.
-///
 /// State chứa:
 /// - User entity từ Domain layer (không phải Model từ Data layer)
 /// - Loading, error states cho UI
@@ -23,9 +21,7 @@ sealed class AuthState with _$AuthState {
   }) = _AuthState;
 }
 
-/// AuthNotifier với Clean Architecture pattern.
-///
-/// Responsibilities:
+/// AuthNotifier
 /// - Quản lý AuthState (UI state)
 /// - Delegate business logic cho UseCases
 /// - Không biết về Data layer (Repository, API, Models)
@@ -38,10 +34,7 @@ class AuthNotifier extends Notifier<AuthState> {
     return const AuthState();
   }
 
-  /// Login với username và password.
-  ///
-  /// Clean Architecture flow:
-  /// UI -> AuthNotifier -> LoginUseCase -> AuthRepository -> AuthRemoteDataSource -> API
+  /// UI -> AuthNotifier (tự động trỏ tới UseCase) -> LoginUseCase -> AuthRepository -> AuthRemoteDataSource -> API
   Future<void> login({
     required String username,
     required String password,

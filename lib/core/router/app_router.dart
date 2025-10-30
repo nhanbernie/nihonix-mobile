@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
+import 'package:nihonix/shared/layouts/main_layout.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
@@ -7,6 +8,7 @@ import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/welcome/presentation/pages/welcome_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
+import '../../features/lesson/presentation/pages/lesson_page.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../storage/welcome_preferences.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
@@ -21,6 +23,8 @@ class AppRouter {
   static const String login = '/login';
   static const String register = '/register';
   static const String profile = '/profile';
+  static const String lesson = '/lesson';
+  static const String exercise = '/exercise';
   static const String forgotPassword = '/forgotPassword';
   static const String verifyCode = '/verifyCode';
   static const String resetPassword = '/resetPassword';
@@ -28,6 +32,15 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     initialLocation: splash,
     redirect: (context, state) async {
+      final location = state.matchedLocation;
+      final prefs = WelcomePreferences();
+      final isFirstTime = await prefs.isFirstTime();
+
+      // Splash logic: Only show on first app start
+      if (location == splash) {
+        // If already seen welcome, skip splash and go directly to home
+        if (!isFirstTime) {
+          return home;
       try {
         final location = state.matchedLocation;
         final prefs = WelcomePreferences();
@@ -92,11 +105,6 @@ class AppRouter {
       ),
 
       // Home route
-      GoRoute(
-        path: home,
-        name: 'home',
-        builder: (context, state) => const HomePage(),
-      ),
 
       // Auth routes
       GoRoute(
@@ -105,6 +113,34 @@ class AppRouter {
         builder: (context, state) => const LoginPage(),
       ),
 
+      // Các route dùng chung main layout
+      ShellRoute(
+          builder: (context, state, child) {
+            return MainLayout(child: child);
+          },
+          routes: [
+            GoRoute(
+              path: home,
+              name: 'home',
+              builder: (context, state) => const HomePage(),
+            ),
+            GoRoute(
+              path: lesson,
+              name: 'lesson',
+              builder: (context, state) {
+                return LessonPage();
+              },
+            ),
+            GoRoute(
+              path: profile,
+              name: 'profile',
+              builder: (context, state) {
+                // Get userId from query parameters
+                final userId = state.uri.queryParameters['userId'] ?? '1';
+                return ProfilePage(userId: int.tryParse(userId) ?? 1);
+              },
+            ),
+          ])
       GoRoute(
         path: register,
         name: 'register',

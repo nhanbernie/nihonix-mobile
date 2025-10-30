@@ -97,6 +97,7 @@ class _WelcomePageState extends State<WelcomePage> {
               child: SafeArea(
                 child: Column(
                   children: [
+                    // PageView with slides
                     // PageView with slides giống như carosel bên web
                     Expanded(
                       child: PageView(
@@ -107,12 +108,16 @@ class _WelcomePageState extends State<WelcomePage> {
                           });
                         },
                         children: const [
+                          // TestSlide(title: 'Slide 1', color: Colors.blue),
+                          // TestSlide(title: 'Slide 2', color: Colors.green),
+                          // TestSlide(title: 'Slide 3', color: Colors.orange),
                           WelcomeSlide1(),
                           WelcomeSlide2(),
                           WelcomeSlide3(),
                         ],
                       ),
                     ),
+
 
                     // Page Indicator
                     PageIndicator(

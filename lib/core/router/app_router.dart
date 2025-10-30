@@ -1,13 +1,19 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:nihonix/shared/layouts/main_layout.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
+import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/welcome/presentation/pages/welcome_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 import '../../features/lesson/presentation/pages/lesson_page.dart';
+import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../storage/welcome_preferences.dart';
+import '../../features/auth/presentation/pages/forgot_password_page.dart';
+import '../../features/auth/presentation/pages/verify_code_page.dart';
+import '../../features/auth/presentation/pages/reset_password_page.dart';
 
 /// App routes configuration using GoRouter
 class AppRouter {
@@ -15,9 +21,13 @@ class AppRouter {
   static const String home = '/home';
   static const String welcome = '/welcome';
   static const String login = '/login';
+  static const String register = '/register';
   static const String profile = '/profile';
   static const String lesson = '/lesson';
   static const String exercise = '/exercise';
+  static const String forgotPassword = '/forgotPassword';
+  static const String verifyCode = '/verifyCode';
+  static const String resetPassword = '/resetPassword';
 
   static final GoRouter router = GoRouter(
     initialLocation: splash,
@@ -31,27 +41,53 @@ class AppRouter {
         // If already seen welcome, skip splash and go directly to home
         if (!isFirstTime) {
           return home;
-        }
-        // First time: allow splash to show
-        return null;
-      }
+      try {
+        final location = state.matchedLocation;
+        final prefs = WelcomePreferences();
+        final isFirstTime = await prefs.isFirstTime();
 
-      // Welcome page protection
-      if (location == welcome) {
-        // If already seen welcome, redirect to home
-        if (!isFirstTime) {
+        // Get auth state from Riverpod
+        final container = ProviderScope.containerOf(context);
+        final authState = container.read(authProvider);
+
+        if (location == splash) {
+          // Splash page should handle its own navigation
+          return null;
+        }
+
+        // Welcome page protection
+        if (location == welcome) {
+          // If already seen welcome, redirect to home
+          if (!isFirstTime) {
+            return home;
+          }
+          return null;
+        }
+
+        // Home and other routes protection
+        if (isFirstTime && location != splash && location != welcome) {
+          // First time user trying to access other routes → show welcome
+          return welcome;
+        }
+
+        // Authentication guard
+        if (location == home || location == profile) {
+          // If not authenticated, redirect to login
+          if (!authState.isAuthenticated) {
+            return login;
+          }
+        }
+
+        // If authenticated and trying to access login, redirect to home
+        if (location == login && authState.isAuthenticated) {
           return home;
         }
-        return null;
-      }
 
-      // Home and other routes protection
-      if (isFirstTime && location != splash && location != welcome) {
-        // First time user trying to access other routes → show welcome
+        return null;
+      } catch (e) {
+        // Fallback to welcome page
         return welcome;
       }
-
-      return null;
     },
     routes: [
       // Splash route
@@ -105,6 +141,45 @@ class AppRouter {
               },
             ),
           ])
+      GoRoute(
+        path: register,
+        name: 'register',
+        builder: (context, state) => const RegisterPage(),
+      ),
+
+      GoRoute(
+        path: forgotPassword,
+        name: 'forgotPassword',
+        builder: (context, state) => const ForgotPasswordPage(),
+      ),
+
+      // Verify code route
+      GoRoute(
+        path: verifyCode,
+        name: 'verifyCode',
+        builder: (context, state) {
+          final email = state.uri.queryParameters['email'] ?? '';
+          return VerifyCodePage(email: email);
+        },
+      ),
+
+      // Reset password route
+      GoRoute(
+        path: resetPassword,
+        name: 'resetPassword',
+        builder: (context, state) => const ResetPasswordPage(),
+      ),
+
+      // Profile route
+      GoRoute(
+        path: profile,
+        name: 'profile',
+        builder: (context, state) {
+          // Get userId from query parameters
+          final userId = state.uri.queryParameters['userId'] ?? '1';
+          return ProfilePage(userId: int.tryParse(userId) ?? 1);
+        },
+      ),
     ],
 
     // Error handling

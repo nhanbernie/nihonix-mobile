@@ -1,10 +1,13 @@
 flutter analyze lib/core/network/ --no-fatal-infos
 flutter clean
 flutter get
-flutter analyze
+flutter analyze => lệnh này để check lỗi như npm run build vậy
+flutter analyze --no-fatal-infos => không cần biết mấy info
 flutter test
 flutter build apk
+flutter build apk --debug
 flutter pub run build_runner build --delete-conflicting-outputs
+dart run build_runner build --delete-conflicting-outputs
 => code gen
 
 do dùng cái này nên mình build trước cho thư viện này freezed

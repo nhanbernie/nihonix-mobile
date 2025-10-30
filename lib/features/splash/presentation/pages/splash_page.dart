@@ -1,25 +1,29 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/storage/welcome_preferences.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
 
 /// Splash Screen với animation
 /// - Hiển thị logo và tên app
 /// - Decorative icons học tập theme
 /// - Duration: 4 giây
 /// - Auto navigate đến Welcome hoặc Home
-class SplashPage extends StatefulWidget {
+/// - Check authentication status on startup
+class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
 
   @override
-  State<SplashPage> createState() => _SplashPageState();
+  ConsumerState<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
+class _SplashPageState extends ConsumerState<SplashPage>
+    with TickerProviderStateMixin {
   // Animation controllers
   late AnimationController _fadeController;
   late AnimationController _scaleController;
@@ -83,22 +87,38 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   }
 
   Future<void> _startSplashSequence() async {
+    try {
+      // Check authentication status first - delay to avoid widget tree building issue
+      await Future.delayed(const Duration(milliseconds: 100));
+      final authNotifier = ref.read(authProvider.notifier);
+      await authNotifier.checkAuth();
+    } catch (e) {
+      // If auth check fails, continue anyway
+    }
+
     // Wait 4 seconds
     await Future.delayed(const Duration(seconds: 4));
 
     if (!mounted) return;
 
-    // Check if first time to determine where to go
-    final prefs = WelcomePreferences();
-    final isFirstTime = await prefs.isFirstTime();
+    try {
+      // Check if first time to determine where to go
+      final prefs = WelcomePreferences();
+      final isFirstTime = await prefs.isFirstTime();
 
-    if (!mounted) return;
+      if (!mounted) return;
 
-    // Navigate - Router redirect will handle protection
-    if (isFirstTime) {
-      context.go(AppRouter.welcome);
-    } else {
-      context.go(AppRouter.home);
+      // Navigate - Router redirect will handle protection
+      if (isFirstTime) {
+        context.go(AppRouter.welcome);
+      } else {
+        context.go(AppRouter.home);
+      }
+    } catch (e) {
+      // If navigation fails, go to welcome as fallback
+      if (mounted) {
+        context.go(AppRouter.welcome);
+      }
     }
   }
 

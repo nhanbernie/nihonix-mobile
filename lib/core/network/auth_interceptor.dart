@@ -1,15 +1,8 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'http_exceptions.dart';
-
-abstract class TokenStore {
-  Future<String?> readAccessToken();
-  Future<String?> readRefreshToken();
-  Future<void> saveAccessToken(String token);
-  Future<void> saveRefreshToken(String token);
-  Future<void> clear(); // khi logout
-}
+import 'api_response.dart';
+import '../storage/token_store.dart';
 
 /// Kiểm tra kết nối mạng (implementation sẽ dùng connectivity_plus).
 abstract class NetworkInfo {
@@ -79,10 +72,9 @@ class AuthInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     try {
-      // 1. Kiểm tra kết nối mạng trước khi gửi request
+      // 2. Kiểm tra kết nối mạng trước khi gửi request
       final isConnected = await _networkInfo.isConnected;
       if (!isConnected) {
-        _logDebug('No internet connection');
         return handler.reject(
           DioException(
             requestOptions: options,
@@ -96,19 +88,41 @@ class AuthInterceptor extends Interceptor {
         final accessToken = await _tokenStore.readAccessToken();
         if (accessToken != null && accessToken.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $accessToken';
-          _logDebug('Added Bearer token to ${options.method} ${options.path}');
         }
       }
 
       handler.next(options);
     } catch (e) {
-      _logDebug('Error in onRequest: $e');
       handler.reject(
         DioException(
           requestOptions: options,
           error: e,
         ),
       );
+    }
+  }
+
+  @override
+  Future<void> onResponse(
+    Response response,
+    ResponseInterceptorHandler handler,
+  ) async {
+    try {
+      if (response.data is Map<String, dynamic>) {
+        final data = response.data as Map<String, dynamic>;
+
+        if (!data.containsKey('success') || !data.containsKey('message')) {
+          response.data = ApiResponseSuccess.create(
+            data: data,
+            message: 'Success',
+            statusCode: response.statusCode,
+          ).toJson((data) => data);
+        }
+      }
+
+      handler.next(response);
+    } catch (e) {
+      handler.next(response);
     }
   }
 
@@ -120,10 +134,7 @@ class AuthInterceptor extends Interceptor {
     final statusCode = err.response?.statusCode;
     final path = err.requestOptions.path;
 
-    _logDebug('Error ${err.type} - Status: $statusCode - Path: $path');
-
     if (statusCode == 401 && !_isRefreshPath(path)) {
-      _logDebug('Attempting to refresh token...');
       try {
         await _handleTokenRefresh();
 
@@ -132,14 +143,12 @@ class AuthInterceptor extends Interceptor {
         if (newAccessToken != null) {
           err.requestOptions.headers['Authorization'] =
               'Bearer $newAccessToken';
-          _logDebug('Token refreshed, replaying request...');
 
           // Replay request bằng cách tạo request mới với options đã update
           final response = await Dio().fetch(err.requestOptions);
           return handler.resolve(response);
         }
       } catch (refreshError) {
-        _logDebug('Refresh token failed: $refreshError');
         // Refresh thất bại → clear token và gọi onUnauthorized
         await _handleRefreshFailure();
         return handler.reject(
@@ -156,7 +165,6 @@ class AuthInterceptor extends Interceptor {
 
     // 2. Xử lý 401 từ refresh endpoint → không retry, coi như failed
     if (statusCode == 401 && _isRefreshPath(path)) {
-      _logDebug('Refresh endpoint returned 401');
       await _handleRefreshFailure();
       return handler.reject(
         DioException(
@@ -173,18 +181,13 @@ class AuthInterceptor extends Interceptor {
     if (_shouldRetry(err)) {
       final retryCount = err.requestOptions.extra['retryCount'] as int? ?? 0;
       if (retryCount < _maxRetries) {
-        _logDebug(
-            'Retrying request (attempt ${retryCount + 1}/$_maxRetries)...');
         await _delayBeforeRetry(retryCount);
 
         err.requestOptions.extra['retryCount'] = retryCount + 1;
         try {
           final response = await Dio().fetch(err.requestOptions);
           return handler.resolve(response);
-        } catch (retryError) {
-          // Nếu retry thất bại, tiếp tục xử lý error bên dưới
-          _logDebug('Retry failed: $retryError');
-        }
+        } catch (retryError) {}
       }
     }
 
@@ -210,7 +213,6 @@ class AuthInterceptor extends Interceptor {
   Future<void> _handleTokenRefresh() async {
     // Nếu đang có refresh đang chạy, đợi nó hoàn thành
     if (_refreshCompleter != null && !_refreshCompleter!.isCompleted) {
-      _logDebug('Waiting for ongoing refresh...');
       return _refreshCompleter!.future;
     }
 
@@ -225,17 +227,14 @@ class AuthInterceptor extends Interceptor {
       }
 
       // Gọi API refresh token
-      _logDebug('Calling refresh token API...');
       final tokens = await _authRemote.refreshToken(refreshToken);
 
       // Lưu token mới vào store
       await _tokenStore.saveAccessToken(tokens.accessToken);
       await _tokenStore.saveRefreshToken(tokens.refreshToken);
 
-      _logDebug('Token refreshed successfully');
       _refreshCompleter!.complete();
     } catch (e) {
-      _logDebug('Token refresh failed: $e');
       _refreshCompleter!.completeError(e);
       rethrow;
     }
@@ -248,7 +247,6 @@ class AuthInterceptor extends Interceptor {
     // Debounce: chỉ gọi onUnauthorized 1 lần
     if (!_hasCalledUnauthorized) {
       _hasCalledUnauthorized = true;
-      _logDebug('Calling onUnauthorized callback...');
       await _onUnauthorized();
 
       // Reset flag sau 2 giây để cho phép gọi lại nếu cần
@@ -292,7 +290,6 @@ class AuthInterceptor extends Interceptor {
   /// Attempt 2: 1400ms
   Future<void> _delayBeforeRetry(int retryCount) async {
     final delayMs = 200 * (1 << retryCount) + 200 * retryCount;
-    _logDebug('Waiting ${delayMs}ms before retry...');
     await Future.delayed(Duration(milliseconds: delayMs));
   }
 
@@ -314,10 +311,23 @@ class AuthInterceptor extends Interceptor {
 
     // Extract message từ response nếu có
     String? extractedMessage;
+    dynamic errors;
+    int? responseStatusCode;
+
     if (data is Map<String, dynamic>) {
-      extractedMessage = data['message'] as String? ??
-          data['error'] as String? ??
-          data['msg'] as String?;
+      // Kiểm tra nếu response đã có format ApiResponse
+      if (data.containsKey('success') && data.containsKey('message')) {
+        extractedMessage = data['message'] as String?;
+        errors = data['errors'];
+        responseStatusCode = data['statusCode'] as int?;
+      } else {
+        // Fallback cho response cũ
+        extractedMessage = data['message'] as String? ??
+            data['error'] as String? ??
+            data['msg'] as String?;
+        errors = data['errors'] ?? data['validation_errors'];
+        responseStatusCode = statusCode;
+      }
     }
 
     // Handle specific status codes
@@ -325,25 +335,25 @@ class AuthInterceptor extends Interceptor {
       return BadRequestException(
         message: extractedMessage,
         requestOptions: requestOptions,
-        data: data,
+        data: errors ?? data,
       );
     } else if (statusCode == 401) {
       return UnauthorizedException(
         message: extractedMessage,
         requestOptions: requestOptions,
-        data: data,
+        data: errors ?? data,
       );
     } else if (statusCode == 403) {
       return ForbiddenException(
         message: extractedMessage,
         requestOptions: requestOptions,
-        data: data,
+        data: errors ?? data,
       );
     } else if (statusCode == 404) {
       return NotFoundException(
         message: extractedMessage,
         requestOptions: requestOptions,
-        data: data,
+        data: errors ?? data,
       );
     } else if (statusCode == 408) {
       return RequestTimeoutException(
@@ -353,9 +363,9 @@ class AuthInterceptor extends Interceptor {
     } else if (statusCode != null && statusCode >= 500 && statusCode < 600) {
       return ServerException(
         message: extractedMessage,
-        statusCode: statusCode,
+        statusCode: responseStatusCode ?? statusCode,
         requestOptions: requestOptions,
-        data: data,
+        data: errors ?? data,
       );
     }
 
@@ -375,20 +385,10 @@ class AuthInterceptor extends Interceptor {
 
     return UnknownHttpException(
       message: extractedMessage ?? err.message,
-      statusCode: statusCode,
+      statusCode: responseStatusCode ?? statusCode,
       requestOptions: requestOptions,
-      data: data,
+      data: errors ?? data,
     );
-  }
-
-  /// Log debug message chỉ trong debug mode.
-  /// Không log token để bảo mật.
-  void _logDebug(String message) {
-    if (kDebugMode) {
-      // Mask token nếu có trong message
-      final maskedMessage = _maskToken(message);
-      debugPrint('[AuthInterceptor] $maskedMessage');
-    }
   }
 
   /// Mask Bearer token trong log để bảo mật.

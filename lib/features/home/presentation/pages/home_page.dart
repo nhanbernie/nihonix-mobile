@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authProvider);
+
     return Scaffold(
       extendBody: true,
       appBar: AppBar(
@@ -18,6 +22,16 @@ class HomePage extends StatelessWidget {
             onPressed: () => context.push(AppRouter.profile),
             icon: const Icon(Icons.person),
             tooltip: AppStrings.profile,
+          ),
+          IconButton(
+            onPressed: () async {
+              await ref.read(authProvider.notifier).logout();
+              if (context.mounted) {
+                context.go(AppRouter.login);
+              }
+            },
+            icon: const Icon(Icons.logout),
+            tooltip: 'Đăng xuất',
           ),
         ],
       ),
@@ -40,7 +54,7 @@ class HomePage extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSizes.s16),
                       Text(
-                        AppStrings.welcome,
+                        'Chào mừng ${authState.user?.name ?? 'User'}!',
                         style: Theme.of(context).textTheme.headlineSmall,
                         textAlign: TextAlign.center,
                       ),

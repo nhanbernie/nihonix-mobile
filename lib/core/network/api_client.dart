@@ -9,16 +9,16 @@ import 'package:nihonix/features/auth/data/datasources/auth_remote_datasource.da
 
 class ApiClient {
   late final Dio dio;
-  final HiveTokenStore _tokenStore;
+  final TokenStore _tokenStore;
 
   ApiClient({
     required String baseUrl,
     required OnUnauthorized onUnauthorized,
-    HiveTokenStore? tokenStore,
+    TokenStore? tokenStore,
     NetworkInfo? networkInfo,
     Duration connectTimeout = const Duration(seconds: 10),
     Duration receiveTimeout = const Duration(seconds: 20),
-  }) : _tokenStore = tokenStore ?? HiveTokenStore() {
+  }) : _tokenStore = tokenStore ?? SecureTokenStore() {
     // 1. Tạo Dio riêng cho auth API (KHÔNG có AuthInterceptor)
     final authDio = Dio(BaseOptions(
       baseUrl: baseUrl,

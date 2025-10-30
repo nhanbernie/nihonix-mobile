@@ -46,6 +46,29 @@ class LocaleKeys {
   static const auth_already_have_account = 'auth.already_have_account';
   static const auth_sign_in = 'auth.sign_in';
   static const auth_sign_up = 'auth.sign_up';
+  static const auth_username = 'auth.username';
+  static const auth_full_name = 'auth.full_name';
+  static const auth_welcome_back = 'auth.welcome_back';
+  static const auth_sign_in_to_access = 'auth.sign_in_to_access';
+  static const auth_get_started = 'auth.get_started';
+  static const auth_by_creating_account = 'auth.by_creating_account';
+  static const auth_or_sign_in_with = 'auth.or_sign_in_with';
+  static const auth_terms_and_conditions = 'auth.terms_and_conditions';
+  static const auth_by_checking_box = 'auth.by_checking_box';
+  static const auth_username_required = 'auth.username_required';
+  static const auth_username_too_short = 'auth.username_too_short';
+  static const auth_username_invalid = 'auth.username_invalid';
+  static const auth_email_required = 'auth.email_required';
+  static const auth_email_invalid = 'auth.email_invalid';
+  static const auth_password_required = 'auth.password_required';
+  static const auth_password_too_short = 'auth.password_too_short';
+  static const auth_password_weak = 'auth.password_weak';
+  static const auth_full_name_required = 'auth.full_name_required';
+  static const auth_full_name_too_short = 'auth.full_name_too_short';
+  static const auth_reset_code_required = 'auth.reset_code_required';
+  static const auth_reset_code_invalid = 'auth.reset_code_invalid';
+  static const auth_reset_token_required = 'auth.reset_token_required';
+  static const auth_reset_token_invalid = 'auth.reset_token_invalid';
 
   // Home
   static const home_title = 'home.title';

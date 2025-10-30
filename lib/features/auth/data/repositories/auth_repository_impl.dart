@@ -1,9 +1,10 @@
 library;
 
 import 'package:nihonix/core/network/http_exceptions.dart';
-import 'package:nihonix/core/network/auth_interceptor.dart' show TokenStore;
+import 'package:nihonix/core/storage/token_store.dart';
 import 'package:nihonix/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:nihonix/features/auth/domain/entities/user.dart';
+import 'package:nihonix/features/auth/domain/entities/login_result.dart';
 import 'package:nihonix/features/auth/domain/repositories/auth_repository.dart';
 
 /// Concrete implementation của AuthRepository.
@@ -24,25 +25,28 @@ class AuthRepositoryImpl implements AuthRepository {
         _tokenStore = tokenStore;
 
   @override
-  Future<User> login({
-    required String email,
+  Future<LoginResult> login({
+    required String username,
     required String password,
   }) async {
     try {
       // 1. Gọi remote data source để login
       final loginResponse = await _remoteDataSource.login(
-        email: email,
+        username: username,
         password: password,
       );
 
-      // 2. Save tokens
-      await _tokenStore.saveAccessToken(loginResponse.accessToken);
+      // 2. Save refreshToken to secure storage
       await _tokenStore.saveRefreshToken(loginResponse.refreshToken);
+      // Note: accessToken sẽ được lưu vào AuthState (RAM) bởi AuthProvider
 
-      // 3. Convert Data Model -> Domain Entity
-      return loginResponse.user.toDomain();
+      // 3. Convert Data Model -> Domain Entity và return LoginResult
+      return LoginResult(
+        user: loginResponse.user.toDomain(),
+        accessToken: loginResponse.accessToken,
+      );
 
-      // Note: Tokens đã được lưu vào TokenStore
+      // Note: refreshToken đã được lưu vào SecureStorage
     } catch (e) {
       // Re-throw domain exceptions
       // Data layer exceptions đã được map sang HttpException bởi AuthInterceptor
@@ -51,10 +55,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> logout() async {
+  Future<void> logout({required String refreshToken}) async {
     try {
       try {
-        await _remoteDataSource.logout();
+        await _remoteDataSource.logout(refreshToken: refreshToken);
       } catch (e) {
         // Vẫn xóa local tokens dù API fail
       }
@@ -96,21 +100,20 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<User> register({
+    required String username,
     required String email,
     required String password,
-    required String name,
+    String? fullName,
   }) async {
     try {
-      final loginResponse = await _remoteDataSource.register(
+      final userModel = await _remoteDataSource.register(
+        username: username,
         email: email,
         password: password,
-        name: name,
+        fullName: fullName,
       );
 
-      await _tokenStore.saveAccessToken(loginResponse.accessToken);
-      await _tokenStore.saveRefreshToken(loginResponse.refreshToken);
-
-      return loginResponse.user.toDomain();
+      return userModel.toDomain();
     } catch (e) {
       rethrow;
     }
@@ -126,15 +129,33 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Map<String, dynamic>> verifyResetCode({required String code}) async {
+    try {
+      return await _remoteDataSource.verifyResetCode(code: code);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
   Future<void> resetPassword({
     required String token,
-    required String newPassword,
+    required String password,
   }) async {
     try {
       await _remoteDataSource.resetPassword(
         token: token,
-        newPassword: newPassword,
+        password: password,
       );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> resendCode({required String email}) async {
+    try {
+      await _remoteDataSource.resendCode(email: email);
     } catch (e) {
       rethrow;
     }

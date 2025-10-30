@@ -98,6 +98,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 child: Column(
                   children: [
                     // PageView with slides
+                    // PageView with slides giống như carosel bên web
                     Expanded(
                       child: PageView(
                         controller: _pageController,
@@ -117,6 +118,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       ),
                     ),
 
+
                     // Page Indicator
                     PageIndicator(
                       currentPage: _currentPage,
@@ -134,7 +136,6 @@ class _WelcomePageState extends State<WelcomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          // Skip button
                           TextButton(
                             onPressed: _handleFinish,
                             child: Text(
@@ -148,8 +149,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                   ),
                             ),
                           ),
-
-                          // Next/Get Started button (with icon + text)
+                          
                           ElevatedButton.icon(
                             onPressed: _handleNext,
                             style: ElevatedButton.styleFrom(

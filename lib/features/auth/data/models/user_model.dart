@@ -50,18 +50,24 @@ sealed class UserModel with _$UserModel {
   /// Factory constructor từ JSON.
   ///
   /// Custom mapping vì API trả về field names khác với model:
-  /// - user_id → id
+  /// - id (int) → id (String)
   /// - full_name → name
   /// - avatar_url → avatar
   /// - created_at → createdAt
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    // API trả về id là int, cần convert sang String
+    final idValue = json['id'];
+    final idString =
+        idValue is int ? idValue.toString() : (idValue as String? ?? '');
+
     return UserModel(
-      id: json['user_id'] as String,
-      email: json['email'] as String,
-      name: json['full_name'] as String,
+      id: idString,
+      email: json['email'] as String? ?? '',
+      name: json['full_name'] as String? ?? '',
       avatar: json['avatar_url'] as String?,
       role: json['role'] as String? ?? 'user',
-      createdAt: DateTime.parse(json['created_at'] as String),
+      createdAt: DateTime.tryParse(json['created_at'] as String? ?? '') ??
+          DateTime.now(),
     );
   }
 

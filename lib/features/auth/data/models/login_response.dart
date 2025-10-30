@@ -16,11 +16,40 @@ sealed class LoginResponse with _$LoginResponse {
   }) = _LoginResponse;
 
   /// Factory constructor từ JSON với custom mapping.
+  ///
+  /// API Response structure:
+  /// {
+  ///   "success": true,
+  ///   "message": "...",
+  ///   "data": {
+  ///     "user": { "id": 1, "username": "...", "email": "...", "full_name": "..." },
+  ///     "accessToken": "...",
+  ///     "refreshToken": "..."
+  ///   },
+  ///   "errors": null,
+  ///   "statusCode": 200
+  /// }
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
+    // Lấy data object từ response
+    final data = json['data'] as Map<String, dynamic>?;
+    if (data == null) {
+      throw FormatException('Data field is null in login response');
+    }
+
+    // Lấy user object từ data
+    final userData = data['user'] as Map<String, dynamic>?;
+    if (userData == null) {
+      throw FormatException('User data is null in login response');
+    }
+
+    // Lấy tokens từ data (API dùng accessToken, refreshToken chứ không phải access_token, refresh_token)
+    final accessToken = data['accessToken'] as String? ?? '';
+    final refreshToken = data['refreshToken'] as String? ?? '';
+
     return LoginResponse(
-      user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
-      accessToken: json['access_token'] as String,
-      refreshToken: json['refresh_token'] as String,
+      user: UserModel.fromJson(userData),
+      accessToken: accessToken,
+      refreshToken: refreshToken,
     );
   }
 

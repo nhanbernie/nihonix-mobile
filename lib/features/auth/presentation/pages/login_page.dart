@@ -134,6 +134,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         ),
       );
 
+      context.go(AppRouter.home);
       context.pop();
     }
   }
@@ -201,7 +202,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                  RememberMeCheckbox(
+                RememberMeCheckbox(
                   initialValue: _rememberMe,
                   onChanged: _onRememberMeChanged,
                 ),

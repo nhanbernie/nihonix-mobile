@@ -41,3 +41,8 @@ dùng lệnh này để load lại icon cho cả app
 
 flutter pub run flutter_native_splash:create
 dùng lệnh này để config vào splash
+
+
+flutter run -d emulator-5554 --verbose *>&1 | Tee-Object -FilePath .\run.log
+lệnh để check engine của flutter (hiện tại đang dùng emulator thay vì skia như trước khoản 2024)
+lệnh đầu để check all lỗi từng cái nhỏ nhất (may be)

@@ -8,7 +8,7 @@ class ResetPasswordUseCase {
 
   Future<void> call(ResetPasswordRequest request) async {
     await _repository.resetPassword(
-      token: request.code,
+      token: request.token,
       password: request.password,
     );
   }

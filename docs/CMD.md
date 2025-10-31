@@ -10,6 +10,10 @@ flutter pub run build_runner build --delete-conflicting-outputs
 dart run build_runner build --delete-conflicting-outputs
 => code gen
 
+
+flutter analyze lib/shared/layouts/auth_layout.dart => check cụ thể
+
+
 do dùng cái này nên mình build trước cho thư viện này freezed
 dart run build_runner build --delete-conflicting-outputs
 

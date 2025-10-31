@@ -25,7 +25,7 @@ class AuthLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final hasIllustration = illustrationPath != null;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -38,172 +38,117 @@ class AuthLayout extends StatelessWidget {
       ),
       child: Scaffold(
         backgroundColor: AppColors.background,
-        extendBody: true,
         body: Stack(
           children: [
-            // Simplified background
-            Container(
-              color: AppColors.background,
-            ),
-
-            // Simplified decorative element (removed CustomPaint for performance)
+            // Decorative element
             Positioned(
               right: -30,
-              bottom: size.height * 0.2,
+              bottom: 200,
               child: Container(
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.05),
+                  color: AppColors.primary.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(60),
                 ),
               ),
             ),
 
             // Main content
-            Positioned.fill(
-              child: SafeArea(
-                child: illustrationPath != null
-                    ? SingleChildScrollView(
-                        padding: const EdgeInsets.all(AppSizes.s24),
-                        child: Column(
-                          children: [
-                            // Illustration with cache
-                            if (illustrationPath != null) ...[
-                              // SizedBox(
-                              //   height: 250,
-                              //   child: Image.asset(
-                              //     illustrationPath!,
-                              //     fit: BoxFit.contain,
-                              //     cacheWidth: 400, // Cache for performance
-                              //     cacheHeight: 250,
-                              //   ),
-                              // ),
-                              // ClipRRect(
-                              //   borderRadius: BorderRadius.circular(AppSizes.s16),
-                              //   child: AspectRatio(
-                              //     aspectRatio: 1/1,
-                              //     child: Image.asset(
-                              //       illustrationPath!,
-                              //       fit: BoxFit.cover,
-                              //     ),
-                              //   ),
-                              // ),
-                              SizedBox(
-                                width: 160,
-                                height: 160,
-                                child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.circular(AppSizes.s16),
-                                  child: AspectRatio(
-                                    aspectRatio: 1 / 1,
-                                    child: Image.asset(
-                                      illustrationPath!,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              const SizedBox(height: AppSizes.s32),
-                            ],
-
-                            // Title & Subtitle
-                            Text(
-                              title,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.textPrimary,
-                                  ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: AppSizes.s8),
-                            Text(
-                              subtitle,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    color: AppColors.textSecondary,
-                                  ),
-                              textAlign: TextAlign.center,
-                            ),
-
-                            const SizedBox(height: AppSizes.s32),
-
-                            // Form Content
-                            child,
-
-                            const SizedBox(height: AppSizes.s24),
-
-                            // Social Login
-                            if (showSocialLogin) const SocialLoginButtons(),
-
-                            // Bottom content
-                            if (bottomContent != null) ...[
-                              const SizedBox(height: AppSizes.s24),
-                              bottomContent!,
-                            ],
-                          ],
-                        ),
-                      )
-                    : Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(AppSizes.s24),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // Title & Subtitle
-                              Text(
-                                title,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.textPrimary,
-                                    ),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: AppSizes.s8),
-                              Text(
-                                subtitle,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(
-                                      color: AppColors.textSecondary,
-                                    ),
-                                textAlign: TextAlign.center,
-                              ),
-
-                              const SizedBox(height: AppSizes.s32),
-
-                              // Form Content
-                              child,
-
-                              const SizedBox(height: AppSizes.s24),
-
-                              // Social Login
-                              if (showSocialLogin) const SocialLoginButtons(),
-
-                              // Bottom content
-                              if (bottomContent != null) ...[
-                                const SizedBox(height: AppSizes.s24),
-                                bottomContent!,
-                              ],
-                            ],
-                          ),
-                        ),
-                      ),
-              ),
+            SafeArea(
+              child: _buildContent(context, hasIllustration),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context, bool hasIllustration) {
+    final content = Column(
+      mainAxisSize: hasIllustration ? MainAxisSize.max : MainAxisSize.min,
+      children: [
+        // Illustration
+        if (hasIllustration) ...[
+          _buildIllustration(),
+          const SizedBox(height: AppSizes.s32),
+        ],
+
+        // Header
+        _buildHeader(),
+
+        // Form content
+        child,
+
+        const SizedBox(height: AppSizes.s24),
+
+        // Social login
+        if (showSocialLogin) const SocialLoginButtons(),
+
+        // Bottom content
+        if (bottomContent != null) ...[
+          const SizedBox(height: AppSizes.s24),
+          bottomContent!,
+        ],
+      ],
+    );
+
+    if (hasIllustration) {
+      return SingleChildScrollView(
+        padding: const EdgeInsets.all(AppSizes.s24),
+        child: content,
+      );
+    }
+
+    // Center content when no illustration, but allow scrolling when keyboard appears
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(AppSizes.s24),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: Center(child: content),
+      ),
+    );
+  }
+
+  Widget _buildIllustration() {
+    return SizedBox(
+      width: 160,
+      height: 160,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSizes.s16),
+        child: Image.asset(
+          illustrationPath!,
+          fit: BoxFit.cover,
+          cacheWidth: 320,
+          cacheHeight: 320,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Column(
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: AppSizes.s8),
+        Text(
+          subtitle,
+          style: const TextStyle(
+            fontSize: 16,
+            color: AppColors.textSecondary,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: AppSizes.s32),
+      ],
     );
   }
 }

@@ -5,8 +5,7 @@ part 'reset_password_request.freezed.dart';
 @freezed
 sealed class ResetPasswordRequest with _$ResetPasswordRequest {
   const factory ResetPasswordRequest({
-    required String email,
-    required String code,
+    required String token,
     required String password,
   }) = _ResetPasswordRequest;
 }

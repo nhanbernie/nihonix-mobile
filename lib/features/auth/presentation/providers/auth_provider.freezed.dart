@@ -17,7 +17,7 @@ mixin _$AuthState {
   bool get isLoading;
   bool get isAuthenticated;
   User? get user;
-  String? get accessToken; // ← Lưu accessToken trong RAM
+  String? get accessToken;
   String? get error;
 
   /// Create a copy of AuthState
@@ -306,7 +306,6 @@ class _AuthState implements AuthState {
   final User? user;
   @override
   final String? accessToken;
-// ← Lưu accessToken trong RAM
   @override
   final String? error;
 

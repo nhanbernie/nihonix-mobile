@@ -25,6 +25,15 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   Email _email = const Email.pure();
 
   @override
+  void initState() {
+    super.initState();
+    // Reset state khi vào lại trang
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(forgotPasswordProvider.notifier).reset();
+    });
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     super.dispose();

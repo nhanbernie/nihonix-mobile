@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/router/app_router.dart';
+import '../../../../core/router/route_constants.dart';
 import '../../../../core/validation/models/password.dart';
 import '../../../../core/validation/validation_errors.dart';
 import '../../../../shared/layouts/auth_layout.dart';
@@ -63,7 +63,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
   }
 
   void _handleBackToLogin() {
-    context.go(AppRouter.login);
+    context.go(AppRoutes.login);
   }
 
   @override
@@ -80,7 +80,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
             backgroundColor: AppColors.success,
           ),
         );
-        context.go(AppRouter.login);
+        context.go(AppRoutes.login);
       }
     });
 

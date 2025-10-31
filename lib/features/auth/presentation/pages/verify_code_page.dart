@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/router/app_router.dart';
+import '../../../../core/router/route_constants.dart';
 import '../../../../shared/layouts/auth_layout.dart';
 import '../../../../shared/widgets/custom_button.dart';
 import '../providers/forgot_password_provider.dart';
@@ -54,7 +54,7 @@ class _VerifyCodePageState extends ConsumerState<VerifyCodePage> {
   }
 
   void _handleBackToLogin() {
-    context.go(AppRouter.login);
+    context.go(AppRoutes.login);
   }
 
   @override
@@ -64,7 +64,7 @@ class _VerifyCodePageState extends ConsumerState<VerifyCodePage> {
     // Navigate to reset password page when code is verified
     ref.listen(forgotPasswordProvider, (previous, next) {
       if (next.isCodeVerified) {
-        context.go(AppRouter.resetPassword);
+        context.go(AppRoutes.resetPassword);
       }
     });
 

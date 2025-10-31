@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/router/app_router.dart';
+import '../../../../core/router/route_constants.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 
 class HomePage extends ConsumerWidget {
@@ -19,7 +19,7 @@ class HomePage extends ConsumerWidget {
         title: const Text(AppStrings.appName),
         actions: [
           IconButton(
-            onPressed: () => context.push(AppRouter.profile),
+            onPressed: () => context.push(AppRoutes.profile),
             icon: const Icon(Icons.person),
             tooltip: AppStrings.profile,
           ),
@@ -27,7 +27,7 @@ class HomePage extends ConsumerWidget {
             onPressed: () async {
               await ref.read(authProvider.notifier).logout();
               if (context.mounted) {
-                context.go(AppRouter.login);
+                context.go(AppRoutes.login);
               }
             },
             icon: const Icon(Icons.logout),
@@ -80,7 +80,7 @@ class HomePage extends ConsumerWidget {
 
               // Navigation buttons
               ElevatedButton.icon(
-                onPressed: () => context.push(AppRouter.login),
+                onPressed: () => context.push(AppRoutes.login),
                 icon: const Icon(Icons.login),
                 label: const Text(AppStrings.login),
               ),
@@ -89,14 +89,14 @@ class HomePage extends ConsumerWidget {
 
               ElevatedButton.icon(
                 onPressed: () =>
-                    context.push('${AppRouter.profile}?userId=123'),
+                    context.push('${AppRoutes.profile}?userId=123'),
                 icon: const Icon(Icons.person),
                 label: const Text('Xem Profile (User #123)'),
               ),
               const SizedBox(height: AppSizes.s12),
 
               ElevatedButton.icon(
-                onPressed: () => context.push(AppRouter.lesson),
+                onPressed: () => context.push(AppRoutes.lesson),
                 label: const Text('Xem Lesson'),
               ),
 

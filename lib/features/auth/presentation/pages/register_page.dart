@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import '../../../../core/l10n/locale_keys.dart';
-import '../../../../core/router/app_router.dart';
+import '../../../../core/router/route_constants.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/validation/models/username.dart';
 import '../../../../core/validation/models/password.dart';
@@ -107,13 +107,13 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         ),
       );
 
-      context.go(AppRouter.home);
+      context.go(AppRoutes.home);
     }
   }
 
   /// Handle sign in navigation
   void _handleSignIn() {
-    context.go(AppRouter.login);
+    context.go(AppRoutes.login);
   }
 
   @override

@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/router/app_router.dart';
+import '../../../../core/router/route_constants.dart';
 import '../../../../core/validation/models/email.dart';
 import '../../../../core/validation/validation_errors.dart';
 import '../../../../shared/layouts/auth_layout.dart';
@@ -43,7 +43,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   }
 
   void _handleBackToLogin() {
-    context.go(AppRouter.login);
+    context.go(AppRoutes.login);
   }
 
   @override
@@ -53,7 +53,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
     // Navigate to verify code page after successful send
     ref.listen(forgotPasswordProvider, (previous, next) {
       if (next.isCodeSent) {
-        context.go('${AppRouter.verifyCode}?email=${_email.value}');
+        context.go('${AppRoutes.verifyCode}?email=${_email.value}');
       }
     });
 

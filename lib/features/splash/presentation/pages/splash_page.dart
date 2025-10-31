@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
-import '../../../../core/router/app_router.dart';
+import '../../../../core/router/route_constants.dart';
 import '../../../../core/storage/welcome_preferences.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 
@@ -110,14 +110,14 @@ class _SplashPageState extends ConsumerState<SplashPage>
 
       // Navigate - Router redirect will handle protection
       if (isFirstTime) {
-        context.go(AppRouter.welcome);
+        context.go(AppRoutes.welcome);
       } else {
-        context.go(AppRouter.home);
+        context.go(AppRoutes.home);
       }
     } catch (e) {
       // If navigation fails, go to welcome as fallback
       if (mounted) {
-        context.go(AppRouter.welcome);
+        context.go(AppRoutes.welcome);
       }
     }
   }

@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/router/app_router.dart';
+import '../../../../core/router/route_constants.dart';
 import '../../../../core/storage/welcome_preferences.dart';
 import '../widgets/welcome_slide_1.dart';
 import '../widgets/welcome_slide_2.dart';
@@ -34,7 +34,7 @@ class _WelcomePageState extends State<WelcomePage> {
     await prefs.setNotFirstTime();
 
     if (mounted) {
-      context.go(AppRouter.home);
+      context.go(AppRoutes.home);
     }
   }
 
@@ -118,7 +118,6 @@ class _WelcomePageState extends State<WelcomePage> {
                       ),
                     ),
 
-
                     // Page Indicator
                     PageIndicator(
                       currentPage: _currentPage,
@@ -149,7 +148,6 @@ class _WelcomePageState extends State<WelcomePage> {
                                   ),
                             ),
                           ),
-                          
                           ElevatedButton.icon(
                             onPressed: _handleNext,
                             style: ElevatedButton.styleFrom(

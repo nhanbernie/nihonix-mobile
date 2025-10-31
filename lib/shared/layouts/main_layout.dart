@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:nihonix/core/constants/app_strings.dart';
+import 'package:nihonix/core/router/route_constants.dart';
 
-const routes = ['/home', '/lesson', '/profile'];
+const routes = [
+  AppRoutes.home,
+  AppRoutes.lesson,
+  AppRoutes.profile,
+];
 
 class MainLayout extends StatelessWidget {
   final Widget child;
@@ -35,13 +40,13 @@ class MainLayout extends StatelessWidget {
           onTap: (i) {
             switch (i) {
               case 0:
-                context.go('/home');
+                context.go(AppRoutes.home);
                 break;
               case 1:
-                context.go('/lesson');
+                context.go(AppRoutes.lesson);
                 break;
               case 2:
-                context.go('/profile');
+                context.go(AppRoutes.profile);
                 break;
             }
           },

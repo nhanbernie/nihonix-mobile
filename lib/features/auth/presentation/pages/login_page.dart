@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import '../../../../core/l10n/locale_keys.dart';
-import '../../../../core/router/app_router.dart';
+import '../../../../core/router/route_constants.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/validation/models/username.dart';
 import '../../../../core/validation/models/password.dart';
@@ -122,17 +122,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         ),
       );
 
-      context.go(AppRouter.home);
+      context.go(AppRoutes.home);
       context.pop();
     }
   }
 
   void _handleSignUp() {
-    context.go(AppRouter.register);
+    context.go(AppRoutes.register);
   }
 
   void _handleForgotPassword() {
-    context.go(AppRouter.forgotPassword);
+    context.go(AppRoutes.forgotPassword);
   }
 
   @override

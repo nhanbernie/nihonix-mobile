@@ -93,6 +93,12 @@ class HomePage extends ConsumerWidget {
                 icon: const Icon(Icons.person),
                 label: const Text('Xem Profile (User #123)'),
               ),
+              const SizedBox(height: AppSizes.s12),
+
+              ElevatedButton.icon(
+                onPressed: () => context.push(AppRouter.lesson),
+                label: const Text('Xem Lesson'),
+              ),
 
               const SizedBox(height: AppSizes.s12),
 

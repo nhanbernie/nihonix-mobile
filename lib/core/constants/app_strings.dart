@@ -8,6 +8,7 @@ class AppStrings {
   // Navigation
   static const String home = 'Trang chủ';
   static const String profile = 'Hồ sơ';
+  static const String lesson = 'Bài học';
   static const String settings = 'Cài đặt';
   static const String back = 'Quay lại';
 
@@ -91,4 +92,8 @@ class AppStrings {
   static const String welcome = 'Chào mừng bạn!';
   static const String welcomeMessage = 'Chào mừng bạn đến với Nihonix';
   static const String getStarted = 'Bắt đầu';
+
+  // Toggle labels
+  static const String vocabulary = 'Từ vựng';
+  static const String grammar = 'Ngữ pháp';
 }

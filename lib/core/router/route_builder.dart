@@ -54,6 +54,13 @@ List<RouteBase> buildAppRoutes() {
             final userId = state.uri.queryParameters['userId'] ?? '1';
             return ProfilePage(userId: int.tryParse(userId) ?? 1);
           },
+          routes: [
+            GoRoute(
+              path: 'edit',
+              name: AppRoutes.profileEditName,
+              builder: (context, state) => const ProfileEditPage(),
+            ),
+          ],
         ),
       ],
     ),

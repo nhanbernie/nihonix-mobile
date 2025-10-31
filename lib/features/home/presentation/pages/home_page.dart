@@ -12,6 +12,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       extendBody: true,
@@ -47,10 +48,10 @@ class HomePage extends ConsumerWidget {
                   padding: const EdgeInsets.all(AppSizes.s20),
                   child: Column(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.flutter_dash,
                         size: AppSizes.iconXLarge,
-                        color: Colors.blue,
+                        color: colorScheme.primary,
                       ),
                       const SizedBox(height: AppSizes.s16),
                       Text(
@@ -120,7 +121,7 @@ class HomePage extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(AppSizes.s16),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  color: colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
                 ),
                 child: Column(

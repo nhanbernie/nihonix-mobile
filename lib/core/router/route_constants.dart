@@ -7,6 +7,7 @@ class AppRoutes {
   static const String login = '/login';
   static const String register = '/register';
   static const String profile = '/profile';
+  static const String profileEdit = '/profile/edit';
   static const String lesson = '/lesson';
   static const String forgotPassword = '/forgotPassword';
   static const String verifyCode = '/verifyCode';
@@ -19,6 +20,7 @@ class AppRoutes {
   static const String loginName = 'login';
   static const String registerName = 'register';
   static const String profileName = 'profile';
+  static const String profileEditName = 'profileEdit';
   static const String lessonName = 'lesson';
   static const String forgotPasswordName = 'forgotPassword';
   static const String verifyCodeName = 'verifyCode';

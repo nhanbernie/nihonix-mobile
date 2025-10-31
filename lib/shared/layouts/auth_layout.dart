@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_sizes.dart';
 import '../../features/auth/presentation/widgets/social_login_buttons.dart';
 
@@ -26,18 +25,25 @@ class AuthLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasIllustration = illustrationPath != null;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: colorScheme.brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark,
+        statusBarBrightness: colorScheme.brightness == Brightness.dark
+            ? Brightness.dark
+            : Brightness.light,
         systemNavigationBarColor: Colors.transparent,
-        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarIconBrightness:
+            colorScheme.brightness == Brightness.dark
+                ? Brightness.light
+                : Brightness.dark,
         systemNavigationBarContrastEnforced: false,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.background,
         body: Stack(
           children: [
             // Decorative element
@@ -48,7 +54,7 @@ class AuthLayout extends StatelessWidget {
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.05),
+                  color: colorScheme.primary.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(60),
                 ),
               ),
@@ -75,7 +81,7 @@ class AuthLayout extends StatelessWidget {
         ],
 
         // Header
-        _buildHeader(),
+        _buildHeader(context),
 
         // Form content
         child,
@@ -126,24 +132,25 @@ class AuthLayout extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       children: [
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 28,
+          style: textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
+            color: colorScheme.onSurface,
           ),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: AppSizes.s8),
         Text(
           subtitle,
-          style: const TextStyle(
-            fontSize: 16,
-            color: AppColors.textSecondary,
+          style: textTheme.bodyLarge?.copyWith(
+            color: colorScheme.onSurfaceVariant,
           ),
           textAlign: TextAlign.center,
         ),

@@ -4,19 +4,7 @@ library;
 import 'package:nihonix/features/auth/domain/entities/user.dart';
 import 'package:nihonix/features/auth/domain/entities/login_result.dart';
 
-/// Pattern: Repository Pattern
-/// - Trừu tượng hóa data source (API, Local Storage...)
-/// - Domain layer chỉ biết "cái gì", không biết "làm thế nào"
-/// - Cho phép swap implementation dễ dàng (mock cho testing, API khác...)
 abstract class AuthRepository {
-  /// Returns:
-  /// - Success: [LoginResult] object với user và accessToken
-  /// - Failure: Throw exception (UnauthorizedException, NoInternetException...)
-  ///
-  /// Exceptions:
-  /// - [UnauthorizedException]: Sai email/password
-  /// - [NoInternetException]: Không có internet
-  /// - [ServerException]: Lỗi server
   Future<LoginResult> login({
     required String username,
     required String password,

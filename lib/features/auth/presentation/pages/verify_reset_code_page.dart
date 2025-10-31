@@ -6,7 +6,6 @@ import '../../../../shared/widgets/custom_input_field.dart';
 import '../../../../shared/widgets/auth_form.dart';
 import '../../../../shared/layouts/auth_layout.dart';
 
-/// Verify reset code page
 class VerifyResetCodePage extends ConsumerStatefulWidget {
   const VerifyResetCodePage({super.key});
 
@@ -34,6 +33,7 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
     });
   }
 
+  // NOTE
   Future<void> _handleVerifyCode() async {
     if (!_formKey.currentState!.validate()) return;
 

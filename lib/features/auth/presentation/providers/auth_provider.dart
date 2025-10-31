@@ -6,28 +6,18 @@ import 'auth_di.dart'; // Provides: loginUseCaseProvider, logoutUseCaseProvider,
 
 part 'auth_provider.freezed.dart';
 
-/// State chứa:
-/// - User entity từ Domain layer (không phải Model từ Data layer)
-/// - Loading, error states cho UI
-/// - Authentication status
+/// State
 @freezed
 sealed class AuthState with _$AuthState {
   const factory AuthState({
     @Default(false) bool isLoading,
     @Default(false) bool isAuthenticated,
     User? user,
-    String? accessToken, // ← Lưu accessToken trong RAM
+    String? accessToken,
     String? error,
   }) = _AuthState;
 }
 
-/// AuthNotifier
-/// - Quản lý AuthState (UI state)
-/// - Delegate business logic cho UseCases
-/// - Không biết về Data layer (Repository, API, Models)
-/// - Chỉ làm việc với Domain entities và UseCases
-///
-/// Pattern 2025: Inject UseCases thông qua Riverpod providers.
 class AuthNotifier extends Notifier<AuthState> {
   @override
   AuthState build() {
@@ -39,7 +29,6 @@ class AuthNotifier extends Notifier<AuthState> {
     required String username,
     required String password,
   }) async {
-    // Only set loading if not already loading
     if (!state.isLoading) {
       state = state.copyWith(isLoading: true, error: null);
     }
@@ -58,7 +47,7 @@ class AuthNotifier extends Notifier<AuthState> {
         isLoading: false,
         isAuthenticated: true,
         user: loginResult.user,
-        accessToken: loginResult.accessToken, // ← Lưu accessToken vào state
+        accessToken: loginResult.accessToken,
         error: null,
       );
     } catch (e) {
@@ -74,17 +63,12 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  /// Register với username, email, password và fullName.
-  ///
-  /// Clean Architecture flow:
-  /// UI -> AuthNotifier -> RegisterUseCase -> AuthRepository -> AuthRemoteDataSource -> API
   Future<void> register({
     required String username,
     required String email,
     required String password,
     String? fullName,
   }) async {
-    // Only set loading if not already loading
     if (!state.isLoading) {
       state = state.copyWith(isLoading: true, error: null);
     }
@@ -120,7 +104,7 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  /// Clears tokens and resets state.
+  // NOTE
   Future<void> logout() async {
     try {
       final logoutUseCase = ref.read(logoutUseCaseProvider);
@@ -135,9 +119,6 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  /// Kiểm tra authentication status.
-  ///
-  /// Loads current user nếu có token hợp lệ.
   Future<void> checkAuth() async {
     // Don't set loading if already loading to avoid UI flicker
     if (!state.isLoading) {
@@ -173,9 +154,6 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  /// Map exceptions to user-friendly error messages.
-  ///
-  /// Pattern: Centralized error handling cho UI.
   String _mapErrorToMessage(Object error) {
     if (error.toString().contains('NoInternetException')) {
       return 'Không có kết nối mạng';
@@ -191,7 +169,7 @@ class AuthNotifier extends Notifier<AuthState> {
   }
 }
 
-/// Provider cho AuthNotifier
+/// Provider
 final authProvider = NotifierProvider<AuthNotifier, AuthState>(
   AuthNotifier.new,
 );

@@ -15,7 +15,6 @@ import '../../../../shared/layouts/auth_layout.dart';
 import '../widgets/social_login_buttons.dart';
 import '../providers/auth_provider.dart';
 
-/// RegisterPage với Clean Architecture & Riverpod
 class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({super.key});
 
@@ -24,10 +23,10 @@ class RegisterPage extends ConsumerStatefulWidget {
 }
 
 class _RegisterPageState extends ConsumerState<RegisterPage> {
-  // Form key để validate tất cả fields
+  // Form key to validate
   final _formKey = GlobalKey<FormState>();
 
-  // Controllers cho TextFormFields
+  // Controllers for TextFormFields
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -57,21 +56,18 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     });
   }
 
-  /// Handle email change with formz validation
   void _onEmailChanged(String value) {
     setState(() {
       _email = Email.dirty(value);
     });
   }
 
-  /// Handle password change with formz validation
   void _onPasswordChanged(String value) {
     setState(() {
       _password = Password.dirty(value);
     });
   }
 
-  /// Handle register với Clean Architecture pattern
   Future<void> _handleRegister() async {
     // Validate form
     if (!_formKey.currentState!.validate()) return;

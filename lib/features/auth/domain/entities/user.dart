@@ -3,12 +3,6 @@ library;
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'user.freezed.dart';
 
-/// User entity đại diện cho người dùng trong hệ thống.
-/// Sử dụng Freezed để:
-/// - Immutable: Không thể thay đổi sau khi tạo
-/// - copyWith: Tạo copy với một số field thay đổi
-/// - Equality: So sánh object dựa trên value, không phải reference
-/// - Pattern matching: Hỗ trợ sealed class patterns
 @freezed
 sealed class User with _$User {
   const User._();

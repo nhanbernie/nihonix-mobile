@@ -11,7 +11,6 @@ class VerifyCodeUseCase {
       code: request.code,
     );
 
-    // Lưu token vào state để dùng cho reset password
     return result;
   }
 }

@@ -12,7 +12,6 @@ import '../../../../shared/widgets/custom_button.dart';
 import '../../../../shared/widgets/custom_input_field.dart';
 import '../providers/forgot_password_provider.dart';
 
-/// Reset password page
 class ResetPasswordPage extends ConsumerStatefulWidget {
   const ResetPasswordPage({super.key});
 
@@ -71,6 +70,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
   Widget build(BuildContext context) {
     final forgotPasswordState = ref.watch(forgotPasswordProvider);
 
+    // NOTE: handle later
     // Navigate to login page when password is reset
     ref.listen(forgotPasswordProvider, (previous, next) {
       if (next.isPasswordReset) {

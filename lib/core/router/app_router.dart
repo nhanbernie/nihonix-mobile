@@ -32,15 +32,6 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     initialLocation: splash,
     redirect: (context, state) async {
-      final location = state.matchedLocation;
-      final prefs = WelcomePreferences();
-      final isFirstTime = await prefs.isFirstTime();
-
-      // Splash logic: Only show on first app start
-      if (location == splash) {
-        // If already seen welcome, skip splash and go directly to home
-        if (!isFirstTime) {
-          return home;
       try {
         final location = state.matchedLocation;
         final prefs = WelcomePreferences();
@@ -71,7 +62,7 @@ class AppRouter {
         }
 
         // Authentication guard
-        if (location == home || location == profile) {
+        if (location == home || location == lesson || location == profile) {
           // If not authenticated, redirect to login
           if (!authState.isAuthenticated) {
             return login;
@@ -104,8 +95,6 @@ class AppRouter {
         builder: (context, state) => const WelcomePage(),
       ),
 
-      // Home route
-
       // Auth routes
       GoRoute(
         path: login,
@@ -113,38 +102,40 @@ class AppRouter {
         builder: (context, state) => const LoginPage(),
       ),
 
-      // Các route dùng chung main layout
-      ShellRoute(
-          builder: (context, state, child) {
-            return MainLayout(child: child);
-          },
-          routes: [
-            GoRoute(
-              path: home,
-              name: 'home',
-              builder: (context, state) => const HomePage(),
-            ),
-            GoRoute(
-              path: lesson,
-              name: 'lesson',
-              builder: (context, state) {
-                return LessonPage();
-              },
-            ),
-            GoRoute(
-              path: profile,
-              name: 'profile',
-              builder: (context, state) {
-                // Get userId from query parameters
-                final userId = state.uri.queryParameters['userId'] ?? '1';
-                return ProfilePage(userId: int.tryParse(userId) ?? 1);
-              },
-            ),
-          ])
       GoRoute(
         path: register,
         name: 'register',
         builder: (context, state) => const RegisterPage(),
+      ),
+
+      // Main shell with bottom navigation
+      ShellRoute(
+        builder: (context, state, child) {
+          return MainLayout(child: child);
+        },
+        routes: [
+          GoRoute(
+            path: home,
+            name: 'home',
+            builder: (context, state) => const HomePage(),
+          ),
+          GoRoute(
+            path: lesson,
+            name: 'lesson',
+            builder: (context, state) {
+              return LessonPage();
+            },
+          ),
+          GoRoute(
+            path: profile,
+            name: 'profile',
+            builder: (context, state) {
+              // Get userId from query parameters
+              final userId = state.uri.queryParameters['userId'] ?? '1';
+              return ProfilePage(userId: int.tryParse(userId) ?? 1);
+            },
+          ),
+        ],
       ),
 
       GoRoute(
@@ -168,17 +159,6 @@ class AppRouter {
         path: resetPassword,
         name: 'resetPassword',
         builder: (context, state) => const ResetPasswordPage(),
-      ),
-
-      // Profile route
-      GoRoute(
-        path: profile,
-        name: 'profile',
-        builder: (context, state) {
-          // Get userId from query parameters
-          final userId = state.uri.queryParameters['userId'] ?? '1';
-          return ProfilePage(userId: int.tryParse(userId) ?? 1);
-        },
       ),
     ],
 

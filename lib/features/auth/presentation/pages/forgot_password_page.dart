@@ -12,7 +12,6 @@ import '../../../../shared/widgets/custom_button.dart';
 import '../../../../shared/widgets/custom_input_field.dart';
 import '../providers/forgot_password_provider.dart';
 
-/// Forgot password page
 class ForgotPasswordPage extends ConsumerStatefulWidget {
   const ForgotPasswordPage({super.key});
 

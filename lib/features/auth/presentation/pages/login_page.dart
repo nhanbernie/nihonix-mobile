@@ -16,13 +16,6 @@ import '../widgets/remember_me_checkbox.dart';
 import '../widgets/social_login_buttons.dart';
 import '../providers/auth_provider.dart';
 
-/// LoginPage với Riverpod.
-/// - ConsumerStatefulWidget để access Riverpod providers
-/// - Không có business logic, chỉ UI và state management
-/// - Delegate authentication logic cho AuthProvider
-///
-/// Architecture flow:
-/// LoginPage (UI) -> AuthProvider -> LoginUseCase -> Repository -> DataSource -> API
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
@@ -88,15 +81,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     });
   }
 
-  /// 1. Validate form
-  /// 2. Call AuthProvider.login() -> LoginUseCase -> Repository
-  /// 3. Listen to AuthState changes via ref.watch()
-  /// 4. Show success/error messages
   Future<void> _handleLogin() async {
     // Validate form
     if (!_formKey.currentState!.validate()) return;
 
-    // Get AuthNotifier and call login giống như dispatch
     final authNotifier = ref.read(authProvider.notifier);
 
     await authNotifier.login(
@@ -139,12 +127,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     }
   }
 
-  /// Handle sign up navigation
   void _handleSignUp() {
     context.go(AppRouter.register);
   }
 
-  /// Handle forgot password
   void _handleForgotPassword() {
     context.go(AppRouter.forgotPassword);
   }

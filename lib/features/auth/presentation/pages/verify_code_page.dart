@@ -10,7 +10,6 @@ import '../../../../shared/widgets/custom_button.dart';
 import '../providers/forgot_password_provider.dart';
 import '../widgets/otp_input_field.dart';
 
-/// Verify reset code page
 class VerifyCodePage extends ConsumerStatefulWidget {
   final String email;
 

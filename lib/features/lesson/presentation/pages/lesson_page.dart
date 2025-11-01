@@ -2,17 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nihonix/core/constants/app_colors.dart';
+import 'package:nihonix/features/lesson/presentation/providers/lesson_provider.dart';
 import 'package:nihonix/features/lesson/presentation/widgets/lesson_type_toggle.dart';
 import 'package:nihonix/features/lesson/presentation/widgets/vocabulary_list.dart';
 
 class LessonPage extends ConsumerStatefulWidget {
-  const LessonPage({super.key});
+  final String? preSelectedType;
+
+  const LessonPage({
+    super.key,
+    this.preSelectedType,
+  });
 
   @override
   ConsumerState<LessonPage> createState() => _LessonPageState();
 }
 
 class _LessonPageState extends ConsumerState<LessonPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Set lesson type based on preSelectedType if provided
+    if (widget.preSelectedType != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(lessonProvider.notifier).toggleLessonType(widget.preSelectedType!);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // final lessonState = ref.watch(lessonProvider);

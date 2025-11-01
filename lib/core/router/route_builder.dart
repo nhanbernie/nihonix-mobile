@@ -48,6 +48,16 @@ List<RouteBase> buildAppRoutes() {
           builder: (context, state) => const LessonPage(),
         ),
         GoRoute(
+          path: AppRoutes.flashcard,
+          name: AppRoutes.flashcardName,
+          builder: (context, state) => const FlashcardPage(),
+        ),
+        GoRoute(
+          path: AppRoutes.practice,
+          name: AppRoutes.practiceName,
+          builder: (context, state) => const PracticePage(),
+        ),
+        GoRoute(
           path: AppRoutes.profile,
           name: AppRoutes.profileName,
           builder: (context, state) {

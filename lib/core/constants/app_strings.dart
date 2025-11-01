@@ -9,6 +9,8 @@ class AppStrings {
   static const String home = 'Trang chủ';
   static const String profile = 'Hồ sơ';
   static const String lesson = 'Bài học';
+  static const String flashcard = 'Flashcard';
+  static const String practice = 'Luyện tập';
   static const String settings = 'Cài đặt';
   static const String back = 'Quay lại';
 

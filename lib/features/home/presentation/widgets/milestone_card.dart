@@ -7,6 +7,7 @@ class MilestoneCard extends StatelessWidget {
   final String title;
   final int current;
   final int total;
+  final VoidCallback? onTap;
 
   const MilestoneCard({
     super.key,
@@ -14,6 +15,7 @@ class MilestoneCard extends StatelessWidget {
     required this.title,
     required this.current,
     required this.total,
+    this.onTap,
   });
 
   @override
@@ -22,24 +24,27 @@ class MilestoneCard extends StatelessWidget {
 
     return AspectRatio(
       aspectRatio: 1.0, // Square cards for 2x2 grid
-      child: Container(
-        padding: const EdgeInsets.all(AppSizes.s16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: Colors.grey.shade200,
-            width: 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(24),
+        child: Container(
+          padding: const EdgeInsets.all(AppSizes.s16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: Colors.grey.shade200,
+              width: 1,
             ),
-          ],
-        ),
-        child: Column(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.03),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -90,6 +95,7 @@ class MilestoneCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }

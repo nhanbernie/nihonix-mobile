@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nihonix/core/constants/app_sizes.dart';
+import 'package:nihonix/core/constants/app_strings.dart';
 import 'package:nihonix/features/auth/presentation/providers/auth_provider.dart';
 import 'package:nihonix/features/home/presentation/widgets/home_app_bar.dart';
 import 'package:nihonix/features/home/presentation/widgets/milestone_card.dart';
+import 'package:nihonix/features/lesson/presentation/pages/lesson_page.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -152,21 +154,41 @@ class HomePage extends ConsumerWidget {
             // 4 milestone cards in 2x2 grid
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: MilestoneCard(
                     icon: Icons.text_fields,
                     title: 'New Words',
                     current: 17,
                     total: 24,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const LessonPage(
+                            preSelectedType: AppStrings.vocabulary,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(width: AppSizes.s16),
-                const Expanded(
+                Expanded(
                   child: MilestoneCard(
                     icon: Icons.edit,
                     title: 'Exercise',
                     current: 4,
                     total: 7,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const LessonPage(
+                            preSelectedType: AppStrings.grammar,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -174,21 +196,41 @@ class HomePage extends ConsumerWidget {
             const SizedBox(height: AppSizes.s16),
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: MilestoneCard(
                     icon: Icons.headphones,
                     title: 'Listening',
                     current: 3,
                     total: 5,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const LessonPage(
+                            preSelectedType: AppStrings.vocabulary,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(width: AppSizes.s16),
-                const Expanded(
+                Expanded(
                   child: MilestoneCard(
                     icon: Icons.menu_book,
                     title: 'Reading',
                     current: 2,
                     total: 4,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const LessonPage(
+                            preSelectedType: AppStrings.vocabulary,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],

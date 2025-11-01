@@ -24,7 +24,10 @@ class AppBottomNavBar extends StatelessWidget {
         context.go(AppRoutes.lesson);
         break;
       case 2:
-        context.go(AppRoutes.profile);
+        context.go(AppRoutes.flashcard);
+        break;
+      case 3:
+        context.go(AppRoutes.practice);
         break;
     }
   }
@@ -48,8 +51,9 @@ class AppBottomNavBar extends StatelessWidget {
           const SizedBox(width: 8),
           _buildNavItem(context, 1, Icons.menu_book_rounded, AppStrings.lesson),
           const SizedBox(width: 8),
-          _buildNavItem(
-              context, 2, Icons.person_outline_rounded, AppStrings.profile),
+          _buildNavItem(context, 2, Icons.style_rounded, AppStrings.flashcard),
+          const SizedBox(width: 8),
+          _buildNavItem(context, 3, Icons.psychology_rounded, AppStrings.practice),
         ],
       ),
     );

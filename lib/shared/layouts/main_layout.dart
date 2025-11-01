@@ -8,7 +8,8 @@ import 'package:nihonix/shared/widgets/app_bottom_nav_bar.dart';
 const routes = [
   AppRoutes.home,
   AppRoutes.lesson,
-  AppRoutes.profile,
+  AppRoutes.flashcard,
+  AppRoutes.practice,
 ];
 
 class MainLayout extends StatelessWidget {

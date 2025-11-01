@@ -9,6 +9,8 @@ class AppRoutes {
   static const String profile = '/profile';
   static const String profileEdit = '/profile/edit';
   static const String lesson = '/lesson';
+  static const String flashcard = '/flashcard';
+  static const String practice = '/practice';
   static const String forgotPassword = '/forgotPassword';
   static const String verifyCode = '/verifyCode';
   static const String resetPassword = '/resetPassword';
@@ -22,12 +24,14 @@ class AppRoutes {
   static const String profileName = 'profile';
   static const String profileEditName = 'profileEdit';
   static const String lessonName = 'lesson';
+  static const String flashcardName = 'flashcard';
+  static const String practiceName = 'practice';
   static const String forgotPasswordName = 'forgotPassword';
   static const String verifyCodeName = 'verifyCode';
   static const String resetPasswordName = 'resetPassword';
 
   // Route groups
-  static final List<String> protectedRoutes = [home, lesson, profile];
+  static final List<String> protectedRoutes = [home, lesson, flashcard, practice, profile];
   static final List<String> authRoutes = [login, register];
   static final List<String> forgotPasswordRoutes = [
     forgotPassword,

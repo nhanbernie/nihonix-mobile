@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import '../../../../core/constants/app_strings.dart';
-import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/router/route_constants.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
+import 'package:nihonix/core/constants/app_sizes.dart';
+import 'package:nihonix/features/auth/presentation/providers/auth_provider.dart';
+import 'package:nihonix/features/home/presentation/widgets/home_app_bar.dart';
+import 'package:nihonix/features/home/presentation/widgets/milestone_card.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -12,135 +11,190 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       extendBody: true,
-      appBar: AppBar(
-        title: const Text(AppStrings.appName),
-        actions: [
-          IconButton(
-            onPressed: () => context.push(AppRoutes.profile),
-            icon: const Icon(Icons.person),
-            tooltip: AppStrings.profile,
-          ),
-          IconButton(
-            onPressed: () async {
-              await ref.read(authProvider.notifier).logout();
-              if (context.mounted) {
-                context.go(AppRoutes.login);
-              }
-            },
-            icon: const Icon(Icons.logout),
-            tooltip: 'Đăng xuất',
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSizes.s16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Welcome section
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSizes.s20),
-                  child: Column(
+      // kéo lên trên app bar để nhìn fullsize
+      extendBodyBehindAppBar: true,
+      appBar: const HomeAppBar(),
+      body: ListView(
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).padding.top +
+              kToolbarHeight +
+              AppSizes.s12,
+          left: AppSizes.s16,
+          right: AppSizes.s16,
+          bottom: MediaQuery.of(context).padding.bottom +
+              100, // Bottom system + nav bar space
+        ),
+        children: [
+            // Welcome header
+            SizedBox(height: AppSizes.s16),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                // horizontal: AppSizes.s20,
+                vertical: AppSizes.s16,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Welcome text
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(
-                        Icons.flutter_dash,
-                        size: AppSizes.iconXLarge,
-                        color: Colors.blue,
-                      ),
-                      const SizedBox(height: AppSizes.s16),
                       Text(
-                        'Chào mừng ${authState.user?.name ?? 'User'}!',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                        textAlign: TextAlign.center,
+                        'Welcome',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
+                              fontWeight: FontWeight.w300,
+                              height: 1.0,
+                            ),
                       ),
-                      const SizedBox(height: AppSizes.s8),
                       Text(
-                        AppStrings.welcomeMessage,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                        textAlign: TextAlign.center,
+                        'back, ${authState.user?.username ?? "User"}',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              height: 1.2,
+                            ),
                       ),
                     ],
                   ),
-                ),
-              ),
-
-              const SizedBox(height: AppSizes.s24),
-
-              // Features section
-              Text(
-                'Tính năng demo',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: AppSizes.s16),
-
-              // Navigation buttons
-              ElevatedButton.icon(
-                onPressed: () => context.push(AppRoutes.login),
-                icon: const Icon(Icons.login),
-                label: const Text(AppStrings.login),
-              ),
-
-              const SizedBox(height: AppSizes.s12),
-
-              ElevatedButton.icon(
-                onPressed: () =>
-                    context.push('${AppRoutes.profile}?userId=123'),
-                icon: const Icon(Icons.person),
-                label: const Text('Xem Profile (User #123)'),
-              ),
-              const SizedBox(height: AppSizes.s12),
-
-              ElevatedButton.icon(
-                onPressed: () => context.push(AppRoutes.lesson),
-                label: const Text('Xem Lesson'),
-              ),
-
-              const SizedBox(height: AppSizes.s12),
-
-              OutlinedButton.icon(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Chức năng đang phát triển!'),
+                  // Level badge
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
                     ),
-                  );
-                },
-                icon: const Icon(Icons.settings),
-                label: const Text(AppStrings.settings),
-              ),
-
-              const Spacer(),
-
-              // Bottom info
-              Container(
-                padding: const EdgeInsets.all(AppSizes.s16),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceVariant,
-                  borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      'Flutter Architecture 2025',
-                      style: Theme.of(context).textTheme.titleMedium,
+                    decoration: BoxDecoration(
+                      color: colorScheme.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    const SizedBox(height: AppSizes.s4),
-                    Text(
-                      'Clean Architecture + Riverpod + GoRouter',
-                      style: Theme.of(context).textTheme.bodySmall,
-                      textAlign: TextAlign.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text('🇯🇵', style: TextStyle(fontSize: 18)),
+                            const SizedBox(width: 4),
+                            Text(
+                              'N5',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Upper',
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: colorScheme.onSurface
+                                        .withValues(alpha: 0.6),
+                                    fontSize: 9,
+                                  ),
+                        ),
+                        Text(
+                          'Intermediate',
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: colorScheme.onSurface
+                                        .withValues(alpha: 0.6),
+                                    fontSize: 9,
+                                  ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+            const SizedBox(height: AppSizes.s24),
+
+            // Today's milestones section
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Today's milestones",
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.arrow_forward,
+                    color: Colors.black,
+                    size: 24,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSizes.s16),
+
+            // 4 milestone cards in 2x2 grid
+            Row(
+              children: [
+                const Expanded(
+                  child: MilestoneCard(
+                    icon: Icons.text_fields,
+                    title: 'New Words',
+                    current: 17,
+                    total: 24,
+                  ),
+                ),
+                const SizedBox(width: AppSizes.s16),
+                const Expanded(
+                  child: MilestoneCard(
+                    icon: Icons.edit,
+                    title: 'Exercise',
+                    current: 4,
+                    total: 7,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSizes.s16),
+            Row(
+              children: [
+                const Expanded(
+                  child: MilestoneCard(
+                    icon: Icons.headphones,
+                    title: 'Listening',
+                    current: 3,
+                    total: 5,
+                  ),
+                ),
+                const SizedBox(width: AppSizes.s16),
+                const Expanded(
+                  child: MilestoneCard(
+                    icon: Icons.menu_book,
+                    title: 'Reading',
+                    current: 2,
+                    total: 4,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSizes.s24),
+          ],
       ),
     );
   }

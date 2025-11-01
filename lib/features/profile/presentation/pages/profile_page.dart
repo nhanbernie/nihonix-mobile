@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/router/route_constants.dart';
 
 class ProfilePage extends StatelessWidget {
   final int userId;
@@ -18,11 +19,7 @@ class ProfilePage extends StatelessWidget {
         title: Text('${AppStrings.profile} #$userId'),
         actions: [
           IconButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Chức năng đang phát triển!')),
-              );
-            },
+            onPressed: () => context.push(AppRoutes.profileEdit),
             icon: const Icon(Icons.edit),
             tooltip: AppStrings.edit,
           ),
@@ -109,11 +106,7 @@ class ProfilePage extends StatelessWidget {
 
                   // Action buttons
                   ElevatedButton.icon(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Chỉnh sửa profile!')),
-                      );
-                    },
+                    onPressed: () => context.push(AppRoutes.profileEdit),
                     icon: const Icon(Icons.edit),
                     label: const Text(AppStrings.edit),
                   ),

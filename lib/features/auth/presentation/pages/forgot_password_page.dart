@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/router/route_constants.dart';
-import '../../../../core/validation/models/email.dart';
-import '../../../../core/validation/validation_errors.dart';
-import '../../../../shared/layouts/auth_layout.dart';
-import '../../../../shared/widgets/custom_button.dart';
-import '../../../../shared/widgets/custom_input_field.dart';
+import 'package:nihonix/core/router/route_constants.dart';
+import 'package:nihonix/core/validation/models/email.dart';
+import 'package:nihonix/core/validation/validation_errors.dart';
+import 'package:nihonix/shared/layouts/auth_layout.dart';
+import 'package:nihonix/shared/widgets/custom_button.dart';
+import 'package:nihonix/shared/widgets/custom_input_field.dart';
+import 'package:nihonix/core/constants/app_colors.dart';
+import 'package:nihonix/core/constants/app_sizes.dart';
 import '../providers/forgot_password_provider.dart';
 
 class ForgotPasswordPage extends ConsumerStatefulWidget {
@@ -23,6 +23,15 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   Email _email = const Email.pure();
+
+  @override
+  void initState() {
+    super.initState();
+    // Reset state khi vào lại trang
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(forgotPasswordProvider.notifier).reset();
+    });
+  }
 
   @override
   void dispose() {

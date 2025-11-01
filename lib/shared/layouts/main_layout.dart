@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:nihonix/core/constants/app_strings.dart';
 import 'package:nihonix/core/router/route_constants.dart';
+import 'package:nihonix/shared/widgets/app_bottom_nav_bar.dart';
 
 const routes = [
   AppRoutes.home,
@@ -19,46 +20,32 @@ class MainLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentPath = GoRouterState.of(context).uri.path;
     final currentIndex = routes.indexOf(currentPath);
+    final colorScheme = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      body: SafeArea(
-        child: child,
+    // Ẩn bottom nav nếu đang ở nested route (ví dụ: /profile/edit)
+    final showBottomNav = currentIndex != -1;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: colorScheme.brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark,
+        statusBarBrightness: colorScheme.brightness == Brightness.dark
+            ? Brightness.dark
+            : Brightness.light,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness:
+            colorScheme.brightness == Brightness.dark
+                ? Brightness.light
+                : Brightness.dark,
+        systemNavigationBarContrastEnforced: false,
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: BottomNavigationBar(
-          elevation: 0,
-          currentIndex: currentIndex != -1 ? currentIndex : 0,
-          onTap: (i) {
-            switch (i) {
-              case 0:
-                context.go(AppRoutes.home);
-                break;
-              case 1:
-                context.go(AppRoutes.lesson);
-                break;
-              case 2:
-                context.go(AppRoutes.profile);
-                break;
-            }
-          },
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home), label: AppStrings.home),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.book), label: AppStrings.lesson),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person), label: AppStrings.profile),
-          ],
-        ),
+      child: Scaffold(
+        extendBody: true,
+        body: child,
+        bottomNavigationBar:
+            showBottomNav ? AppBottomNavBar(currentIndex: currentIndex) : null,
       ),
     );
   }

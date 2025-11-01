@@ -73,8 +73,7 @@ class ForgotPasswordNotifier extends _$ForgotPasswordNotifier {
     try {
       final useCase = ref.read(resetPasswordUseCaseProvider);
       await useCase(ResetPasswordRequest(
-        email: state.email!,
-        code: state.resetToken!, // Sử dụng token thay vì code
+        token: state.resetToken!,
         password: newPassword,
       ));
 

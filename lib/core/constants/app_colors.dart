@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Primary
-  // static const Color primary = Color(0xFFFF6B35);
-  static const Color primary = Color(0xFFE6661A);
+  // Primary - Màu cam đẹp, hiện đại, không trùng
+  // static const Color primary = Color(0xFFFF6B35); // Cam đỏ cũ
+  // static const Color primary = Color(0xFFE6661A); // Cam đậm cũ
+  static const Color primary = Color(0xFFFF8A3D); // Cam sáng, tươi, hiện đại
   static const Color onPrimary = Color(0xFFFFFFFF);
 
   // Background

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,7 +11,7 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(80); // Tăng height
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -17,61 +19,111 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
     final user = authState.user;
 
     return AppBar(
+      toolbarHeight: 80,
       backgroundColor: Colors.transparent,
       elevation: 0,
       surfaceTintColor: Colors.transparent,
       forceMaterialTransparency: true,
+      leadingWidth:
+          104, // 36 (left padding) + 56 (container) + 12 (right padding)
       leading: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: IconButton(
-            onPressed: () {
-              // TODO: Handle menu action
-            },
-            icon: const Icon(Icons.menu, color: Colors.black),
-          ),
-        ),
-      ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GestureDetector(
-            onTap: () => context.push(AppRoutes.profile),
-            child: Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: user?.avatar != null
-                  ? ClipOval(
+        padding: const EdgeInsets.only(
+            left: 36.0, top: 12.0, right: 12.0, bottom: 12.0),
+        child: user?.avatar != null
+            ? Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(28),
+                    onTap: () => context.push(AppRoutes.profile),
+                    child: ClipOval(
                       child: Image.network(
                         user!.avatar!,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) =>
-                            const Icon(Icons.person, color: Colors.black),
+                            const Icon(Icons.person,
+                                color: Colors.black, size: 28),
                       ),
-                    )
-                  : const Icon(Icons.person, color: Colors.black),
+                    ),
+                  ),
+                ),
+              )
+            : Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  // border: Border.all(color: Colors.grey.shade300),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(28),
+                    onTap: () => context.push(AppRoutes.profile),
+                    child: const Center(
+                      child: Icon(Icons.person, color: Colors.black, size: 28),
+                    ),
+                  ),
+                ),
+              ),
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(
+              left: 12.0, top: 12.0, right: 36.0, bottom: 12.0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(28),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey.shade300),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(28),
+                    onTap: () {
+                      // TODO: Handle notification action
+                    },
+                    child: const Center(
+                      child: Icon(Icons.notifications_outlined,
+                          color: Colors.black, size: 28),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ),

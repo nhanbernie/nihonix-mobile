@@ -2,27 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nihonix/core/constants/app_colors.dart';
 import 'package:nihonix/core/constants/app_sizes.dart';
+import 'package:nihonix/features/flashcard/presentation/widgets/folder_card.dart';
+import 'package:nihonix/shared/widgets/common_app_bar.dart';
 
 class FlashcardPage extends ConsumerWidget {
   const FlashcardPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          'Flashcard',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+      appBar: FlashcardAppBar(
+        onAddPressed: () => _showCreateFolderDialog(context),
       ),
       body: ListView(
         padding: EdgeInsets.only(
@@ -85,96 +77,59 @@ class FlashcardPage extends ConsumerWidget {
           ),
           const SizedBox(height: AppSizes.s24),
 
-          // Demo flashcard sets
-          _buildFlashcardSet(
-            'Từ vựng N5',
-            '120 thẻ',
-            Icons.star_rounded,
-            Colors.amber,
+          // Folder Cards
+          FolderCard(
+            folderName: 'Từ vựng N5',
+            onTap: () {
+              // TODO: Navigate to folder detail
+            },
           ),
-          const SizedBox(height: AppSizes.s16),
-          _buildFlashcardSet(
-            'Kanji cơ bản',
-            '80 thẻ',
-            Icons.translate_rounded,
-            Colors.blue,
+          FolderCard(
+            folderName: 'Kanji cơ bản',
+            onTap: () {
+              // TODO: Navigate to folder detail
+            },
           ),
-          const SizedBox(height: AppSizes.s16),
-          _buildFlashcardSet(
-            'Ngữ pháp thường dùng',
-            '50 thẻ',
-            Icons.menu_book_rounded,
-            Colors.green,
+          FolderCard(
+            folderName: 'Ngữ pháp thường dùng',
+            onTap: () {
+              // TODO: Navigate to folder detail
+            },
           ),
         ],
       ),
     );
   }
 
-  Widget _buildFlashcardSet(
-    String title,
-    String count,
-    IconData icon,
-    Color color,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(AppSizes.s16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Colors.grey.shade200,
-          width: 1,
+  // NOTE: fix dùng modal khác sau 
+  void _showCreateFolderDialog(BuildContext context) {
+    final TextEditingController controller = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Tạo folder mới'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(
+            hintText: 'Nhập tên folder',
+            border: OutlineInputBorder(),
+          ),
+          autofocus: true,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Hủy'),
           ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 32,
-            ),
-          ),
-          const SizedBox(width: AppSizes.s16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  count,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Icon(
-            Icons.arrow_forward_ios_rounded,
-            size: 20,
-            color: Colors.grey.shade400,
+          FilledButton(
+            onPressed: () {
+              if (controller.text.trim().isNotEmpty) {
+                // TODO: Create folder logic
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Tạo'),
           ),
         ],
       ),

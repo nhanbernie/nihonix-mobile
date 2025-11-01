@@ -31,20 +31,26 @@ class AppBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildNavItem(context, 0, Icons.home, AppStrings.home),
-            const SizedBox(width: 8),
-            _buildNavItem(context, 1, Icons.book, AppStrings.lesson),
-            const SizedBox(width: 8),
-            _buildNavItem(context, 2, Icons.person, AppStrings.profile),
-          ],
-        ),
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+
+    return Container(
+      color: Colors.transparent,
+      padding: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        top: 16,
+        bottom: bottomPadding + 16, // SafeArea bottom + extra space for shadow
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildNavItem(context, 0, Icons.home_rounded, AppStrings.home),
+          const SizedBox(width: 8),
+          _buildNavItem(context, 1, Icons.menu_book_rounded, AppStrings.lesson),
+          const SizedBox(width: 8),
+          _buildNavItem(
+              context, 2, Icons.person_outline_rounded, AppStrings.profile),
+        ],
       ),
     );
   }
@@ -59,116 +65,127 @@ class AppBottomNavBar extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
+    // Neomorphism colors - khai báo cụ thể
+    const neuBgColorLight = Color.fromARGB(255, 243, 243, 243);
+    const neuBgColorDark = Color(0xFF2A2A2A);
+    const neuLightShadowLight = Color(0xFFFFFFFF);
+    const neuLightShadowDark = Color(0xFF3A3A3A);
+    const neuDarkShadowLight = Color(0xFFBCBCBC);
+    const neuDarkShadowDark = Color(0xFF1A1A1A);
+    const neuBorderColorLight = Color(0xFFCECECE);
+    const neuBorderColorDark = Color(0xFF353535);
+    const neuIconColorLight = Color(0xFF4D4D4D);
+    const neuIconColorDark = Color(0xFF9E9E9E);
+
+    final neuBgColor = isDark ? neuBgColorDark : neuBgColorLight;
+    final neuLightShadow = isDark ? neuLightShadowDark : neuLightShadowLight;
+    final neuDarkShadow = isDark ? neuDarkShadowDark : neuDarkShadowLight;
+    final neuBorderColor = isDark ? neuBorderColorDark : neuBorderColorLight;
+    final neuIconColor = isDark ? neuIconColorDark : neuIconColorLight;
+
     return GestureDetector(
       onTap: () => _navigate(context, index),
-      child: Stack(
-        children: [
-          // Shadow layer - chỉ hiện khi selected
-          if (isSelected)
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.35),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                      spreadRadius: 0,
-                    ),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeInOutCubic,
+        padding: isSelected
+            ? const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
+            : const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          gradient: isSelected
+              ? LinearGradient(
+                  colors: [
+                    AppColors.primary,
+                    AppColors.primary.withValues(alpha: 0.85),
                   ],
-                ),
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+          color: isSelected ? null : neuBgColor,
+          borderRadius: BorderRadius.circular(50),
+          // border: isSelected
+          //     ? null
+          //     : Border.all(
+          //         color: neuBorderColor,
+          //         width: 2,
+          //       ),
+          boxShadow: isSelected
+              ? [
+                  // Outer glow for selected - giảm shadow
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.3),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                    spreadRadius: 0,
+                  ),
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.15),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                    spreadRadius: 0,
+                  ),
+                ]
+              : [
+                  // Neomorphism shadow - dark shadow (bottom-right)
+                  BoxShadow(
+                    color: neuDarkShadow,
+                    blurRadius: 10,
+                    offset: const Offset(4, 4),
+                    spreadRadius: 0,
+                  ),
+                  // Neomorphism shadow - light shadow (top-left)
+                  BoxShadow(
+                    color: neuLightShadow,
+                    blurRadius: 10,
+                    offset: const Offset(-4, -4),
+                    spreadRadius: 0,
+                  ),
+                ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Icon với scale animation
+            AnimatedScale(
+              scale: isSelected ? 1.0 : 1.0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOutBack,
+              child: Icon(
+                icon,
+                color: isSelected ? AppColors.onPrimary : neuIconColor,
+                size: 24,
               ),
             ),
-          // Main content
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 350),
-            curve: Curves.easeInOutCubic,
-            padding: isSelected
-                ? const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
-                : const EdgeInsets.all(0),
-            decoration: BoxDecoration(
-              gradient: isSelected
-                  ? LinearGradient(
-                      colors: [
-                        AppColors.primary,
-                        AppColors.primary.withValues(alpha: 0.85),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    )
-                  : null,
-              color: isSelected ? null : Colors.transparent,
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Icon với scale animation
-                AnimatedScale(
-                  scale: isSelected ? 1.0 : 1.0,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOutBack,
-                  child: isSelected
-                      ? Icon(
-                          icon,
-                          color: AppColors.onPrimary,
-                          size: 24,
-                        )
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(30),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: isDark
-                                    ? Colors.white.withValues(alpha: 0.05)
-                                    : Colors.grey.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              child: Icon(
-                                icon,
-                                color: isDark
-                                    ? Colors.grey.shade500
-                                    : Colors.grey.shade600,
-                                size: 24,
-                              ),
+            // Text với animated size và fade
+            AnimatedSize(
+              duration: const Duration(milliseconds: 350),
+              curve: Curves.easeInOutCubic,
+              child: isSelected
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(width: 8),
+                        AnimatedOpacity(
+                          opacity: isSelected ? 1.0 : 0.0,
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeInOut,
+                          child: Text(
+                            label,
+                            style: const TextStyle(
+                              color: AppColors.onPrimary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
                             ),
                           ),
                         ),
-                ),
-                // Text với animated size và fade
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 350),
-                  curve: Curves.easeInOutCubic,
-                  child: isSelected
-                      ? Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const SizedBox(width: 8),
-                            AnimatedOpacity(
-                              opacity: isSelected ? 1.0 : 0.0,
-                              duration: const Duration(milliseconds: 250),
-                              curve: Curves.easeInOut,
-                              child: Text(
-                                label,
-                                style: const TextStyle(
-                                  color: AppColors.onPrimary,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.5,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
-                ),
-              ],
+                      ],
+                    )
+                  : const SizedBox.shrink(),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

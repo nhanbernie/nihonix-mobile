@@ -2,27 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nihonix/core/constants/app_colors.dart';
 import 'package:nihonix/core/constants/app_sizes.dart';
+import 'package:nihonix/features/practice/presentation/widgets/practice_mode_card.dart';
+import 'package:nihonix/shared/widgets/common_app_bar.dart';
 
 class PracticePage extends ConsumerWidget {
   const PracticePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          'Luyện tập',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+      appBar: const CommonAppBar(
+        title: 'Luyện tập',
       ),
       body: ListView(
         padding: EdgeInsets.only(
@@ -38,10 +30,11 @@ class PracticePage extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(AppSizes.s20),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 colors: [
-                  AppColors.accent3,
-                  AppColors.accent3.withValues(alpha: 0.8),
+                  Color(0xFFFF8A3D), // Primary
+                  Color(0xFFFF6B35), // Darker orange
+                  Color(0xFFFF4500), // Deep orange
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -49,7 +42,7 @@ class PracticePage extends ConsumerWidget {
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.accent3.withValues(alpha: 0.3),
+                  color: AppColors.primary.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -85,103 +78,73 @@ class PracticePage extends ConsumerWidget {
           ),
           const SizedBox(height: AppSizes.s24),
 
-          // Practice modes
-          _buildPracticeMode(
-            'Quiz nhanh',
-            'Trắc nghiệm từ vựng',
-            Icons.quiz_rounded,
-            Colors.purple,
-          ),
-          const SizedBox(height: AppSizes.s16),
-          _buildPracticeMode(
-            'Nghe và viết',
-            'Luyện kỹ năng nghe',
-            Icons.headphones_rounded,
-            Colors.orange,
-          ),
-          const SizedBox(height: AppSizes.s16),
-          _buildPracticeMode(
-            'Ghép câu',
-            'Luyện ngữ pháp',
-            Icons.extension_rounded,
-            Colors.teal,
-          ),
-          const SizedBox(height: AppSizes.s16),
-          _buildPracticeMode(
-            'Viết Kanji',
-            'Luyện viết chữ Hán',
-            Icons.draw_rounded,
-            Colors.red,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPracticeMode(
-    String title,
-    String subtitle,
-    IconData icon,
-    Color color,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(AppSizes.s16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Colors.grey.shade200,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 32,
-            ),
-          ),
-          const SizedBox(width: AppSizes.s16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+          // Practice modes - 2x2 Grid
+          Row(
+            children: [
+              Expanded(
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: PracticeModeCard(
+                    title: 'Quiz nhanh',
+                    subtitle: 'Trắc nghiệm từ vựng',
+                    icon: Icons.quiz_rounded,
+                    color: AppColors.accent1,
+                    onTap: () {
+                      // TODO: Navigate to quiz
+                    },
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade600,
+              ),
+              const SizedBox(width: AppSizes.s12),
+              Expanded(
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: PracticeModeCard(
+                    title: 'Nghe và viết',
+                    subtitle: 'Luyện kỹ năng nghe',
+                    icon: Icons.headphones_rounded,
+                    color: AppColors.primary,
+                    onTap: () {
+                      // TODO: Navigate to listening
+                    },
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Icon(
-            Icons.arrow_forward_ios_rounded,
-            size: 20,
-            color: Colors.grey.shade400,
+          const SizedBox(height: AppSizes.s12),
+          Row(
+            children: [
+              Expanded(
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: PracticeModeCard(
+                    title: 'Ghép câu',
+                    subtitle: 'Luyện ngữ pháp',
+                    icon: Icons.extension_rounded,
+                    color: AppColors.accent3,
+                    onTap: () {
+                      // TODO: Navigate to sentence matching
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppSizes.s12),
+              Expanded(
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: PracticeModeCard(
+                    title: 'Viết Kanji',
+                    subtitle: 'Luyện viết chữ Hán',
+                    icon: Icons.draw_rounded,
+                    color: AppColors.accent2,
+                    onTap: () {
+                      // TODO: Navigate to kanji writing
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

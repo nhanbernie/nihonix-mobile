@@ -20,9 +20,10 @@ class AppColors {
   static const Color onSurfaceDark = Color(0xFFFFFFFF);
 
   // Accent
-  static const Color accent1 = Color(0xFFDCC1FF);
-  static const Color accent2 = Color(0xFFF5F378);
-  static const Color accent3 = Color(0xFF4EF4A5);
+  static const Color accent1 = Color(0xFF7246AC); // Purple
+  static const Color accent2 = Color(0xFF81BFFF); // Blue
+  static const Color accent3 = Color(0xFFEF9D51); // Orange
+  static const Color accent4 = Color(0xFFECDD6A); // Yellow
   static const Color onAccent = Color(0xFF000000);
 
   // Semantic

@@ -13,10 +13,14 @@ class FlashcardPage extends ConsumerWidget {
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
-      appBar: FlashcardAppBar(
-        onAddPressed: () => _showCreateFolderDialog(context),
+      appBar: CommonAppBar(
+        title: 'Flashcard',
+        actionIcon: Icons.add_rounded,
+        onActionPressed: () => _showCreateFolderDialog(context),
       ),
       body: ListView(
+        // const Box 
+
         padding: EdgeInsets.only(
           top: MediaQuery.of(context).padding.top +
               kToolbarHeight +
@@ -26,14 +30,16 @@ class FlashcardPage extends ConsumerWidget {
           bottom: MediaQuery.of(context).padding.bottom + 100,
         ),
         children: [
+          const SizedBox(height: AppSizes.s12),
           // Header
           Container(
             padding: const EdgeInsets.all(AppSizes.s20),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 colors: [
-                  AppColors.primary,
-                  AppColors.primary.withValues(alpha: 0.8),
+                  Color(0xFFFF8A3D), // Primary
+                  Color(0xFFFF6B35), // Darker orange
+                  Color(0xFFFF4500), // Deep orange
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,

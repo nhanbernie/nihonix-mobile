@@ -25,16 +25,12 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       surfaceTintColor: Colors.transparent,
       forceMaterialTransparency: true,
-      centerTitle: false,
-      titleSpacing: 0,
-      title: Padding(
-        padding: const EdgeInsets.only(left: 36.0),
-        child: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
+      centerTitle: true,
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
         ),
       ),
       actions: actionIcon != null && onActionPressed != null

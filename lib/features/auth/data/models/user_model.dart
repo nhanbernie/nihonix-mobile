@@ -25,6 +25,9 @@ sealed class UserModel with _$UserModel {
     required String name,
     String? avatar,
     @Default('user') String role,
+    String? levelCode,
+    String? language,
+    String? status,
     required DateTime createdAt,
   }) = _UserModel;
 
@@ -40,6 +43,9 @@ sealed class UserModel with _$UserModel {
       name: json['full_name'] as String? ?? '',
       avatar: json['avatar_url'] as String?,
       role: json['role'] as String? ?? 'user',
+      levelCode: json['level_code'] as String?,
+      language: json['language'] as String?,
+      status: json['status'] as String?,
       createdAt: DateTime.tryParse(json['created_at'] as String? ?? '') ??
           DateTime.now(),
     );
@@ -53,6 +59,9 @@ sealed class UserModel with _$UserModel {
       'full_name': name,
       'avatar_url': avatar,
       'role': role,
+      'level_code': levelCode,
+      'language': language,
+      'status': status,
       'created_at': createdAt.toIso8601String(),
     };
   }
@@ -65,6 +74,9 @@ sealed class UserModel with _$UserModel {
       name: name,
       avatar: avatar,
       role: role,
+      levelCode: levelCode,
+      language: language,
+      status: status,
       createdAt: createdAt,
     );
   }
@@ -77,6 +89,9 @@ sealed class UserModel with _$UserModel {
       name: user.name,
       avatar: user.avatar,
       role: user.role,
+      levelCode: user.levelCode,
+      language: user.language,
+      status: user.status,
       createdAt: user.createdAt,
     );
   }

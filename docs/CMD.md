@@ -10,6 +10,7 @@ flutter pub run build_runner build --delete-conflicting-outputs
 dart run build_runner build --delete-conflicting-outputs
 => code gen
 
+flutter build apk --release --split-per-abi lệnh build apk
 
 flutter analyze lib/shared/layouts/auth_layout.dart => check cụ thể
 

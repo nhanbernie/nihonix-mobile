@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nihonix/features/auth_pages.dart';
 import 'package:nihonix/features/main_pages.dart';
+import 'package:nihonix/features/onboarding/presentation/pages/language_selection_page.dart';
+import 'package:nihonix/features/onboarding/presentation/pages/level_selection_page.dart';
 import 'package:nihonix/shared/layouts/main_layout.dart';
 import 'route_constants.dart';
 
@@ -17,6 +19,18 @@ List<RouteBase> buildAppRoutes() {
       path: AppRoutes.welcome,
       name: AppRoutes.welcomeName,
       builder: (context, state) => const WelcomePage(),
+    ),
+
+    GoRoute(
+      path: AppRoutes.languageSelection,
+      name: AppRoutes.languageSelectionName,
+      builder: (context, state) => const LanguageSelectionPage(),
+    ),
+
+    GoRoute(
+      path: AppRoutes.levelSelection,
+      name: AppRoutes.levelSelectionName,
+      builder: (context, state) => const LevelSelectionPage(),
     ),
 
     GoRoute(

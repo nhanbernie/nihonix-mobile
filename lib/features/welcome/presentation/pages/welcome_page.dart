@@ -34,7 +34,8 @@ class _WelcomePageState extends State<WelcomePage> {
     await prefs.setNotFirstTime();
 
     if (mounted) {
-      context.go(AppRoutes.home);
+      // Navigate to language selection instead of home
+      context.go(AppRoutes.languageSelection);
     }
   }
 

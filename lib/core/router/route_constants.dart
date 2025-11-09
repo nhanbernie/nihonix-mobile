@@ -4,6 +4,8 @@ class AppRoutes {
   static const String splash = '/';
   static const String home = '/home';
   static const String welcome = '/welcome';
+  static const String languageSelection = '/language-selection';
+  static const String levelSelection = '/level-selection';
   static const String login = '/login';
   static const String register = '/register';
   static const String profile = '/profile';
@@ -19,6 +21,8 @@ class AppRoutes {
   static const String splashName = 'splash';
   static const String homeName = 'home';
   static const String welcomeName = 'welcome';
+  static const String languageSelectionName = 'languageSelection';
+  static const String levelSelectionName = 'levelSelection';
   static const String loginName = 'login';
   static const String registerName = 'register';
   static const String profileName = 'profile';
@@ -33,6 +37,7 @@ class AppRoutes {
   // Route groups
   static final List<String> protectedRoutes = [home, lesson, flashcard, practice, profile];
   static final List<String> authRoutes = [login, register];
+  static final List<String> onboardingRoutes = [languageSelection, levelSelection];
   static final List<String> forgotPasswordRoutes = [
     forgotPassword,
     verifyCode,

@@ -21,28 +21,62 @@ Future<String?> handleRouteGuard(
       return null;
     }
 
-    // Check first time user preference
-    final isFirstTime = await _welcomePrefs.isFirstTime();
-
-    // Get auth state from Riverpod
+    // Get auth state from Riverpod first (before async calls)
     final container = ProviderScope.containerOf(context);
     final authState = container.read(authProvider);
 
-    // Welcome page protection
+    // Check first time and language selection
+    final isFirstTime = await _welcomePrefs.isFirstTime();
+    final hasSelectedLanguage = await _welcomePrefs.hasSelectedLanguage();
+
+    // Welcome page guard - show intro slides first time
+    if (isFirstTime &&
+        location != AppRoutes.welcome &&
+        location != AppRoutes.splash) {
+      return AppRoutes.welcome;
+    }
+
+    // Allow access to welcome page
     if (location == AppRoutes.welcome) {
-      // If already seen welcome, redirect to home
       if (!isFirstTime) {
-        return AppRoutes.home;
+        // Already seen welcome, check language
+        if (!hasSelectedLanguage) {
+          return AppRoutes.languageSelection;
+        }
+        return authState.isAuthenticated ? AppRoutes.home : AppRoutes.login;
       }
       return null;
     }
 
-    // Home and other routes protection
-    if (isFirstTime &&
-        location != AppRoutes.splash &&
-        location != AppRoutes.welcome) {
-      // First time user trying to access other routes → show welcome
-      return AppRoutes.welcome;
+    // Language selection guard - after welcome
+    if (!hasSelectedLanguage &&
+        location != AppRoutes.languageSelection &&
+        location != AppRoutes.welcome &&
+        location != AppRoutes.splash) {
+      return AppRoutes.languageSelection;
+    }
+
+    // Allow access to language selection page
+    if (location == AppRoutes.languageSelection) {
+      if (hasSelectedLanguage) {
+        // Already selected language, redirect based on auth
+        return authState.isAuthenticated ? AppRoutes.home : AppRoutes.login;
+      }
+      return null;
+    }
+
+    // Level selection guard - only for authenticated users without level
+    if (location == AppRoutes.levelSelection) {
+      if (!authState.isAuthenticated) {
+        return AppRoutes.login;
+      }
+      // Check if user has level_code
+      final user = authState.user;
+      if (user != null && user.levelCode != null && user.levelCode!.isNotEmpty) {
+        // Already has level, go to home
+        return AppRoutes.home;
+      }
+      return null;
     }
 
     // Authentication guard for protected routes
@@ -50,10 +84,21 @@ Future<String?> handleRouteGuard(
       if (!authState.isAuthenticated) {
         return AppRoutes.login;
       }
+
+      // Check if authenticated user needs to select level
+      final user = authState.user;
+      if (user != null && (user.levelCode == null || user.levelCode!.isEmpty)) {
+        return AppRoutes.levelSelection;
+      }
     }
 
     // Redirect authenticated users away from auth routes
     if (AppRoutes.authRoutes.contains(location) && authState.isAuthenticated) {
+      // Check if user needs to select level
+      final user = authState.user;
+      if (user != null && (user.levelCode == null || user.levelCode!.isEmpty)) {
+        return AppRoutes.levelSelection;
+      }
       return AppRoutes.home;
     }
 
@@ -66,7 +111,7 @@ Future<String?> handleRouteGuard(
     return null;
   } catch (e) {
     debugPrint('Router redirect error: $e');
-    // Fallback to welcome page
-    return AppRoutes.welcome;
+    // Fallback to language selection
+    return AppRoutes.languageSelection;
   }
 }

@@ -14,6 +14,9 @@ sealed class User with _$User {
     required String name,
     String? avatar,
     @Default('user') String role,
+    String? levelCode,
+    String? language,
+    String? status,
     required DateTime createdAt,
   }) = _User;
 

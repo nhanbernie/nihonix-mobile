@@ -167,6 +167,12 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
+  /// Update the current user data
+  /// Used after profile update to sync auth state
+  void updateUser(User updatedUser) {
+    state = state.copyWith(user: updatedUser);
+  }
+
   String _mapErrorToMessage(Object error) {
     if (error.toString().contains('NoInternetException')) {
       return 'Không có kết nối mạng';

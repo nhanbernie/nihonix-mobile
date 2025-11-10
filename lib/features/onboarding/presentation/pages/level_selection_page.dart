@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:nihonix/core/constants/app_colors.dart';
 import 'package:nihonix/core/constants/app_sizes.dart';
 import 'package:nihonix/core/router/route_constants.dart';
+import 'package:nihonix/features/auth/presentation/providers/auth_provider.dart';
 import '../providers/onboarding_providers.dart';
 import '../widgets/level_card.dart';
 
@@ -79,14 +80,46 @@ class _LevelSelectionPageState extends ConsumerState<LevelSelectionPage> {
       await ref.read(updateUserLevelProvider(levelCode).future);
 
       if (mounted) {
-        context.go(AppRoutes.home);
+        // show quick success feedback
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Cập nhật trình độ thành công'),
+            backgroundColor: Colors.green,
+            duration: Duration(milliseconds: 700),
+          ),
+        );
+
+        // Refresh auth state so route guard sees updated user.levelCode
+        // Update local auth state so route guard won't redirect back to login
+        try {
+          ref.read(authProvider.notifier).setUserLevelLocally(levelCode);
+        } catch (e) {
+          // ignore: avoid_print
+          print('[Onboarding] setUserLevelLocally error: $e');
+        }
+
+  ref.read(authProvider.notifier).checkAuth();
+
+        // Use path-based navigation (same approach as login page)
+        try {
+          context.go(AppRoutes.home);
+        } catch (navErr) {
+          // ignore: avoid_print
+          print('[Onboarding] navigation error: $navErr');
+        }
       }
     } catch (e) {
+      String message = 'Có lỗi xảy ra';
+      try {
+        message = e.toString();
+      } catch (_) {}
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Lỗi: ${e.toString()}'),
+            content: Text('Lỗi: $message'),
             backgroundColor: AppColors.error,
+            duration: const Duration(seconds: 3),
           ),
         );
       }

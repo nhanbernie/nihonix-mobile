@@ -154,6 +154,19 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
+  /// Update the current user's levelCode locally without calling the server.
+  /// This helps route guards and UI update immediately after onboarding
+  /// when the server update succeeded but fetching current user may fail
+  /// transiently.
+  void setUserLevelLocally(String levelCode) {
+    final current = state.user;
+    if (current != null) {
+      // user is a Freezed class with copyWith
+      final updated = current.copyWith(levelCode: levelCode);
+      state = state.copyWith(user: updated);
+    }
+  }
+
   String _mapErrorToMessage(Object error) {
     if (error.toString().contains('NoInternetException')) {
       return 'Không có kết nối mạng';

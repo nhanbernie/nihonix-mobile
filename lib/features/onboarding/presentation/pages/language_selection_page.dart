@@ -16,11 +16,18 @@ class LanguageSelectionPage extends StatefulWidget {
 
 class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
   String? _selectedLanguage;
+  bool _isLoading = false;
   final _welcomePrefs = WelcomePreferences();
+
+  void _selectLanguage(String languageCode) {
+    setState(() {
+      _selectedLanguage = languageCode;
+    });
+  }
 
   Future<void> _handleLanguageSelection(String languageCode) async {
     setState(() {
-      _selectedLanguage = languageCode;
+      _isLoading = true;
     });
 
     // Save language preference
@@ -68,9 +75,11 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
           ),
           child: SafeArea(
             child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSizes.s24,
-              vertical: AppSizes.s32,
+            padding: const EdgeInsets.only(
+              left: AppSizes.s24,
+              right: AppSizes.s24,
+              top: AppSizes.s32,
+              bottom: 80, // Space for floating button
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -122,125 +131,76 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                   languageName: 'Tiếng Việt',
                   languageCode: 'vi',
                   isSelected: _selectedLanguage == 'vi',
-                  onTap: () => _handleLanguageSelection('vi'),
+                  onTap: () => _selectLanguage('vi'),
                 ),
-                
+
                 const SizedBox(height: AppSizes.s16),
-                
+
                 LanguageOptionCard(
                   flag: '🇬🇧',
                   languageName: 'English',
                   languageCode: 'en',
                   isSelected: _selectedLanguage == 'en',
-                  onTap: () => _handleLanguageSelection('en'),
+                  onTap: () => _selectLanguage('en'),
                 ),
-                
+
                 const SizedBox(height: AppSizes.s16),
-                
+
                 LanguageOptionCard(
                   flag: '🇯🇵',
                   languageName: '日本語',
                   languageCode: 'ja',
                   isSelected: _selectedLanguage == 'ja',
-                  onTap: () => _handleLanguageSelection('ja'),
-                ),
-                
-                const SizedBox(height: AppSizes.s48),
-
-                // Footer with curved design
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
-                  child: CustomPaint(
-                    painter: _CurvedFooterPainter(
-                      color: isDark
-                          ? AppColors.onBackgroundDark.withOpacity(0.1)
-                          : AppColors.onBackground.withOpacity(0.1),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSizes.s24,
-                        vertical: AppSizes.s12,
-                      ),
-                      child: Text(
-                        'Bạn có thể thay đổi ngôn ngữ sau trong Cài đặt',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontSize: 11,
-                              color: isDark
-                                  ? AppColors.onBackgroundDark.withOpacity(0.5)
-                                  : AppColors.onBackground.withOpacity(0.5),
-                            ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
+                  onTap: () => _selectLanguage('ja'),
                 ),
               ],
             ),
           ),
         ),
       ),
+      // Floating confirm button
+      floatingActionButton: _selectedLanguage != null && !_isLoading
+          ? Padding(
+              padding: const EdgeInsets.only(
+                left: AppSizes.s24,
+                right: AppSizes.s24,
+                // bottom: AppSizes.s24, // Add bottom padding for system nav bar
+              ),
+              child: SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: FloatingActionButton.extended(
+                  onPressed: () => _handleLanguageSelection(_selectedLanguage!),
+                  backgroundColor: AppColors.primary,
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                  label: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Xác nhận',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      const SizedBox(width: AppSizes.s8),
+                      const Icon(
+                        Icons.check_rounded,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     ),
     );
   }
-}
-
-// Custom painter for curved footer background
-class _CurvedFooterPainter extends CustomPainter {
-  final Color color;
-
-  _CurvedFooterPainter({required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill;
-
-    final path = Path();
-
-    // Start from top-left with curve
-    path.moveTo(0, 8);
-    path.quadraticBezierTo(0, 0, 8, 0);
-
-    // Top edge with slight curve down in middle
-    path.lineTo(size.width * 0.3, 0);
-    path.quadraticBezierTo(
-      size.width * 0.5, 4,
-      size.width * 0.7, 0,
-    );
-    path.lineTo(size.width - 8, 0);
-
-    // Top-right corner
-    path.quadraticBezierTo(size.width, 0, size.width, 8);
-
-    // Right edge
-    path.lineTo(size.width, size.height - 8);
-
-    // Bottom-right corner with curve
-    path.quadraticBezierTo(
-      size.width, size.height,
-      size.width - 8, size.height,
-    );
-
-    // Bottom edge with curve up in middle
-    path.lineTo(size.width * 0.7, size.height);
-    path.quadraticBezierTo(
-      size.width * 0.5, size.height - 4,
-      size.width * 0.3, size.height,
-    );
-    path.lineTo(8, size.height);
-
-    // Bottom-left corner
-    path.quadraticBezierTo(0, size.height, 0, size.height - 8);
-
-    // Left edge
-    path.lineTo(0, 8);
-    path.close();
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 

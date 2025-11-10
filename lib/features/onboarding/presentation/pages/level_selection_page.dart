@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:nihonix/core/constants/app_colors.dart';
 import 'package:nihonix/core/constants/app_sizes.dart';
 import 'package:nihonix/core/router/route_constants.dart';
+import '../providers/onboarding_providers.dart';
 import '../widgets/level_card.dart';
 
 class LevelSelectionPage extends ConsumerStatefulWidget {
@@ -63,21 +64,21 @@ class _LevelSelectionPageState extends ConsumerState<LevelSelectionPage> {
     },
   ];
 
-  Future<void> _handleLevelSelection(String levelCode) async {
+  void _selectLevel(String levelCode) {
     setState(() {
       _selectedLevel = levelCode;
+    });
+  }
+
+  Future<void> _handleLevelSelection(String levelCode) async {
+    setState(() {
       _isLoading = true;
     });
 
     try {
-      // TODO: Call API to update user level
-      // await ref.read(updateUserLevelProvider(levelCode).future);
-
-      // Simulate API call
-      await Future.delayed(const Duration(milliseconds: 500));
+      await ref.read(updateUserLevelProvider(levelCode).future);
 
       if (mounted) {
-        // Navigate to home
         context.go(AppRoutes.home);
       }
     } catch (e) {
@@ -132,7 +133,6 @@ class _LevelSelectionPageState extends ConsumerState<LevelSelectionPage> {
               ],
             ),
           ),
-          child: SafeArea(
             child: Column(
             children: [
               // Header
@@ -173,9 +173,11 @@ class _LevelSelectionPageState extends ConsumerState<LevelSelectionPage> {
               // Level options (scrollable)
               Expanded(
                 child: ListView.separated(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSizes.s24,
-                    vertical: AppSizes.s16,
+                  padding: const EdgeInsets.only(
+                    left: AppSizes.s24,
+                    right: AppSizes.s24,
+                    top: AppSizes.s16,
+                    bottom: 80, // Space for floating button
                   ),
                   itemCount: _levels.length,
                   separatorBuilder: (context, index) =>
@@ -192,29 +194,55 @@ class _LevelSelectionPageState extends ConsumerState<LevelSelectionPage> {
                       isLoading: _isLoading && _selectedLevel == level['code'],
                       onTap: _isLoading
                           ? null
-                          : () => _handleLevelSelection(level['code']),
+                          : () => _selectLevel(level['code']),
                     );
                   },
                 ),
               ),
-
-              // Footer
-              Padding(
-                padding: const EdgeInsets.all(AppSizes.s24),
-                child: Text(
-                  'Bạn có thể thay đổi trình độ sau trong Cài đặt',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: isDark
-                            ? AppColors.onBackgroundDark.withOpacity(0.5)
-                            : AppColors.onBackground.withOpacity(0.5),
-                      ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
             ],
           ),
-        ),
       ),
+      // Floating confirm button
+      floatingActionButton: _selectedLevel != null && !_isLoading
+          ? Padding(
+              padding: const EdgeInsets.only(
+                left: AppSizes.s24,
+                right: AppSizes.s24,
+                bottom: AppSizes.s24, // Add bottom padding for system nav bar
+              ),
+              child: SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: FloatingActionButton.extended(
+                  onPressed: () => _handleLevelSelection(_selectedLevel!),
+                  backgroundColor: AppColors.primary,
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                  label: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Xác nhận',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      const SizedBox(width: AppSizes.s8),
+                      const Icon(
+                        Icons.check_rounded,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     ),
     );
   }

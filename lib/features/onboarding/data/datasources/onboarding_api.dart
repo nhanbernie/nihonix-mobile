@@ -9,7 +9,7 @@ part 'onboarding_api.g.dart';
 abstract class OnboardingApi {
   factory OnboardingApi(Dio dio, {String? baseUrl}) = _OnboardingApi;
 
-  @PATCH('/api/users/me/level')
+  @PATCH('/users/me/level')
   Future<void> updateUserLevel(@Body() Map<String, String> body);
 }
 

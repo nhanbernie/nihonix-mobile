@@ -27,8 +27,9 @@ class OnboardingRemoteDataSource {
   Future<void> updateUserLevel(String levelCode) async {
     try {
       await _api.updateUserLevel({'level_code': levelCode});
-    } on DioException {
-      // AuthInterceptor đã map errors sang custom exceptions
+    } on DioException catch (e) {
+      rethrow;
+    } catch (e) {
       rethrow;
     }
   }

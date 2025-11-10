@@ -208,7 +208,7 @@ class _LevelSelectionPageState extends ConsumerState<LevelSelectionPage> {
               padding: const EdgeInsets.only(
                 left: AppSizes.s24,
                 right: AppSizes.s24,
-                bottom: AppSizes.s24, // Add bottom padding for system nav bar
+                bottom: AppSizes.s24,
               ),
               child: SizedBox(
                 width: double.infinity,

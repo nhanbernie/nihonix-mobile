@@ -5,6 +5,7 @@ import 'package:retrofit/retrofit.dart';
 
 import '../models/login_response.dart';
 import '../models/user_model.dart';
+import '../models/refresh_response.dart';
 import '../models/verify_code_response.dart';
 import '../models/reset_password_request.dart';
 
@@ -22,7 +23,7 @@ abstract class AuthApi {
   Future<LoginResponse> login(@Body() Map<String, dynamic> body);
 
   @POST('/auth/refresh')
-  Future<Map<String, String>> refreshToken(@Body() Map<String, String> body);
+  Future<RefreshResponse> refreshToken(@Body() Map<String, String> body);
 
   @POST('/auth/logout')
   Future<Map<String, String>> logout(@Body() Map<String, String> body);

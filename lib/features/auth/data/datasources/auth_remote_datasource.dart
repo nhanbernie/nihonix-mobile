@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/network/auth_interceptor.dart'
     show IAuthRefreshService;
-import '../../../../core/network/http_exceptions.dart';
+import 'package:nihonix/core/network/http_exceptions.dart';
 import '../models/login_response.dart';
 import '../models/user_model.dart';
 import '../models/reset_password_request.dart';
@@ -134,9 +134,14 @@ class AuthRemoteDataSource implements IAuthRefreshService {
         'refreshToken': refreshToken,
       });
 
+      // response is now typed as RefreshResponse (see model)
+      if (response.accessToken.isEmpty || response.refreshToken.isEmpty) {
+        throw UnauthorizedException(message: 'Invalid refresh response: missing tokens');
+      }
+
       return (
-        accessToken: response['accessToken'] as String,
-        refreshToken: response['refreshToken'] as String,
+        accessToken: response.accessToken,
+        refreshToken: response.refreshToken,
       );
     } on DioException catch (e) {
       // Nếu refresh thất bại, throw UnauthorizedException

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nihonix/core/constants/app_colors.dart';
 import 'package:nihonix/core/constants/app_sizes.dart';
+import 'package:nihonix/features/flashcard/presentation/providers/flashcard_provider.dart';
 import 'package:nihonix/features/flashcard/presentation/widgets/folder_card.dart';
 import 'package:nihonix/shared/widgets/common_app_bar.dart';
 
@@ -10,13 +11,15 @@ class FlashcardPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final flashcardState = ref.watch(flashcardProvider);
+    
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
       appBar: CommonAppBar(
         title: 'Flashcard',
         actionIcon: Icons.add_rounded,
-        onActionPressed: () => _showCreateFolderDialog(context),
+        onActionPressed: () => _showCreateFolderDialog(context, ref),
       ),
       body: ListView(
         // const Box 
@@ -83,56 +86,158 @@ class FlashcardPage extends ConsumerWidget {
           ),
           const SizedBox(height: AppSizes.s24),
 
-          // Folder Cards
-          FolderCard(
-            folderName: 'Từ vựng N5',
-            onTap: () {
-              // TODO: Navigate to folder detail
-            },
-          ),
-          FolderCard(
-            folderName: 'Kanji cơ bản',
-            onTap: () {
-              // TODO: Navigate to folder detail
-            },
-          ),
-          FolderCard(
-            folderName: 'Ngữ pháp thường dùng',
-            onTap: () {
-              // TODO: Navigate to folder detail
-            },
-          ),
+          // Loading indicator
+          if (flashcardState.isLoading)
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(AppSizes.s24),
+                child: CircularProgressIndicator(),
+              ),
+            )
+          // Error message
+          else if (flashcardState.error != null)
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSizes.s24),
+                child: Column(
+                  children: [
+                    const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                    const SizedBox(height: AppSizes.s12),
+                    Text(
+                      'Lỗi: ${flashcardState.error}',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                    const SizedBox(height: AppSizes.s16),
+                    FilledButton.icon(
+                      onPressed: () => ref.read(flashcardProvider.notifier).loadFolders(),
+                      icon: const Icon(Icons.refresh),
+                      label: const Text('Thử lại'),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          // Empty state
+          else if (flashcardState.folders.isEmpty)
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSizes.s24),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.folder_open_rounded,
+                      size: 64,
+                      color: Colors.grey.shade400,
+                    ),
+                    const SizedBox(height: AppSizes.s16),
+                    Text(
+                      'Chưa có folder nào',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                    const SizedBox(height: AppSizes.s8),
+                    Text(
+                      'Nhấn + để tạo folder mới',
+                      style: TextStyle(color: Colors.grey.shade500),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          // Folder list
+          else
+            ...flashcardState.folders.map((folder) => Padding(
+              padding: const EdgeInsets.only(bottom: AppSizes.s12),
+              child: FolderCard(
+                folderName: folder.name,
+                onTap: () {
+                  // TODO: Navigate to folder detail
+                },
+              ),
+            )),
         ],
       ),
     );
   }
 
-  // NOTE: fix dùng modal khác sau 
-  void _showCreateFolderDialog(BuildContext context) {
-    final TextEditingController controller = TextEditingController();
+  void _showCreateFolderDialog(BuildContext context, WidgetRef ref) {
+    final nameController = TextEditingController();
+    final descriptionController = TextEditingController();
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Tạo folder mới'),
-        content: TextField(
-          controller: controller,
-          decoration: const InputDecoration(
-            hintText: 'Nhập tên folder',
-            border: OutlineInputBorder(),
-          ),
-          autofocus: true,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(
+                labelText: 'Tên folder *',
+                hintText: 'Ví dụ: Từ vựng N5',
+                border: OutlineInputBorder(),
+              ),
+              autofocus: true,
+            ),
+            const SizedBox(height: AppSizes.s16),
+            TextField(
+              controller: descriptionController,
+              decoration: const InputDecoration(
+                labelText: 'Mô tả (tùy chọn)',
+                hintText: 'Mô tả ngắn về folder',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 2,
+            ),
+          ],
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text('Hủy'),
           ),
           FilledButton(
-            onPressed: () {
-              if (controller.text.trim().isNotEmpty) {
-                // TODO: Create folder logic
-                Navigator.pop(context);
+            onPressed: () async {
+              final name = nameController.text.trim();
+              if (name.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Vui lòng nhập tên folder')),
+                );
+                return;
+              }
+
+              Navigator.pop(dialogContext);
+
+              // Call API to create folder
+              final description = descriptionController.text.trim();
+              final success = await ref.read(flashcardProvider.notifier).createFolder(
+                name: name,
+                description: description.isEmpty ? null : description,
+                order: 1, // Backend requires order >= 1
+              );
+
+              if (context.mounted) {
+                if (success) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Tạo folder "$name" thành công!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } else {
+                  final error = ref.read(flashcardProvider).error ?? 'Có lỗi xảy ra';
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Lỗi: $error'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
               }
             },
             child: const Text('Tạo'),

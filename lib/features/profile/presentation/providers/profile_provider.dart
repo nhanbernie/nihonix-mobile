@@ -1,8 +1,8 @@
 library;
 
+import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../../auth/domain/entities/user.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../domain/entities/update_profile_request.dart';
 import 'profile_di.dart';
@@ -63,6 +63,52 @@ class ProfileNotifier extends Notifier<ProfileState> {
         error: null,
       );
     } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        isSuccess: false,
+        error: e.toString(),
+      );
+    }
+  }
+
+  /// Upload avatar
+  Future<void> uploadAvatar({
+    required File imageFile,
+  }) async {
+    state = state.copyWith(isLoading: true, error: null, isSuccess: false);
+
+    try {
+      // Get repository from DI
+      final repository = ref.read(profileRepositoryProvider);
+
+      // Upload avatar
+      final avatarUrl = await repository.uploadAvatar(
+        imageFile: imageFile,
+      );
+
+      print('✅ [ProfileNotifier] Avatar uploaded: $avatarUrl');
+
+      // Get current user and update with new avatar
+      final authState = ref.read(authProvider);
+      final currentUser = authState.user;
+
+      if (currentUser != null) {
+        // Create updated user with new avatar URL using copyWith
+        final updatedUser = currentUser.copyWith(
+          avatar: avatarUrl, // New avatar URL
+        );
+
+        // Update auth state
+        ref.read(authProvider.notifier).updateUser(updatedUser);
+      }
+
+      state = state.copyWith(
+        isLoading: false,
+        isSuccess: true,
+        error: null,
+      );
+    } catch (e) {
+      print('❌ [ProfileNotifier] Upload avatar error: $e');
       state = state.copyWith(
         isLoading: false,
         isSuccess: false,

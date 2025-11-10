@@ -42,6 +42,9 @@ class AuthInterceptor extends Interceptor {
   final AuthPathsConfig _paths;
   final List<String> _retryIdempotentMethods;
   final int _maxRetries;
+  
+  /// Reference to Dio instance for retrying requests
+  Dio? _dio;
 
   /// Completer để implement single-flight pattern cho refresh token.
   /// Đảm bảo chỉ có 1 refresh request được thực hiện tại một thời điểm.
@@ -66,6 +69,11 @@ class AuthInterceptor extends Interceptor {
         _retryIdempotentMethods = retryIdempotentMethods,
         _maxRetries = maxRetries;
 
+  /// Set Dio instance for retrying requests
+  void setDio(Dio dio) {
+    _dio = dio;
+  }
+
   @override
   Future<void> onRequest(
     RequestOptions options,
@@ -87,8 +95,13 @@ class AuthInterceptor extends Interceptor {
       if (!_isExcludedPath(options.path)) {
         final accessToken = await _tokenStore.readAccessToken();
         if (accessToken != null && accessToken.isNotEmpty) {
+          print('🔑 [AuthInterceptor] Attaching Bearer token to ${options.path}');
           options.headers['Authorization'] = 'Bearer $accessToken';
+        } else {
+          print('⚠️ [AuthInterceptor] No access token found for ${options.path}');
         }
+      } else {
+        print('🔓 [AuthInterceptor] Skipping auth for excluded path: ${options.path}');
       }
 
       handler.next(options);
@@ -134,21 +147,36 @@ class AuthInterceptor extends Interceptor {
     final statusCode = err.response?.statusCode;
     final path = err.requestOptions.path;
 
+    print('⚠️ [AuthInterceptor] onError: statusCode=$statusCode, path=$path');
+
     if (statusCode == 401 && !_isRefreshPath(path)) {
+      print('🔐 [AuthInterceptor] 401 detected, attempting token refresh...');
+      
       try {
         await _handleTokenRefresh();
 
         // Refresh thành công → replay request với token mới
         final newAccessToken = await _tokenStore.readAccessToken();
         if (newAccessToken != null) {
+          print('✅ [AuthInterceptor] Got new access token, replaying request...');
           err.requestOptions.headers['Authorization'] =
               'Bearer $newAccessToken';
 
-          // Replay request bằng cách tạo request mới với options đã update
-          final response = await Dio().fetch(err.requestOptions);
-          return handler.resolve(response);
+          // Replay request bằng Dio instance có interceptor
+          if (_dio != null) {
+            final response = await _dio!.fetch(err.requestOptions);
+            return handler.resolve(response);
+          } else {
+            // Fallback nếu Dio chưa được set
+            print('⚠️ [AuthInterceptor] WARNING: _dio is null, using fallback Dio instance');
+            final response = await Dio().fetch(err.requestOptions);
+            return handler.resolve(response);
+          }
+        } else {
+          print('❌ [AuthInterceptor] No access token after refresh');
         }
       } catch (refreshError) {
+        print('❌ [AuthInterceptor] Token refresh failed: $refreshError');
         // Refresh thất bại → clear token và gọi onUnauthorized
         await _handleRefreshFailure();
         return handler.reject(
@@ -185,8 +213,13 @@ class AuthInterceptor extends Interceptor {
 
         err.requestOptions.extra['retryCount'] = retryCount + 1;
         try {
-          final response = await Dio().fetch(err.requestOptions);
-          return handler.resolve(response);
+          if (_dio != null) {
+            final response = await _dio!.fetch(err.requestOptions);
+            return handler.resolve(response);
+          } else {
+            final response = await Dio().fetch(err.requestOptions);
+            return handler.resolve(response);
+          }
         } catch (retryError) {}
       }
     }
@@ -213,6 +246,7 @@ class AuthInterceptor extends Interceptor {
   Future<void> _handleTokenRefresh() async {
     // Nếu đang có refresh đang chạy, đợi nó hoàn thành
     if (_refreshCompleter != null && !_refreshCompleter!.isCompleted) {
+      print('🔄 [AuthInterceptor] Waiting for existing refresh to complete...');
       return _refreshCompleter!.future;
     }
 
@@ -220,21 +254,30 @@ class AuthInterceptor extends Interceptor {
     _refreshCompleter = Completer<void>();
 
     try {
+      print('🔄 [AuthInterceptor] Starting token refresh...');
+      
       // Lấy refresh token từ store
       final refreshToken = await _tokenStore.readRefreshToken();
       if (refreshToken == null || refreshToken.isEmpty) {
+        print('❌ [AuthInterceptor] No refresh token found in storage');
         throw UnauthorizedException(message: 'Không tìm thấy refresh token');
       }
+      
+      print('✅ [AuthInterceptor] Got refresh token from storage: ${refreshToken.substring(0, 20)}...');
 
       // Gọi API refresh token
+      print('🌐 [AuthInterceptor] Calling refresh token API...');
       final tokens = await _authRemote.refreshToken(refreshToken);
+      print('✅ [AuthInterceptor] Refresh token API success');
 
       // Lưu token mới vào store
       await _tokenStore.saveAccessToken(tokens.accessToken);
       await _tokenStore.saveRefreshToken(tokens.refreshToken);
+      print('✅ [AuthInterceptor] New tokens saved to storage');
 
       _refreshCompleter!.complete();
     } catch (e) {
+      print('❌ [AuthInterceptor] Token refresh failed: $e');
       _refreshCompleter!.completeError(e);
       rethrow;
     }
@@ -389,18 +432,5 @@ class AuthInterceptor extends Interceptor {
       requestOptions: requestOptions,
       data: errors ?? data,
     );
-  }
-
-  /// Mask Bearer token trong log để bảo mật.
-  /// Ví dụ: "Bearer abc123xyz" → "Bearer abc...xyz"
-  String _maskToken(String message) {
-    final bearerRegex = RegExp(r'Bearer\s+([a-zA-Z0-9_\-\.]+)');
-    return message.replaceAllMapped(bearerRegex, (match) {
-      final token = match.group(1);
-      if (token != null && token.length > 10) {
-        return 'Bearer ${token.substring(0, 3)}...${token.substring(token.length - 3)}';
-      }
-      return 'Bearer ***';
-    });
   }
 }

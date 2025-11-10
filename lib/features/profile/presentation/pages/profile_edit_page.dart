@@ -1,11 +1,16 @@
+
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
+import '../../../../shared/widgets/common_app_bar.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../providers/profile_provider.dart';
+import '../widgets/avatar_picker_button.dart';
 
 class ProfileEditPage extends ConsumerStatefulWidget {
   const ProfileEditPage({super.key});
@@ -93,107 +98,66 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.dark,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
         systemNavigationBarColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
         backgroundColor: Colors.white,
+        appBar: const CommonAppBar(title: 'Edit Profile'),
         body: Column(
           children: [
-            // Header with gradient
-            Container(
-              height: 200,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [AppColors.primary, AppColors.accent3],
-                ),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(32),
-                  bottomRight: Radius.circular(32),
-                ),
-              ),
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    // AppBar
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            onPressed: () => context.pop(),
-                            icon: const Icon(Icons.arrow_back, color: Colors.white),
-                          ),
-                          const Expanded(
-                            child: Text(
-                              'Sửa thông tin',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 48), // Balance back button
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    // Avatar
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.white,
-                        border: Border.all(color: Colors.white, width: 3),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withAlpha(51),
-                            blurRadius: 15,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: ClipOval(
-                        child: user?.avatar != null
-                            ? Image.network(
-                                user!.avatar!,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    const Icon(Icons.person, color: Colors.black, size: 32),
-                              )
-                            : const Icon(Icons.person, color: Colors.black, size: 32),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
 
             // Form
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(AppSizes.s24),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s24),
                 child: Form(
                   key: _formKey,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(height: AppSizes.s16),
+                      const SizedBox(height: AppSizes.s24),
+
+                      // Avatar picker button
+                      AvatarPickerButton(
+                        currentAvatarUrl: user?.avatar,
+                        size: 100.0,
+                        onImageSelected: (imageFile) async {
+                          // Upload avatar
+                          await ref.read(profileProvider.notifier).uploadAvatar(
+                            imageFile: imageFile,
+                          );
+
+                          // Show result
+                          if (mounted) {
+                            final state = ref.read(profileProvider);
+                            if (state.isSuccess) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Cập nhật avatar thành công!'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            } else if (state.error != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Lỗi: ${state.error}'),
+                                  backgroundColor: AppColors.error,
+                                ),
+                              );
+                            }
+                          }
+                        },
+                      ),
+
+                      const SizedBox(height: AppSizes.s40),
 
                       // Username
-                      _buildLabel('Tên đăng nhập'),
-                      const SizedBox(height: AppSizes.s8),
-                      _buildTextField(
+                      _buildInputField(
+                        label: 'Tên đăng nhập',
                         controller: _usernameController,
-                        hintText: 'Nhập tên đăng nhập',
-                        prefixIcon: Icons.person_outline,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'Vui lòng nhập tên đăng nhập';
@@ -205,12 +169,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                       const SizedBox(height: AppSizes.s20),
 
                       // Email
-                      _buildLabel('Email'),
-                      const SizedBox(height: AppSizes.s8),
-                      _buildTextField(
+                      _buildInputField(
+                        label: 'Email',
                         controller: _emailController,
-                        hintText: 'Nhập email',
-                        prefixIcon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -226,12 +187,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                       const SizedBox(height: AppSizes.s20),
 
                       // Full Name
-                      _buildLabel('Họ và tên'),
-                      const SizedBox(height: AppSizes.s8),
-                      _buildTextField(
+                      _buildInputField(
+                        label: 'Họ và tên',
                         controller: _fullNameController,
-                        hintText: 'Nhập họ và tên',
-                        prefixIcon: Icons.badge_outlined,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'Vui lòng nhập họ và tên';
@@ -242,12 +200,10 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
 
                       const SizedBox(height: AppSizes.s20),
 
-                      // Language
-                      _buildLabel('Ngôn ngữ'),
-                      const SizedBox(height: AppSizes.s8),
+                      // Language Dropdown
                       _buildLanguageDropdown(),
 
-                      const SizedBox(height: AppSizes.s32),
+                      const SizedBox(height: AppSizes.s40),
 
                       // Save Button
                       SizedBox(
@@ -256,24 +212,24 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                         child: ElevatedButton(
                           onPressed: profileState.isLoading ? null : _handleSave,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
+                            backgroundColor: AppColors.primary.withValues(alpha: 0.8),
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(25),
                             ),
                             elevation: 0,
                           ),
                           child: profileState.isLoading
                               ? const SizedBox(
-                                  width: 24,
-                                  height: 24,
+                                  width: 20,
+                                  height: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                   ),
                                 )
                               : const Text(
-                                  'Lưu thay đổi',
+                                  'Save',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -281,6 +237,8 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                                 ),
                         ),
                       ),
+
+                      const SizedBox(height: AppSizes.s24),
                     ],
                   ),
                 ),
@@ -292,85 +250,129 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
     );
   }
 
-  Widget _buildLabel(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
-        color: Color(0xFF2C3E50),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
+  Widget _buildInputField({
+    required String label,
     required TextEditingController controller,
-    required String hintText,
-    required IconData prefixIcon,
     TextInputType? keyboardType,
     String? Function(String?)? validator,
+    bool enabled = true,
   }) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      validator: validator,
-      decoration: InputDecoration(
-        hintText: hintText,
-        prefixIcon: Icon(prefixIcon, color: AppColors.primary),
-        filled: true,
-        fillColor: Colors.grey.shade50,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey.shade300),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Label
+        Padding(
+          padding: const EdgeInsets.only(left: AppSizes.s4, bottom: AppSizes.s8),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey.shade600,
+            ),
+          ),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey.shade300),
+        // Input field
+        Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFFBDBDBD),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: TextFormField(
+            controller: controller,
+            keyboardType: keyboardType,
+            validator: validator,
+            enabled: enabled,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w400,
+              color: enabled ? const Color(0xFF333333) : Colors.grey.shade500,
+            ),
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: AppSizes.s20,
+                vertical: 16,
+              ),
+            ),
+          ),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.primary, width: 2),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.error),
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.s16,
-          vertical: AppSizes.s16,
-        ),
-      ),
+      ],
     );
   }
 
   Widget _buildLanguageDropdown() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: DropdownButtonFormField<String>(
-        value: _selectedLanguage,
-        decoration: InputDecoration(
-          prefixIcon: Icon(Icons.language, color: AppColors.primary),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: AppSizes.s16,
-            vertical: AppSizes.s16,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Label
+        Padding(
+          padding: const EdgeInsets.only(left: AppSizes.s4, bottom: AppSizes.s8),
+          child: Text(
+            'Ngôn ngữ',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey.shade600,
+            ),
           ),
         ),
-        items: const [
-          DropdownMenuItem(value: 'vi', child: Text('Tiếng Việt')),
-          DropdownMenuItem(value: 'en', child: Text('English')),
-          DropdownMenuItem(value: 'jp', child: Text('日本語')),
-        ],
-        onChanged: (value) {
-          setState(() {
-            _selectedLanguage = value;
-          });
-        },
-      ),
+        // Dropdown
+        Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFFBDBDBD),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: DropdownButtonFormField<String>(
+            initialValue: _selectedLanguage,
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: AppSizes.s20,
+                vertical: 16,
+              ),
+            ),
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w400,
+              color: Color(0xFF333333),
+            ),
+            dropdownColor: Colors.white,
+            items: const [
+              DropdownMenuItem(value: 'vi', child: Text('Tiếng Việt')),
+              DropdownMenuItem(value: 'en', child: Text('English')),
+              DropdownMenuItem(value: 'jp', child: Text('日本語')),
+            ],
+            onChanged: (value) {
+              setState(() {
+                _selectedLanguage = value;
+              });
+            },
+          ),
+        ),
+      ],
     );
   }
 }

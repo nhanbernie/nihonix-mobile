@@ -1,9 +1,11 @@
 library;
 
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'profile_api.dart';
 import '../models/update_profile_request_model.dart';
 import '../models/update_profile_response.dart';
+import '../models/upload_avatar_response.dart';
 
 /// Remote DataSource for Profile
 /// 
@@ -13,13 +15,14 @@ import '../models/update_profile_response.dart';
 /// - Error handling
 class ProfileRemoteDataSource {
   final ProfileApi _api;
+  final Dio _dio;
 
-  ProfileRemoteDataSource(this._api);
+  ProfileRemoteDataSource(this._api, this._dio);
 
   /// Factory constructor from Dio instance
   factory ProfileRemoteDataSource.fromDio(Dio dio) {
     final api = ProfileApi(dio);
-    return ProfileRemoteDataSource(api);
+    return ProfileRemoteDataSource(api, dio);
   }
 
   /// Update user profile
@@ -52,5 +55,47 @@ class ProfileRemoteDataSource {
       rethrow;
     }
   }
-}
 
+  /// Upload user avatar
+  Future<UploadAvatarResponse> uploadAvatar({
+    required File imageFile,
+  }) async {
+    try {
+      print('🔵 [ProfileDataSource] Calling API uploadAvatar');
+      print('🔵 [ProfileDataSource] Image path: ${imageFile.path}');
+
+      // Create FormData with avatar file
+      final formData = FormData.fromMap({
+        'avatar': await MultipartFile.fromFile(
+          imageFile.path,
+          filename: imageFile.path.split('/').last,
+        ),
+      });
+
+      // Call API using Dio directly
+      final response = await _dio.post(
+        '/users/me/avatar',
+        data: formData,
+      );
+
+      print('✅ [ProfileDataSource] Avatar uploaded successfully');
+      print('✅ [ProfileDataSource] Response: ${response.data}');
+
+      // Parse response
+      final uploadResponse = UploadAvatarResponse.fromJson(
+        response.data['data'] as Map<String, dynamic>,
+      );
+
+      print('✅ [ProfileDataSource] Avatar URL: ${uploadResponse.avatarUrl}');
+
+      return uploadResponse;
+    } on DioException catch (e) {
+      print('❌ [ProfileDataSource] DioException: ${e.message}');
+      print('❌ [ProfileDataSource] Response: ${e.response?.data}');
+      rethrow;
+    } catch (e) {
+      print('❌ [ProfileDataSource] Unexpected error: $e');
+      rethrow;
+    }
+  }
+}

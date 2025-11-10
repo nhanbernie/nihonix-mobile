@@ -1,5 +1,6 @@
 library;
 
+import 'dart:io';
 import '../../../auth/domain/entities/user.dart';
 import '../../domain/entities/update_profile_request.dart';
 import '../../domain/repositories/profile_repository.dart';
@@ -39,5 +40,22 @@ class ProfileRepositoryImpl implements ProfileRepository {
       rethrow;
     }
   }
-}
 
+  @override
+  Future<String> uploadAvatar({
+    required File imageFile,
+  }) async {
+    try {
+      // Call remote data source
+      final response = await _remoteDataSource.uploadAvatar(
+        imageFile: imageFile,
+      );
+
+      // Return avatar URL
+      return response.avatarUrl;
+    } catch (e) {
+      print('❌ [ProfileRepository] Error uploading avatar: $e');
+      rethrow;
+    }
+  }
+}

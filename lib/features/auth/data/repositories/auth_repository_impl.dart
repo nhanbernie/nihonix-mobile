@@ -36,17 +36,15 @@ class AuthRepositoryImpl implements AuthRepository {
         password: password,
       );
 
-      // 2. Save refreshToken to secure storage
+      // 2. Save both tokens to secure storage for AuthInterceptor
+      await _tokenStore.saveAccessToken(loginResponse.accessToken);
       await _tokenStore.saveRefreshToken(loginResponse.refreshToken);
-      // Note: accessToken sẽ được lưu vào AuthState (RAM) bởi AuthProvider
 
       // 3. Convert Data Model -> Domain Entity và return LoginResult
       return LoginResult(
         user: loginResponse.user.toDomain(),
         accessToken: loginResponse.accessToken,
       );
-
-      // Note: refreshToken đã được lưu vào SecureStorage
     } catch (e) {
       // Re-throw domain exceptions
       // Data layer exceptions đã được map sang HttpException bởi AuthInterceptor

@@ -47,7 +47,13 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<true/>
-		<key>UIViewControllerBasedStatusBarAppearance</key>
-		<false/>
-	</dict>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Chúng tôi cần truy cập camera để bạn có thể chụp ảnh đại diện</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Chúng tôi cần truy cập thư viện ảnh để bạn có thể chọn ảnh đại diện</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Chúng tôi cần truy cập microphone</string>
+</dict>
 </plist>

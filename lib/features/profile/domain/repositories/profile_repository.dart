@@ -1,5 +1,6 @@
 library;
 
+import 'dart:io';
 import '../../domain/entities/update_profile_request.dart';
 import '../../../auth/domain/entities/user.dart';
 
@@ -14,5 +15,13 @@ abstract class ProfileRepository {
     required String userId,
     required UpdateProfileRequest request,
   });
-}
 
+  /// Upload user avatar
+  /// 
+  /// POST /api/users/me/avatar
+  /// 
+  /// Returns avatar URL
+  Future<String> uploadAvatar({
+    required File imageFile,
+  });
+}

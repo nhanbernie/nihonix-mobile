@@ -44,23 +44,26 @@ class ApiClient {
     );
 
     // 4. Thêm AuthInterceptor
-    dio.interceptors.add(
-      AuthInterceptor(
-        tokenStore: _tokenStore,
-        networkInfo: netInfo,
-        authRemote: authRemote,
-        onUnauthorized: onUnauthorized,
-        paths: AuthPathsConfig(
-          excludedPaths: [
-            '/auth/login',
-            '/auth/register',
-            '/auth/refresh',
-            '/public',
-          ],
-          refreshPath: '/auth/refresh',
-        ),
+    final authInterceptor = AuthInterceptor(
+      tokenStore: _tokenStore,
+      networkInfo: netInfo,
+      authRemote: authRemote,
+      onUnauthorized: onUnauthorized,
+      paths: AuthPathsConfig(
+        excludedPaths: [
+          '/auth/login',
+          '/auth/register',
+          '/auth/refresh',
+          '/public',
+        ],
+        refreshPath: '/auth/refresh',
       ),
     );
+    
+    dio.interceptors.add(authInterceptor);
+    
+    // Set Dio instance sau khi thêm vào interceptors
+    authInterceptor.setDio(dio);
 
     // 5. Thêm logging trong debug mode
     if (kDebugMode) {

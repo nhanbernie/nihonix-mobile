@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nihonix/core/constants/app_colors.dart';
 import 'package:nihonix/core/constants/app_sizes.dart';
+import 'package:nihonix/core/router/route_constants.dart';
 import 'package:nihonix/features/flashcard/presentation/providers/flashcard_provider.dart';
 import 'package:nihonix/features/flashcard/presentation/widgets/folder_card.dart';
 import 'package:nihonix/shared/widgets/common_app_bar.dart';
@@ -155,7 +157,9 @@ class FlashcardPage extends ConsumerWidget {
               child: FolderCard(
                 folderName: folder.name,
                 onTap: () {
-                  // TODO: Navigate to folder detail
+                  context.push(
+                    '${AppRoutes.folderDetail}?folderId=${folder.id}&folderName=${Uri.encodeComponent(folder.name)}',
+                  );
                 },
               ),
             )),

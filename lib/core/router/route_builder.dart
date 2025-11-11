@@ -4,6 +4,9 @@ import 'package:nihonix/features/auth_pages.dart';
 import 'package:nihonix/features/main_pages.dart';
 import 'package:nihonix/features/onboarding/presentation/pages/language_selection_page.dart';
 import 'package:nihonix/features/onboarding/presentation/pages/level_selection_page.dart';
+import 'package:nihonix/features/flashcard/presentation/pages/folder_detail_page.dart';
+import 'package:nihonix/features/flashcard/presentation/pages/card_study_page.dart';
+import 'package:nihonix/features/flashcard/presentation/pages/card_form_page.dart';
 import 'package:nihonix/shared/layouts/main_layout.dart';
 import 'route_constants.dart';
 
@@ -84,6 +87,35 @@ List<RouteBase> buildAppRoutes() {
           ],
         ),
       ],
+    ),
+
+    // Flashcard routes (outside shell - no bottom nav)
+    GoRoute(
+      path: AppRoutes.folderDetail,
+      name: AppRoutes.folderDetailName,
+      builder: (context, state) {
+        final folderId = state.uri.queryParameters['folderId'] ?? '';
+        final folderName = state.uri.queryParameters['folderName'] ?? '';
+        return FolderDetailPage(folderId: folderId, folderName: folderName);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.cardStudy,
+      name: AppRoutes.cardStudyName,
+      builder: (context, state) {
+        final setId = state.uri.queryParameters['setId'] ?? '';
+        final setName = state.uri.queryParameters['setName'] ?? '';
+        return CardStudyPage(setId: setId, setName: setName);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.cardForm,
+      name: AppRoutes.cardFormName,
+      builder: (context, state) {
+        final folderId = state.uri.queryParameters['folderId'] ?? '';
+        final cardId = state.uri.queryParameters['cardId'];
+        return CardFormPage(folderId: folderId, cardId: cardId);
+      },
     ),
 
     // Forgot password flow

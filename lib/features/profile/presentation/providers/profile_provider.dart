@@ -86,19 +86,14 @@ class ProfileNotifier extends Notifier<ProfileState> {
         imageFile: imageFile,
       );
 
-      print('✅ [ProfileNotifier] Avatar uploaded: $avatarUrl');
-
-      // Get current user and update with new avatar
       final authState = ref.read(authProvider);
       final currentUser = authState.user;
 
       if (currentUser != null) {
-        // Create updated user with new avatar URL using copyWith
         final updatedUser = currentUser.copyWith(
-          avatar: avatarUrl, // New avatar URL
+          avatar: avatarUrl, 
         );
 
-        // Update auth state
         ref.read(authProvider.notifier).updateUser(updatedUser);
       }
 
@@ -108,7 +103,6 @@ class ProfileNotifier extends Notifier<ProfileState> {
         error: null,
       );
     } catch (e) {
-      print('❌ [ProfileNotifier] Upload avatar error: $e');
       state = state.copyWith(
         isLoading: false,
         isSuccess: false,

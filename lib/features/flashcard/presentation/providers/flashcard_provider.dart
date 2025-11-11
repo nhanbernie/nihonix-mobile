@@ -26,18 +26,14 @@ class FlashcardNotifier extends Notifier<FlashcardState> {
   Future<void> loadFolders() async {
     state = state.copyWith(isLoading: true, error: null, isSuccess: false);
     try {
-      print('📁 [FlashcardNotifier] Loading folders...');
       final repository = ref.read(flashcardRepositoryProvider);
       final folders = await repository.getFolders();
-      print('✅ [FlashcardNotifier] Loaded ${folders.length} folders');
       state = state.copyWith(
         folders: folders,
         isLoading: false,
         isSuccess: true,
       );
     } catch (e, stackTrace) {
-      print('❌ [FlashcardNotifier] Error loading folders: $e');
-      print('Stack trace: $stackTrace');
       state = state.copyWith(
         isLoading: false,
         isSuccess: false,
@@ -53,14 +49,12 @@ class FlashcardNotifier extends Notifier<FlashcardState> {
   }) async {
     state = state.copyWith(isLoading: true, error: null, isSuccess: false);
     try {
-      print('📁 [FlashcardNotifier] Creating folder: $name');
       final useCase = ref.read(createFlashcardFolderUseCaseProvider);
       final folder = await useCase.call(
         name: name,
         description: description ?? '',
         order: order,
       );
-      print('✅ [FlashcardNotifier] Folder created: ${folder.id}');
 
       // Add to list
       final updatedFolders = [...state.folders, folder];
@@ -71,8 +65,6 @@ class FlashcardNotifier extends Notifier<FlashcardState> {
       );
       return true;
     } catch (e, stackTrace) {
-      print('❌ [FlashcardNotifier] Error creating folder: $e');
-      print('Stack trace: $stackTrace');
       state = state.copyWith(
         isLoading: false,
         isSuccess: false,
@@ -90,7 +82,6 @@ class FlashcardNotifier extends Notifier<FlashcardState> {
   }) async {
     state = state.copyWith(isLoading: true, error: null, isSuccess: false);
     try {
-      print('📁 [FlashcardNotifier] Updating folder: $id');
       final repository = ref.read(flashcardRepositoryProvider);
       final folder = await repository.updateFolder(
         id: id,
@@ -98,7 +89,6 @@ class FlashcardNotifier extends Notifier<FlashcardState> {
         description: description,
         order: order,
       );
-      print('✅ [FlashcardNotifier] Folder updated: ${folder.id}');
 
       // Update in list
       final updatedFolders = state.folders.map((f) {
@@ -111,8 +101,7 @@ class FlashcardNotifier extends Notifier<FlashcardState> {
       );
       return true;
     } catch (e, stackTrace) {
-      print('❌ [FlashcardNotifier] Error updating folder: $e');
-      print('Stack trace: $stackTrace');
+      print('[FlashcardNotifier] Error updating folder: $e');
       state = state.copyWith(
         isLoading: false,
         isSuccess: false,
@@ -125,10 +114,8 @@ class FlashcardNotifier extends Notifier<FlashcardState> {
   Future<bool> deleteFolder(String id) async {
     state = state.copyWith(isLoading: true, error: null, isSuccess: false);
     try {
-      print('📁 [FlashcardNotifier] Deleting folder: $id');
       final repository = ref.read(flashcardRepositoryProvider);
       await repository.deleteFolder(id);
-      print('✅ [FlashcardNotifier] Folder deleted: $id');
 
       // Remove from list
       final updatedFolders = state.folders.where((f) => f.id != id).toList();
@@ -139,7 +126,6 @@ class FlashcardNotifier extends Notifier<FlashcardState> {
       );
       return true;
     } catch (e, stackTrace) {
-      print('❌ [FlashcardNotifier] Error deleting folder: $e');
       print('Stack trace: $stackTrace');
       state = state.copyWith(
         isLoading: false,

@@ -185,7 +185,6 @@ class AvatarPickerButton extends StatelessWidget {
       // Callback với file đã pick (không crop)
       onImageSelected(File(pickedFile.path));
     } catch (e) {
-      print('❌ [AvatarPicker] Error picking image: $e');
       
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -31,7 +31,7 @@ class FlashcardRemoteDataSource {
       final response = await _api.createFolder(request);
 
       return response;
-    } on DioException catch (e) {
+  } on DioException {
       // Rethrow Dio exception for repository to handle
       rethrow;
     } catch (e) {
@@ -44,7 +44,7 @@ class FlashcardRemoteDataSource {
     try {
       final response = await _api.getFolders();
       return response.data;
-    } on DioException catch (e) {
+  } on DioException {
       // Rethrow Dio exception for upstream handling
       rethrow;
     }
@@ -54,7 +54,7 @@ class FlashcardRemoteDataSource {
     try {
       final folder = await _api.getFolderById(id);
       return folder;
-    } on DioException catch (e) {
+  } on DioException {
       rethrow;
     }
   }
@@ -73,7 +73,7 @@ class FlashcardRemoteDataSource {
       if (order != null) request['order'] = order;
       final folder = await _api.updateFolder(id, request);
       return folder;
-    } on DioException catch (e) {
+  } on DioException {
       rethrow;
     }
   }
@@ -81,7 +81,7 @@ class FlashcardRemoteDataSource {
   Future<void> deleteFolder(String id) async {
     try {
       await _api.deleteFolder(id);
-    } on DioException catch (e) {
+  } on DioException {
       rethrow;
     }
   }

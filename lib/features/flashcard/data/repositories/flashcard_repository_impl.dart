@@ -27,7 +27,6 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
       // Convert data model to domain entity
       return response.data.toDomain();
     } catch (e) {
-      print('❌ [FlashcardRepository] Error creating folder: $e');
       rethrow;
     }
   }
@@ -38,7 +37,6 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
       final folders = await _remoteDataSource.getFolders();
       return folders.map((model) => model.toDomain()).toList();
     } catch (e) {
-      print('❌ [FlashcardRepository] Error getting folders: $e');
       rethrow;
     }
   }
@@ -49,7 +47,6 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
       final folder = await _remoteDataSource.getFolderById(id);
       return folder.toDomain();
     } catch (e) {
-      print('❌ [FlashcardRepository] Error getting folder: $e');
       rethrow;
     }
   }
@@ -70,7 +67,6 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
       );
       return folder.toDomain();
     } catch (e) {
-      print('❌ [FlashcardRepository] Error updating folder: $e');
       rethrow;
     }
   }
@@ -80,7 +76,6 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
     try {
       await _remoteDataSource.deleteFolder(id);
     } catch (e) {
-      print('❌ [FlashcardRepository] Error deleting folder: $e');
       rethrow;
     }
   }

@@ -22,9 +22,6 @@ class FlashcardRemoteDataSource {
     required int order,
   }) async {
     try {
-      print('🔵 [FlashcardDataSource] Calling API createFolder');
-      print('🔵 [FlashcardDataSource] Request: name=$name, description=$description, order=$order');
-
       final request = CreateFolderRequest(
         name: name,
         description: description,
@@ -33,16 +30,11 @@ class FlashcardRemoteDataSource {
 
       final response = await _api.createFolder(request);
 
-      print('✅ [FlashcardDataSource] API call successful');
-      print('✅ [FlashcardDataSource] Response: ${response.toJson()}');
-
       return response;
     } on DioException catch (e) {
-      print('❌ [FlashcardDataSource] DioException: ${e.message}');
-      print('❌ [FlashcardDataSource] Response: ${e.response?.data}');
+      // Rethrow Dio exception for repository to handle
       rethrow;
     } catch (e) {
-      print('❌ [FlashcardDataSource] Unexpected error: $e');
       rethrow;
     }
   }
@@ -50,30 +42,19 @@ class FlashcardRemoteDataSource {
   /// Get all folders
   Future<List<FlashcardFolderModel>> getFolders() async {
     try {
-      print('🔵 [FlashcardDataSource] Calling API getFolders');
-      
       final response = await _api.getFolders();
-
-      print('✅ [FlashcardDataSource] Got ${response.data.length} folders');
-
       return response.data;
     } on DioException catch (e) {
-      print('❌ [FlashcardDataSource] DioException: ${e.message}');
+      // Rethrow Dio exception for upstream handling
       rethrow;
     }
   }
 
   Future<FlashcardFolderModel> getFolderById(String id) async {
     try {
-      print('🔵 [FlashcardDataSource] Calling API getFolderById: $id');
-      
       final folder = await _api.getFolderById(id);
-
-      print('✅ [FlashcardDataSource] Got folder: ${folder.name}');
-
       return folder;
     } on DioException catch (e) {
-      print('❌ [FlashcardDataSource] DioException: ${e.message}');
       rethrow;
     }
   }
@@ -85,33 +66,22 @@ class FlashcardRemoteDataSource {
     int? order,
   }) async {
     try {
-      print('🔵 [FlashcardDataSource] Calling API updateFolder: $id');
       
       final request = <String, dynamic>{};
       if (name != null) request['name'] = name;
       if (description != null) request['description'] = description;
       if (order != null) request['order'] = order;
-
       final folder = await _api.updateFolder(id, request);
-
-      print('✅ [FlashcardDataSource] Folder updated');
-
       return folder;
     } on DioException catch (e) {
-      print('❌ [FlashcardDataSource] DioException: ${e.message}');
       rethrow;
     }
   }
 
   Future<void> deleteFolder(String id) async {
     try {
-      print('🔵 [FlashcardDataSource] Calling API deleteFolder: $id');
-      
       await _api.deleteFolder(id);
-
-      print('✅ [FlashcardDataSource] Folder deleted');
     } on DioException catch (e) {
-      print('❌ [FlashcardDataSource] DioException: ${e.message}');
       rethrow;
     }
   }

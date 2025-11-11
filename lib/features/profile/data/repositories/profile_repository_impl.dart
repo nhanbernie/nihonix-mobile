@@ -36,7 +36,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
       // Convert data model to domain entity
       return response.user.toDomain();
     } catch (e) {
-      print('❌ [ProfileRepository] Error updating profile: $e');
+      print('[ProfileRepository] Error updating profile: $e');
       rethrow;
     }
   }
@@ -54,7 +54,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
       // Return avatar URL
       return response.avatarUrl;
     } catch (e) {
-      print('❌ [ProfileRepository] Error uploading avatar: $e');
+      print('[ProfileRepository] Error uploading avatar: $e');
       rethrow;
     }
   }

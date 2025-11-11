@@ -12,6 +12,9 @@ class AppRoutes {
   static const String profileEdit = '/profile/edit';
   static const String lesson = '/lesson';
   static const String flashcard = '/flashcard';
+  static const String folderDetail = '/flashcard/folder';
+  static const String cardStudy = '/flashcard/study';
+  static const String cardForm = '/flashcard/card-form';
   static const String practice = '/practice';
   static const String forgotPassword = '/forgotPassword';
   static const String verifyCode = '/verifyCode';
@@ -29,6 +32,9 @@ class AppRoutes {
   static const String profileEditName = 'profileEdit';
   static const String lessonName = 'lesson';
   static const String flashcardName = 'flashcard';
+  static const String folderDetailName = 'folderDetail';
+  static const String cardStudyName = 'cardStudy';
+  static const String cardFormName = 'cardForm';
   static const String practiceName = 'practice';
   static const String forgotPasswordName = 'forgotPassword';
   static const String verifyCodeName = 'verifyCode';

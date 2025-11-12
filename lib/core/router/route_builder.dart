@@ -8,6 +8,7 @@ import 'package:nihonix/features/flashcard/presentation/pages/folder_detail_page
 import 'package:nihonix/features/flashcard/presentation/pages/folder_edit_page.dart';
 import 'package:nihonix/features/flashcard/presentation/pages/card_study_page.dart';
 import 'package:nihonix/features/flashcard/presentation/pages/card_form_page.dart';
+import 'package:nihonix/features/flashcard/presentation/pages/generate_flashcard_page.dart';
 import 'package:nihonix/features/lesson/presentation/pages/topic_detail_page.dart';
 import 'package:nihonix/features/vocabulary/presentation/pages/vocab_list_page.dart';
 import 'package:nihonix/features/vocabulary/presentation/pages/vocab_folder_detail_page.dart';
@@ -180,6 +181,14 @@ List<RouteBase> buildAppRoutes() {
         final folderId = state.uri.queryParameters['folderId'] ?? '';
         final cardId = state.uri.queryParameters['cardId'];
         return CardFormPage(folderId: folderId, cardId: cardId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.generateFlashcard,
+      name: AppRoutes.generateFlashcardName,
+      builder: (context, state) {
+        final folderId = state.uri.queryParameters['folderId'] ?? '';
+        return GenerateFlashcardPage(folderId: folderId);
       },
     ),
 

@@ -18,6 +18,7 @@ class AppRoutes {
   static const String folderDetail = '/flashcard/folder';
   static const String cardStudy = '/flashcard/study';
   static const String cardForm = '/flashcard/card-form';
+  static const String generateFlashcard = '/flashcard/generate';
   static const String practice = '/practice';
   static const String forgotPassword = '/forgotPassword';
   static const String verifyCode = '/verifyCode';
@@ -41,6 +42,7 @@ class AppRoutes {
   static const String folderDetailName = 'folderDetail';
   static const String cardStudyName = 'cardStudy';
   static const String cardFormName = 'cardForm';
+  static const String generateFlashcardName = 'generateFlashcard';
   static const String practiceName = 'practice';
   static const String forgotPasswordName = 'forgotPassword';
   static const String verifyCodeName = 'verifyCode';

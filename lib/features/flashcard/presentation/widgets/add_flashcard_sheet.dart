@@ -50,7 +50,7 @@ class AddFlashcardSheet extends StatelessWidget {
             subtitle: 'Tạo thẻ học tự động bằng AI',
             onTap: () {
               context.pop();
-              // TODO: Navigate to AI generation page
+              context.push('${AppRoutes.generateFlashcard}?folderId=$folderId');
             },
           ),
 

@@ -36,4 +36,14 @@ abstract class FlashcardRepository {
     required String setName,
     required List<CardRequest> cards,
   });
+
+  Future<String> generateFlashcard({
+    required String folderId,
+    required String setName,
+    required String levelCode,
+    required String difficulty,
+    required String topic,
+    required int count,
+    String? customPrompt,
+  });
 }

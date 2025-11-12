@@ -11,6 +11,7 @@ import '../models/get_sets_response.dart';
 import '../models/get_cards_response.dart';
 import '../models/create_flashcard_request.dart';
 import '../models/create_flashcard_response.dart';
+import '../models/generate_flashcard_request.dart';
 
 part 'flashcard_api.g.dart';
 
@@ -64,5 +65,11 @@ abstract class FlashcardApi {
   @POST('/flashcards')
   Future<CreateFlashcardResponse> createFlashcard(
     @Body() CreateFlashcardRequest request,
+  );
+
+  // Generate flashcard set with AI
+  @POST('/flashcards/generate')
+  Future<CreateFlashcardResponse> generateFlashcard(
+    @Body() GenerateFlashcardRequest request,
   );
 }

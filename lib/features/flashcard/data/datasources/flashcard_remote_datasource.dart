@@ -9,6 +9,7 @@ import '../models/flashcard_set_model.dart';
 import '../models/flashcard_model.dart';
 import '../models/create_flashcard_request.dart';
 import '../models/create_flashcard_response.dart';
+import '../models/generate_flashcard_request.dart';
 
 class FlashcardRemoteDataSource {
   final FlashcardApi _api;
@@ -132,6 +133,33 @@ class FlashcardRemoteDataSource {
         cards: cards,
       );
       final response = await _api.createFlashcard(request);
+      return response;
+    } on DioException {
+      rethrow;
+    }
+  }
+
+  /// Generate flashcard set with AI
+  Future<CreateFlashcardResponse> generateFlashcard({
+    required String folderId,
+    required String setName,
+    required String levelCode,
+    required String difficulty,
+    required String topic,
+    required int count,
+    String? customPrompt,
+  }) async {
+    try {
+      final request = GenerateFlashcardRequest(
+        folderId: folderId,
+        setName: setName,
+        levelCode: levelCode,
+        difficulty: difficulty,
+        topic: topic,
+        count: count,
+        customPrompt: customPrompt,
+      );
+      final response = await _api.generateFlashcard(request);
       return response;
     } on DioException {
       rethrow;

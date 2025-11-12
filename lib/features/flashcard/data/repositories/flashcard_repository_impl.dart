@@ -131,4 +131,32 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<String> generateFlashcard({
+    required String folderId,
+    required String setName,
+    required String levelCode,
+    required String difficulty,
+    required String topic,
+    required int count,
+    String? customPrompt,
+  }) async {
+    try {
+      final response = await _remoteDataSource.generateFlashcard(
+        folderId: folderId,
+        setName: setName,
+        levelCode: levelCode,
+        difficulty: difficulty,
+        topic: topic,
+        count: count,
+        customPrompt: customPrompt,
+      );
+      
+      // Return setId for further use
+      return response.data.setId;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

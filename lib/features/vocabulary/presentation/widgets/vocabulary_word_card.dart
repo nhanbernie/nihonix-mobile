@@ -82,7 +82,7 @@ class VocabularyWordCard extends StatelessWidget {
             word.meaning,
             style: TextStyle(
               fontSize: 15,
-              color: isDark ? Colors.white87 : Colors.black87,
+              color: isDark ? Colors.white.withOpacity(0.87) : Colors.black87,
               height: 1.4,
             ),
           ),

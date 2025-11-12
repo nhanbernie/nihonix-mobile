@@ -1,20 +1,21 @@
-library;
+// Simple class without freezed - just for UI
+class VocabularyWord {
+  final String id;
+  final String word;
+  final String meaning;
+  final String pronunciation;
+  final String? example;
+  final String? translation;
+  final bool isMastered;
 
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'vocabulary_word.freezed.dart';
-
-@freezed
-class VocabularyWord with _$VocabularyWord {
-  const VocabularyWord._();
-
-  const factory VocabularyWord({
-    required String id,
-    required String word,
-    required String meaning,
-    required String pronunciation,
-    String? example,
-    String? translation,
-    @Default(false) bool isMastered,
-  }) = _VocabularyWord;
+  const VocabularyWord({
+    required this.id,
+    required this.word,
+    required this.meaning,
+    required this.pronunciation,
+    this.example,
+    this.translation,
+    this.isMastered = false,
+  });
 }
+

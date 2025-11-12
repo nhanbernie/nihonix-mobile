@@ -26,9 +26,7 @@ class _VocabListPageState extends ConsumerState<VocabListPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(vocabProvider.notifier).loadFolders(widget.topicName);
-    });
+    // Mock data is already loaded in provider, no need to call loadFolders
   }
 
   void _showCreateDialog() {
@@ -122,11 +120,12 @@ class _VocabListPageState extends ConsumerState<VocabListPage> {
 
                   Navigator.pop(context);
 
-                  await ref.read(vocabProvider.notifier).createFolderWithAI(
-                        topicName: widget.topicName,
-                        folderName: nameController.text,
-                        prompt: promptController.text,
-                      );
+                  // TODO: Implement AI folder creation later
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('AI folder creation will be implemented later'),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,

@@ -227,7 +227,13 @@ class TopicDetailPage extends StatelessWidget {
                               isDark: isDark,
                               onTap: () {
                                 context.push(
-                                  '${AppRoutes.vocabList}?topic=$topicName&icon=${topicIcon.codePoint}',
+                                  Uri(
+                                    path: AppRoutes.vocabList,
+                                    queryParameters: {
+                                      'topic': topicName,
+                                      'icon': topicIcon.codePoint.toString(),
+                                    },
+                                  ).toString(),
                                 );
                               },
                             ),

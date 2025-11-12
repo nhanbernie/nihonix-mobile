@@ -12,11 +12,9 @@ final ColorScheme lightColorScheme = ColorScheme(
   onSecondary: AppColors.white,
   error: AppColors.error,
   onError: AppColors.white,
-  background: AppColors.background,
-  onBackground: AppColors.textPrimary,
   surface: AppColors.surface,
   onSurface: AppColors.textPrimary,
-  surfaceVariant: AppColors.surfaceVariant,
+  surfaceContainerHighest: AppColors.surfaceVariant,
   onSurfaceVariant: AppColors.textSecondary,
   outline: AppColors.grey,
   outlineVariant: AppColors.greyLight,
@@ -36,11 +34,9 @@ final ColorScheme darkColorScheme = ColorScheme(
   onSecondary: AppColors.white,
   error: AppColors.error,
   onError: AppColors.white,
-  background: AppColors.backgroundDark,
-  onBackground: AppColors.white,
   surface: AppColors.surfaceDark,
   onSurface: AppColors.white,
-  surfaceVariant: AppColors.surfaceVariantDark,
+  surfaceContainerHighest: AppColors.surfaceVariantDark,
   onSurfaceVariant: AppColors.textSecondary,
   outline: AppColors.grey,
   outlineVariant: AppColors.greyLight,
@@ -121,7 +117,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: lightColorScheme.surfaceVariant,
+        fillColor: lightColorScheme.surfaceContainerHighest,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.textFieldBorderRadius),
           borderSide: BorderSide.none,
@@ -222,7 +218,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: darkColorScheme.surfaceVariant,
+        fillColor: darkColorScheme.surfaceContainerHighest,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.textFieldBorderRadius),
           borderSide: BorderSide.none,

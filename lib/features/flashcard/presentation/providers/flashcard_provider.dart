@@ -33,7 +33,7 @@ class FlashcardNotifier extends Notifier<FlashcardState> {
         isLoading: false,
         isSuccess: true,
       );
-    } catch (e, stackTrace) {
+    } catch (e) {
       state = state.copyWith(
         isLoading: false,
         isSuccess: false,
@@ -64,7 +64,7 @@ class FlashcardNotifier extends Notifier<FlashcardState> {
         isSuccess: true,
       );
       return true;
-    } catch (e, stackTrace) {
+    } catch (e) {
       state = state.copyWith(
         isLoading: false,
         isSuccess: false,
@@ -100,7 +100,7 @@ class FlashcardNotifier extends Notifier<FlashcardState> {
         isSuccess: true,
       );
       return true;
-    } catch (e, stackTrace) {
+    } catch (e) {
       print('[FlashcardNotifier] Error updating folder: $e');
       state = state.copyWith(
         isLoading: false,
@@ -125,8 +125,7 @@ class FlashcardNotifier extends Notifier<FlashcardState> {
         isSuccess: true,
       );
       return true;
-    } catch (e, stackTrace) {
-      print('Stack trace: $stackTrace');
+    } catch (e) {
       state = state.copyWith(
         isLoading: false,
         isSuccess: false,

@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/router/route_constants.dart';
+import '../widgets/folder_header.dart';
+import '../widgets/flashcard_item.dart';
+import '../widgets/add_flashcard_sheet.dart';
+import '../widgets/folder_options_sheet.dart';
+import '../providers/flashcard_provider.dart';
 
-class FolderDetailPage extends StatelessWidget {
+class FolderDetailPage extends ConsumerWidget {
   final String folderId;
   final String folderName;
 
@@ -16,7 +22,7 @@ class FolderDetailPage extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -39,7 +45,60 @@ class FolderDetailPage extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.more_vert, color: Colors.black),
               onPressed: () {
-                // TODO: Show folder options
+                showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.white,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                  ),
+                  builder: (_) => FolderOptionsSheet(
+                    onEdit: () {
+                      Navigator.of(context).pop();
+                      // Navigate to folder edit route (placeholder)
+                      context.push('${AppRoutes.folderDetail}/edit?folderId=$folderId');
+                    },
+                    onDelete: () async {
+                      Navigator.of(context).pop();
+                      final confirmed = await showDialog<bool>(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          title: const Text('Xác nhận'),
+                          content: const Text('Bạn chắc chắn muốn xóa folder này?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(ctx).pop(false),
+                              child: const Text('Hủy'),
+                            ),
+                            FilledButton(
+                              onPressed: () => Navigator.of(ctx).pop(true),
+                              child: const Text('Xóa'),
+                            ),
+                          ],
+                        ),
+                      );
+
+                      if (confirmed == true) {
+                        try {
+                          final success = await ref.read(flashcardProvider.notifier).deleteFolder(folderId);
+                          if (success) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Xóa folder thành công')),
+                              );
+                              context.pop();
+                            }
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Lỗi khi xóa folder: $e')),
+                            );
+                          }
+                        }
+                      }
+                    },
+                  ),
+                );
               },
             ),
           ],
@@ -47,39 +106,7 @@ class FolderDetailPage extends StatelessWidget {
         body: Column(
           children: [
             // Folder Header
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s24),
-              child: Column(
-                children: [
-                  const SizedBox(height: AppSizes.s16),
-                  // Folder Icon
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF5F5F5),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Icon(
-                      Icons.folder_rounded,
-                      size: 40,
-                      color: AppColors.primary.withValues(alpha: 0.8),
-                    ),
-                  ),
-                  const SizedBox(height: AppSizes.s16),
-                  // Folder Name
-                  Text(
-                    folderName,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: AppSizes.s24),
-                ],
-              ),
-            ),
+            FolderHeader(folderName: folderName),
 
             // Flashcard List
             Expanded(
@@ -110,8 +137,7 @@ class FolderDetailPage extends StatelessWidget {
                   ),
 
                   // Flashcard Items (Hardcoded for UI demo)
-                  _buildFlashcardItem(
-                    context,
+                  FlashcardItem(
                     title: 'animal',
                     subtitle: 'Flashcard set • 2 terms • by you',
                     onTap: () {
@@ -126,7 +152,15 @@ class FolderDetailPage extends StatelessWidget {
                   // Add More Button
                   Center(
                     child: TextButton.icon(
-                      onPressed: () => _showAddFlashcardSheet(context),
+                      onPressed: () => showModalBottomSheet(
+                        context: context,
+                        backgroundColor: Colors.white,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(20)),
+                        ),
+                        builder: (_) => AddFlashcardSheet(folderId: folderId),
+                      ),
                       icon: const Icon(Icons.add, size: 20),
                       label: const Text(
                         'Add more',
@@ -155,201 +189,5 @@ class FolderDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _buildFlashcardItem(
-    BuildContext context, {
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: AppSizes.s12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFAFAFA),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
-          child: Padding(
-            padding: const EdgeInsets.all(AppSizes.s16),
-            child: Row(
-              children: [
-                // Flashcard Icon
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    Icons.style_rounded,
-                    size: 20,
-                    color: AppColors.primary.withValues(alpha: 0.8),
-                  ),
-                ),
-                const SizedBox(width: AppSizes.s12),
-                // Flashcard Info
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        subtitle,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // More Icon
-                Icon(
-                  Icons.more_vert,
-                  size: 20,
-                  color: Colors.grey.shade400,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showAddFlashcardSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Drag Handle
-            Container(
-              margin: const EdgeInsets.only(top: AppSizes.s12),
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-
-            const SizedBox(height: AppSizes.s24),
-
-            // Manual Flashcard Set Option
-            _buildSheetOption(
-              context,
-              icon: Icons.style_rounded,
-              title: 'Flashcard Set',
-              subtitle: 'Tạo bộ thẻ học thủ công',
-              onTap: () {
-                context.pop();
-                context.push(
-                  '${AppRoutes.cardForm}?folderId=$folderId',
-                );
-              },
-            ),
-
-            const SizedBox(height: AppSizes.s8),
-
-            // AI Generated Flashcard Option
-            _buildSheetOption(
-              context,
-              icon: Icons.auto_awesome,
-              title: 'AI Flashcard',
-              subtitle: 'Tạo thẻ học tự động bằng AI',
-              onTap: () {
-                context.pop();
-                // TODO: Navigate to AI generation page
-              },
-            ),
-
-            const SizedBox(height: AppSizes.s24),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSheetOption(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSizes.s24,
-            vertical: AppSizes.s12,
-          ),
-          child: Row(
-            children: [
-              // Icon Container
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  icon,
-                  color: AppColors.primary,
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: AppSizes.s16),
-              // Text
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
 

@@ -39,7 +39,7 @@ class ProfileRemoteDataSource {
       );
 
       return updateProfileResponse;
-    } on DioException catch (e) {
+    } on DioException {
       rethrow;
     } catch (e) {
       rethrow;
@@ -67,7 +67,7 @@ class ProfileRemoteDataSource {
       );
 
       return uploadResponse;
-    } on DioException catch (e) {
+    } on DioException {
       rethrow;
     } catch (e) {
       rethrow;

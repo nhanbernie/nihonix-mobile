@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flip_card/flip_card.dart';
+import 'package:flip_card/flip_card_controller.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 
@@ -20,7 +22,8 @@ class CardStudyPage extends StatefulWidget {
 
 class _CardStudyPageState extends State<CardStudyPage> {
   int _currentCardIndex = 0;
-  bool _isFlipped = false;
+  late PageController _pageController;
+  late Map<int, FlipCardController> _flipControllers; // Controller per card for independent flip control
 
   // Hardcoded demo data
   final List<Map<String, String>> _cards = [
@@ -29,34 +32,55 @@ class _CardStudyPageState extends State<CardStudyPage> {
     {'front': '鳥', 'back': 'tori - con chim'},
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: 0);
+    _flipControllers = {for (var i = 0; i < _cards.length; i++) i: FlipCardController()};
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   void _flipCard() {
-    setState(() {
-      _isFlipped = !_isFlipped;
-    });
+    final controller = _flipControllers[_currentCardIndex];
+    if (controller != null) {
+      controller.toggleCard();
+      print('DEBUG: Flipping card at index $_currentCardIndex');
+    } else {
+      print('DEBUG: FlipCard controller is null for index $_currentCardIndex');
+    }
   }
 
   void _nextCard() {
     if (_currentCardIndex < _cards.length - 1) {
-      setState(() {
-        _currentCardIndex++;
-        _isFlipped = false;
-      });
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
     }
   }
 
   void _previousCard() {
     if (_currentCardIndex > 0) {
-      setState(() {
-        _currentCardIndex--;
-        _isFlipped = false;
-      });
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
     }
+  }
+
+  void _onPageChanged(int index) {
+    setState(() {
+      _currentCardIndex = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentCard = _cards[_currentCardIndex];
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -128,48 +152,54 @@ class _CardStudyPageState extends State<CardStudyPage> {
 
             const SizedBox(height: AppSizes.s40),
 
-            // Flashcard
+            // Flashcard with PageView for swipe
             Expanded(
-              child: Center(
-                child: GestureDetector(
-                  onTap: _flipCard,
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    transitionBuilder: (child, animation) {
-                      final rotate = Tween(begin: 0.0, end: 1.0).animate(animation);
-                      return AnimatedBuilder(
-                        animation: rotate,
-                        child: child,
-                        builder: (context, child) {
-                          final angle = rotate.value * 3.14159;
-                          final isUnder = angle > 1.5708;
-                          return Transform(
-                            transform: Matrix4.rotationY(angle),
-                            alignment: Alignment.center,
-                            child: isUnder
-                                ? Transform(
-                                    transform: Matrix4.rotationY(3.14159),
-                                    alignment: Alignment.center,
-                                    child: child,
-                                  )
-                                : child,
-                          );
-                        },
+              child: PageView.builder(
+                controller: _pageController,
+                onPageChanged: _onPageChanged,
+                itemCount: _cards.length,
+                itemBuilder: (context, index) {
+                  final currentCard = _cards[index];
+                  final flipController = _flipControllers[index]!;
+                  
+                  return AnimatedBuilder(
+                    animation: _pageController,
+                    builder: (context, child) {
+                      double value = 1.0;
+                      if (_pageController.position.haveDimensions) {
+                        value = _pageController.page! - index;
+                        // Scale effect: zoom out khi kéo, zoom in khi về giữa
+                        value = (1 - (value.abs() * 0.15)).clamp(0.85, 1.0);
+                      }
+                      
+                      return Center(
+                        child: Transform.scale(
+                          scale: value,
+                          child: Opacity(
+                            opacity: value,
+                            child: child,
+                          ),
+                        ),
                       );
                     },
-                    child: _isFlipped
-                        ? _buildCard(
-                            key: const ValueKey('back'),
-                            text: currentCard['back']!,
-                            isBack: true,
-                          )
-                        : _buildCard(
-                            key: const ValueKey('front'),
-                            text: currentCard['front']!,
-                            isBack: false,
-                          ),
-                  ),
-                ),
+                    child: FlipCard(
+                      controller: flipController,
+                      flipOnTouch: true, // TEST: Enable tap on card to flip
+                      direction: FlipDirection.HORIZONTAL,
+                      speed: 300,
+                      front: _buildCard(
+                        key: ValueKey('front-$index'),
+                        text: currentCard['front']!,
+                        isBack: false,
+                      ),
+                      back: _buildCard(
+                        key: ValueKey('back-$index'),
+                        text: currentCard['back']!,
+                        isBack: true,
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
 

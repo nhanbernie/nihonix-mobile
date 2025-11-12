@@ -9,6 +9,8 @@ import 'package:nihonix/features/flashcard/presentation/pages/folder_edit_page.d
 import 'package:nihonix/features/flashcard/presentation/pages/card_study_page.dart';
 import 'package:nihonix/features/flashcard/presentation/pages/card_form_page.dart';
 import 'package:nihonix/features/lesson/presentation/pages/topic_detail_page.dart';
+import 'package:nihonix/features/vocabulary/presentation/pages/vocab_list_page.dart';
+import 'package:nihonix/features/vocabulary/presentation/pages/vocab_folder_detail_page.dart';
 import 'package:nihonix/shared/layouts/main_layout.dart';
 import 'route_constants.dart';
 
@@ -104,6 +106,35 @@ List<RouteBase> buildAppRoutes() {
         return TopicDetailPage(
           topicName: topicName,
           topicIcon: IconData(iconCodePoint, fontFamily: 'MaterialIcons'),
+        );
+      },
+    ),
+
+    // Vocabulary routes (outside shell - no bottom nav)
+    GoRoute(
+      path: AppRoutes.vocabList,
+      name: AppRoutes.vocabListName,
+      builder: (context, state) {
+        final topicName = state.uri.queryParameters['topic'] ?? '';
+        final iconCodePoint = int.tryParse(
+              state.uri.queryParameters['icon'] ?? '',
+            ) ??
+            Icons.book_rounded.codePoint;
+        return VocabListPage(
+          topicName: topicName,
+          topicIcon: IconData(iconCodePoint, fontFamily: 'MaterialIcons'),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.vocabFolderDetail,
+      name: AppRoutes.vocabFolderDetailName,
+      builder: (context, state) {
+        final folderId = state.uri.queryParameters['folderId'] ?? '';
+        final folderName = state.uri.queryParameters['folderName'] ?? '';
+        return VocabFolderDetailPage(
+          folderId: folderId,
+          folderName: folderName,
         );
       },
     ),

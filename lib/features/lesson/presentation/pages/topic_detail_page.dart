@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nihonix/core/constants/app_colors.dart';
 import 'package:nihonix/core/constants/app_sizes.dart';
+import 'package:nihonix/core/router/route_constants.dart';
 
 class TopicDetailPage extends StatelessWidget {
   final String topicName;
@@ -225,11 +226,8 @@ class TopicDetailPage extends StatelessWidget {
                                   'find easy-to-understand definitions &\nlearn new words fast',
                               isDark: isDark,
                               onTap: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Learning $topicName vocabulary'),
-                                    behavior: SnackBarBehavior.floating,
-                                  ),
+                                context.push(
+                                  '${AppRoutes.vocabList}?topic=$topicName&icon=${topicIcon.codePoint}',
                                 );
                               },
                             ),

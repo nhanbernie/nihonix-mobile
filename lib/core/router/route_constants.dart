@@ -12,6 +12,8 @@ class AppRoutes {
   static const String profileEdit = '/profile/edit';
   static const String lesson = '/lesson';
   static const String topicDetail = '/lesson/topic';
+  static const String vocabList = '/vocabulary';
+  static const String vocabFolderDetail = '/vocabulary/folder';
   static const String flashcard = '/flashcard';
   static const String folderDetail = '/flashcard/folder';
   static const String cardStudy = '/flashcard/study';
@@ -33,6 +35,8 @@ class AppRoutes {
   static const String profileEditName = 'profileEdit';
   static const String lessonName = 'lesson';
   static const String topicDetailName = 'topicDetail';
+  static const String vocabListName = 'vocabList';
+  static const String vocabFolderDetailName = 'vocabFolderDetail';
   static const String flashcardName = 'flashcard';
   static const String folderDetailName = 'folderDetail';
   static const String cardStudyName = 'cardStudy';

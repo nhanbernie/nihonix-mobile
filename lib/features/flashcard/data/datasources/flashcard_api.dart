@@ -8,6 +8,7 @@ import '../models/update_folder_response.dart';
 import '../models/flashcard_folder_model.dart';
 import '../models/get_folders_response.dart';
 import '../models/get_sets_response.dart';
+import '../models/get_cards_response.dart';
 
 part 'flashcard_api.g.dart';
 
@@ -43,5 +44,11 @@ abstract class FlashcardApi {
   @GET('/flashcards/sets')
   Future<GetSetsResponse> getSetsInFolder(
     @Query('folderId') String folderId,
+  );
+
+  // Get all cards in a set
+  @GET('/flashcards/sets/{setId}/cards')
+  Future<GetCardsResponse> getCardsInSet(
+    @Path('setId') String setId,
   );
 }

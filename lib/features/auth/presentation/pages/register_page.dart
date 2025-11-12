@@ -102,12 +102,13 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-              'Đăng ký thành công! Xin chào ${authState.user?.name ?? ""}'),
+              'Đăng ký thành công! Vui lòng đăng nhập để tiếp tục'),
           backgroundColor: Colors.green,
         ),
       );
 
-      context.go(AppRoutes.home);
+      // Navigate to login page
+      context.go(AppRoutes.login);
     }
   }
 

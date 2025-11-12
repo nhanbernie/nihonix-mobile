@@ -26,8 +26,8 @@ class FlashcardNotifier extends Notifier<FlashcardState> {
   Future<void> loadFolders() async {
     state = state.copyWith(isLoading: true, error: null, isSuccess: false);
     try {
-      final repository = ref.read(flashcardRepositoryProvider);
-      final folders = await repository.getFolders();
+      final useCase = ref.read(getFoldersUseCaseProvider);
+      final folders = await useCase();
       state = state.copyWith(
         folders: folders,
         isLoading: false,
@@ -82,8 +82,8 @@ class FlashcardNotifier extends Notifier<FlashcardState> {
   }) async {
     state = state.copyWith(isLoading: true, error: null, isSuccess: false);
     try {
-      final repository = ref.read(flashcardRepositoryProvider);
-      final folder = await repository.updateFolder(
+      final useCase = ref.read(updateFolderUseCaseProvider);
+      final folder = await useCase(
         id: id,
         name: name,
         description: description,
@@ -114,8 +114,8 @@ class FlashcardNotifier extends Notifier<FlashcardState> {
   Future<bool> deleteFolder(String id) async {
     state = state.copyWith(isLoading: true, error: null, isSuccess: false);
     try {
-      final repository = ref.read(flashcardRepositoryProvider);
-      await repository.deleteFolder(id);
+      final useCase = ref.read(deleteFolderUseCaseProvider);
+      await useCase(id);
 
       // Remove from list
       final updatedFolders = state.folders.where((f) => f.id != id).toList();

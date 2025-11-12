@@ -6,6 +6,7 @@ import '../models/create_folder_request.dart';
 import '../models/create_folder_response.dart';
 import '../models/flashcard_folder_model.dart';
 import '../models/flashcard_set_model.dart';
+import '../models/flashcard_model.dart';
 
 class FlashcardRemoteDataSource {
   final FlashcardApi _api;
@@ -91,6 +92,16 @@ class FlashcardRemoteDataSource {
   Future<List<FlashcardSetModel>> getSetsInFolder(String folderId) async {
     try {
       final response = await _api.getSetsInFolder(folderId);
+      return response.data;
+    } on DioException {
+      rethrow;
+    }
+  }
+
+  /// Get all cards in a set
+  Future<List<FlashcardModel>> getCardsInSet(String setId) async {
+    try {
+      final response = await _api.getCardsInSet(setId);
       return response.data;
     } on DioException {
       rethrow;

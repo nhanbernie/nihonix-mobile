@@ -2,6 +2,7 @@ library;
 
 import '../entities/flashcard_folder.dart';
 import '../entities/flashcard_set.dart';
+import '../entities/flashcard.dart';
 
 abstract class FlashcardRepository {
   Future<FlashcardFolder> createFolder({
@@ -24,4 +25,6 @@ abstract class FlashcardRepository {
   Future<void> deleteFolder(String id);
 
   Future<List<FlashcardSet>> getSetsInFolder(String folderId);
+
+  Future<List<Flashcard>> getCardsInSet(String setId);
 }

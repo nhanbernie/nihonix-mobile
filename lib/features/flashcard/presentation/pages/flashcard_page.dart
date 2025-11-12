@@ -8,11 +8,25 @@ import 'package:nihonix/features/flashcard/presentation/providers/flashcard_prov
 import 'package:nihonix/features/flashcard/presentation/widgets/folder_card.dart';
 import 'package:nihonix/shared/widgets/common_app_bar.dart';
 
-class FlashcardPage extends ConsumerWidget {
+class FlashcardPage extends ConsumerStatefulWidget {
   const FlashcardPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<FlashcardPage> createState() => _FlashcardPageState();
+}
+
+class _FlashcardPageState extends ConsumerState<FlashcardPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Refresh folders mỗi khi vào màn
+    Future.microtask(() {
+      ref.read(flashcardProvider.notifier).loadFolders();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final flashcardState = ref.watch(flashcardProvider);
     
     return Scaffold(
@@ -21,7 +35,7 @@ class FlashcardPage extends ConsumerWidget {
       appBar: CommonAppBar(
         title: 'Flashcard',
         actionIcon: Icons.add_rounded,
-        onActionPressed: () => _showCreateFolderDialog(context, ref),
+        onActionPressed: () => _showCreateFolderDialog(context),
       ),
       body: ListView(
         // const Box 
@@ -168,7 +182,7 @@ class FlashcardPage extends ConsumerWidget {
     );
   }
 
-  void _showCreateFolderDialog(BuildContext context, WidgetRef ref) {
+  void _showCreateFolderDialog(BuildContext context) {
     final nameController = TextEditingController();
     final descriptionController = TextEditingController();
 

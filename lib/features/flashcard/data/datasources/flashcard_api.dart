@@ -40,8 +40,8 @@ abstract class FlashcardApi {
   );
 
   // Get all sets in a folder
-  @GET('/flashcard-folders/{folderId}/sets')
+  @GET('/flashcards/sets')
   Future<GetSetsResponse> getSetsInFolder(
-    @Path('folderId') String folderId,
+    @Query('folderId') String folderId,
   );
 }

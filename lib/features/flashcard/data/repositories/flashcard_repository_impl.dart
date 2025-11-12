@@ -1,6 +1,7 @@
 library;
 
 import '../../domain/entities/flashcard_folder.dart';
+import '../../domain/entities/flashcard_set.dart';
 import '../../domain/repositories/flashcard_repository.dart';
 import '../datasources/flashcard_remote_datasource.dart';
 
@@ -75,6 +76,16 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
   Future<void> deleteFolder(String id) async {
     try {
       await _remoteDataSource.deleteFolder(id);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<FlashcardSet>> getSetsInFolder(String folderId) async {
+    try {
+      final sets = await _remoteDataSource.getSetsInFolder(folderId);
+      return sets.map((model) => model.toDomain()).toList();
     } catch (e) {
       rethrow;
     }

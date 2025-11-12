@@ -12,6 +12,7 @@ import '../widgets/flashcard_item.dart';
 import '../widgets/add_flashcard_sheet.dart';
 import '../widgets/folder_options_sheet.dart';
 import '../providers/flashcard_provider.dart';
+import '../providers/folder_sets_provider.dart';
 
 class FolderDetailPage extends ConsumerWidget {
   final String folderId;
@@ -77,78 +78,138 @@ class FolderDetailPage extends ConsumerWidget {
 
             // Flashcard List
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s24),
+              child: _buildSetsList(context, ref),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSetsList(BuildContext context, WidgetRef ref) {
+    final setsAsync = ref.watch(folderSetsProvider(folderId));
+
+    return setsAsync.when(
+      data: (sets) {
+        if (sets.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.folder_open, size: 64, color: Colors.grey.shade300),
+                const SizedBox(height: AppSizes.s16),
+                Text(
+                  'Chưa có set nào',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+                const SizedBox(height: AppSizes.s24),
+                FilledButton.icon(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.white,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                      ),
+                      builder: (_) => AddFlashcardSheet(folderId: folderId),
+                    );
+                  },
+                  icon: const Icon(Icons.add),
+                  label: const Text('Tạo set đầu tiên'),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return ListView(
+          padding: const EdgeInsets.symmetric(horizontal: AppSizes.s24),
+          children: [
+            // Section Header
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppSizes.s12),
+              child: Row(
                 children: [
-                  // Section Header
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: AppSizes.s12),
-                    child: Row(
-                      children: [
-                        Text(
-                          'Recent',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                        const SizedBox(width: AppSizes.s8),
-                        Icon(
-                          Icons.arrow_drop_down,
-                          size: 20,
-                          color: Colors.grey.shade600,
-                        ),
-                      ],
+                  Text(
+                    'Sets (${sets.length})',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey.shade600,
                     ),
                   ),
-
-                  // Flashcard Items (Hardcoded for UI demo)
-                  FlashcardItem(
-                    title: 'animal',
-                    subtitle: 'Flashcard set • 2 terms • by you',
-                    onTap: () {
-                      context.push(
-                        '${AppRoutes.cardStudy}?setId=demo&setName=${Uri.encodeComponent('animal')}',
-                      );
-                    },
-                  ),
-
-                  const SizedBox(height: AppSizes.s24),
-
-                  // Add More Button
-                  Center(
-                    child: TextButton.icon(
-                      onPressed: () => showModalBottomSheet(
-                        context: context,
-                        backgroundColor: Colors.white,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(20)),
-                        ),
-                        builder: (_) => AddFlashcardSheet(folderId: folderId),
-                      ),
-                      icon: const Icon(Icons.add, size: 20),
-                      label: const Text(
-                        'Add more',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      style: TextButton.styleFrom(
-                        foregroundColor: AppColors.primary,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSizes.s20,
-                          vertical: AppSizes.s12,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: AppSizes.s40),
                 ],
               ),
+            ),
+
+            // Flashcard Sets from API
+            ...sets.map((set) {
+              return FlashcardItem(
+                title: set.name,
+                subtitle: 'Flashcard set • ${set.cardCount} terms',
+                onTap: () {
+                  context.push(
+                    '${AppRoutes.cardStudy}?setId=${set.id}&setName=${Uri.encodeComponent(set.name)}',
+                  );
+                },
+              );
+            }),
+
+            const SizedBox(height: AppSizes.s24),
+
+            // Add More Button
+            Center(
+              child: TextButton.icon(
+                onPressed: () => showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.white,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                  ),
+                  builder: (_) => AddFlashcardSheet(folderId: folderId),
+                ),
+                icon: const Icon(Icons.add, size: 20),
+                label: const Text(
+                  'Add more',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.primary,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.s20,
+                    vertical: AppSizes.s12,
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: AppSizes.s40),
+          ],
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, size: 48, color: Colors.red.shade300),
+            const SizedBox(height: AppSizes.s16),
+            Text(
+              'Lỗi: $error',
+              style: TextStyle(color: Colors.red.shade700),
+            ),
+            const SizedBox(height: AppSizes.s16),
+            ElevatedButton(
+              onPressed: () {
+                ref.invalidate(folderSetsProvider(folderId));
+              },
+              child: const Text('Thử lại'),
             ),
           ],
         ),

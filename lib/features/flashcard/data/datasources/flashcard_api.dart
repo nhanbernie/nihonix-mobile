@@ -7,6 +7,7 @@ import '../models/create_folder_response.dart';
 import '../models/update_folder_response.dart';
 import '../models/flashcard_folder_model.dart';
 import '../models/get_folders_response.dart';
+import '../models/get_sets_response.dart';
 
 part 'flashcard_api.g.dart';
 
@@ -36,5 +37,11 @@ abstract class FlashcardApi {
   @DELETE('/flashcard-folders/{id}')
   Future<void> deleteFolder(
     @Path('id') String id,
+  );
+
+  // Get all sets in a folder
+  @GET('/flashcard-folders/{folderId}/sets')
+  Future<GetSetsResponse> getSetsInFolder(
+    @Path('folderId') String folderId,
   );
 }

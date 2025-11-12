@@ -5,6 +5,7 @@ import 'flashcard_api.dart';
 import '../models/create_folder_request.dart';
 import '../models/create_folder_response.dart';
 import '../models/flashcard_folder_model.dart';
+import '../models/flashcard_set_model.dart';
 
 class FlashcardRemoteDataSource {
   final FlashcardApi _api;
@@ -81,6 +82,16 @@ class FlashcardRemoteDataSource {
   Future<void> deleteFolder(String id) async {
     try {
       await _api.deleteFolder(id);
+    } on DioException {
+      rethrow;
+    }
+  }
+
+  /// Get all sets in a folder
+  Future<List<FlashcardSetModel>> getSetsInFolder(String folderId) async {
+    try {
+      final response = await _api.getSetsInFolder(folderId);
+      return response.data;
     } on DioException {
       rethrow;
     }

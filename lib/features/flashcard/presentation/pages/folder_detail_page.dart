@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/router/route_constants.dart';
-import '../../../../shared/widgets/common_app_bar.dart';
+import 'package:nihonix/core/constants/app_colors.dart';
+import 'package:nihonix/core/constants/app_sizes.dart';
+import 'package:nihonix/core/router/route_constants.dart';
+import 'package:nihonix/shared/widgets/common_app_bar.dart';
+
 import '../widgets/folder_header.dart';
 import '../widgets/flashcard_item.dart';
 import '../widgets/add_flashcard_sheet.dart';

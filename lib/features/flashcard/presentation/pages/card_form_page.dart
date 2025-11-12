@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
+import '../../../../shared/widgets/glass_icon_button.dart';
 
 class CardFormPage extends StatefulWidget {
   final String folderId;
@@ -18,18 +19,61 @@ class CardFormPage extends StatefulWidget {
   State<CardFormPage> createState() => _CardFormPageState();
 }
 
+class FlashcardItem {
+  final TextEditingController termController;
+  final TextEditingController definitionController;
+
+  FlashcardItem({
+    String? term,
+    String? definition,
+  })  : termController = TextEditingController(text: term),
+        definitionController = TextEditingController(text: definition);
+
+  void dispose() {
+    termController.dispose();
+    definitionController.dispose();
+  }
+}
+
 class _CardFormPageState extends State<CardFormPage> {
   final _formKey = GlobalKey<FormState>();
-  final _frontController = TextEditingController();
-  final _backController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final List<FlashcardItem> _cards = [];
 
   bool get _isEditing => widget.cardId != null;
 
   @override
+  void initState() {
+    super.initState();
+    // Thêm 2 card mặc định
+    _addCard();
+    _addCard();
+  }
+
+  @override
   void dispose() {
-    _frontController.dispose();
-    _backController.dispose();
+    _titleController.dispose();
+    _descriptionController.dispose();
+    for (var card in _cards) {
+      card.dispose();
+    }
     super.dispose();
+  }
+
+  void _addCard() {
+    setState(() {
+      _cards.add(FlashcardItem());
+    });
+  }
+
+  void _removeCard(int index) {
+    if (_cards.length > 1) {
+      setState(() {
+        _cards[index].dispose();
+        _cards.removeAt(index);
+      });
+    }
   }
 
   void _handleSave() {
@@ -37,10 +81,10 @@ class _CardFormPageState extends State<CardFormPage> {
       return;
     }
 
-    // TODO: Save flashcard
+    // TODO: Save flashcard set with multiple cards
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Đã lưu thẻ học'),
+        content: Text('Đã lưu bộ thẻ học'),
         backgroundColor: Colors.green,
       ),
     );
@@ -69,7 +113,7 @@ class _CardFormPageState extends State<CardFormPage> {
             onPressed: () => context.pop(),
           ),
           title: Text(
-            _isEditing ? 'Chỉnh sửa thẻ' : 'Tạo thẻ mới',
+            _isEditing ? 'Chỉnh sửa bộ thẻ' : 'Tạo bộ thẻ mới',
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -93,154 +137,241 @@ class _CardFormPageState extends State<CardFormPage> {
         ),
         body: Form(
           key: _formKey,
-          child: ListView(
-            padding: const EdgeInsets.all(AppSizes.s24),
+          child: Column(
             children: [
-              // Front Side
-              _buildCardSection(
-                title: 'Mặt trước',
-                subtitle: 'Từ vựng hoặc câu hỏi',
-                controller: _frontController,
-                hintText: 'Ví dụ: 犬',
-                maxLines: 3,
-              ),
-
-              const SizedBox(height: AppSizes.s32),
-
-              // Divider with flip icon
-              Row(
-                children: [
-                  Expanded(child: Divider(color: Colors.grey.shade300)),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(
-                        Icons.flip,
-                        size: 20,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  ),
-                  Expanded(child: Divider(color: Colors.grey.shade300)),
-                ],
-              ),
-
-              const SizedBox(height: AppSizes.s32),
-
-              // Back Side
-              _buildCardSection(
-                title: 'Mặt sau',
-                subtitle: 'Nghĩa hoặc câu trả lời',
-                controller: _backController,
-                hintText: 'Ví dụ: inu - con chó',
-                maxLines: 5,
-              ),
-
-              const SizedBox(height: AppSizes.s40),
-
-              // Tips
+              // Title & Description Section (Fixed at top)
               Container(
-                padding: const EdgeInsets.all(AppSizes.s16),
-                decoration: BoxDecoration(
-                  color: AppColors.accent4.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
+                color: Colors.white,
+                padding: const EdgeInsets.all(AppSizes.s24),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      Icons.lightbulb_outline,
-                      size: 20,
-                      color: AppColors.accent4.withValues(alpha: 0.8),
+                    // Title Field
+                    Text(
+                      'TITLE',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey.shade600,
+                        letterSpacing: 0.5,
+                      ),
                     ),
-                    const SizedBox(width: AppSizes.s12),
-                    Expanded(
+                    const SizedBox(height: AppSizes.s8),
+                    TextFormField(
+                      controller: _titleController,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: 'Subject, chapter, unit',
+                        hintStyle: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey.shade300,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Vui lòng nhập tiêu đề';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: AppSizes.s4),
+                    Divider(color: AppColors.primary, thickness: 2),
+                    
+                    const SizedBox(height: AppSizes.s16),
+                    
+                    // Description (Optional)
+                    GestureDetector(
+                      onTap: () {
+                        // TODO: Show description input
+                      },
                       child: Text(
-                        'Mẹo: Mặt trước nên ngắn gọn, mặt sau có thể chi tiết hơn với ví dụ và giải thích',
+                        '+ Description',
                         style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey.shade700,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
+
+              Divider(height: 1, color: Colors.grey.shade200),
+
+              // Cards List (Scrollable)
+              Expanded(
+                child: ListView.separated(
+                  padding: const EdgeInsets.all(AppSizes.s16),
+                  itemCount: _cards.length,
+                  separatorBuilder: (context, index) => const SizedBox(height: AppSizes.s16),
+                  itemBuilder: (context, index) => _buildCardItem(index),
+                ),
+              ),
             ],
           ),
+        ),
+        floatingActionButton: GlassIconButton(
+          icon: Icons.add,
+          onTap: _addCard,
+          size: 64,
+          iconSize: 32,
+          backgroundColor: AppColors.primary.withValues(alpha: 0.9),
+          iconColor: Colors.white,
         ),
       ),
     );
   }
 
-  Widget _buildCardSection({
-    required String title,
-    required String subtitle,
-    required TextEditingController controller,
-    required String hintText,
-    required int maxLines,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Label
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
+  Widget _buildCardItem(int index) {
+    return Container(
+      padding: const EdgeInsets.all(AppSizes.s16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
-        ),
-        const SizedBox(height: AppSizes.s4),
-        Text(
-          subtitle,
-          style: TextStyle(
-            fontSize: 13,
-            color: Colors.grey.shade600,
-          ),
-        ),
-        const SizedBox(height: AppSizes.s12),
-
-        // Input Field
-        Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFFF7F7F7),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: TextFormField(
-            controller: controller,
-            maxLines: maxLines,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.black87,
-            ),
-            decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: TextStyle(
-                fontSize: 16,
-                color: Colors.grey.shade400,
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Card Header (Index + Delete button)
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSizes.s8,
+                  vertical: AppSizes.s4,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  '${index + 1}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
               ),
-              border: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              errorBorder: InputBorder.none,
-              contentPadding: const EdgeInsets.all(AppSizes.s16),
-            ),
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return 'Vui lòng nhập nội dung';
-              }
-              return null;
-            },
+              const Spacer(),
+              if (_cards.length > 1)
+                IconButton(
+                  icon: Icon(Icons.delete_outline, color: Colors.grey.shade400, size: 20),
+                  onPressed: () => _removeCard(index),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+            ],
           ),
-        ),
-      ],
+
+          const SizedBox(height: AppSizes.s12),
+
+          // TERM Field
+          Text(
+            'TERM',
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade600,
+              letterSpacing: 0.5,
+            ),
+          ),
+          const SizedBox(height: AppSizes.s8),
+          Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFF7F7F7),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: TextFormField(
+              controller: _cards[index].termController,
+              maxLines: 2,
+              style: const TextStyle(
+                fontSize: 15,
+                color: Colors.black87,
+              ),
+              decoration: InputDecoration(
+                hintText: 'Nhập từ vựng, câu hỏi...',
+                hintStyle: TextStyle(
+                  fontSize: 15,
+                  color: Colors.grey.shade400,
+                ),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.all(AppSizes.s12),
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Vui lòng nhập term';
+                }
+                return null;
+              },
+            ),
+          ),
+
+          const SizedBox(height: AppSizes.s12),
+          
+          // Divider
+          Divider(height: 1, color: Colors.grey.shade300),
+          
+          const SizedBox(height: AppSizes.s12),
+
+          // DEFINITION Field
+          Text(
+            'DEFINITION',
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade600,
+              letterSpacing: 0.5,
+            ),
+          ),
+          const SizedBox(height: AppSizes.s8),
+          Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFF7F7F7),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: TextFormField(
+              controller: _cards[index].definitionController,
+              maxLines: 2,
+              style: const TextStyle(
+                fontSize: 15,
+                color: Colors.black87,
+              ),
+              decoration: InputDecoration(
+                hintText: 'Nhập định nghĩa, nghĩa...',
+                hintStyle: TextStyle(
+                  fontSize: 15,
+                  color: Colors.grey.shade400,
+                ),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.all(AppSizes.s12),
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Vui lòng nhập definition';
+                }
+                return null;
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

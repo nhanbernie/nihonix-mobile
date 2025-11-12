@@ -5,6 +5,7 @@ import 'package:nihonix/core/constants/app_strings.dart';
 import 'package:nihonix/features/auth/presentation/providers/auth_provider.dart';
 import 'package:nihonix/features/home/presentation/widgets/home_app_bar.dart';
 import 'package:nihonix/features/home/presentation/widgets/milestone_card.dart';
+import 'package:nihonix/features/home/presentation/widgets/streak_tracker.dart';
 import 'package:nihonix/features/lesson/presentation/pages/lesson_page.dart';
 
 class HomePage extends ConsumerWidget {
@@ -121,6 +122,14 @@ class HomePage extends ConsumerWidget {
                   ),
                 ],
               ),
+            ),
+            const SizedBox(height: AppSizes.s24),
+
+            // Streak Tracker
+            const StreakTracker(
+              currentStreak: 7,
+              longestStreak: 15,
+              weekProgress: [true, true, true, true, false, false, false],
             ),
             const SizedBox(height: AppSizes.s24),
 

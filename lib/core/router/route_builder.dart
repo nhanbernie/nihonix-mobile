@@ -8,6 +8,7 @@ import 'package:nihonix/features/flashcard/presentation/pages/folder_detail_page
 import 'package:nihonix/features/flashcard/presentation/pages/folder_edit_page.dart';
 import 'package:nihonix/features/flashcard/presentation/pages/card_study_page.dart';
 import 'package:nihonix/features/flashcard/presentation/pages/card_form_page.dart';
+import 'package:nihonix/features/lesson/presentation/pages/topic_detail_page.dart';
 import 'package:nihonix/shared/layouts/main_layout.dart';
 import 'route_constants.dart';
 
@@ -88,6 +89,23 @@ List<RouteBase> buildAppRoutes() {
           ],
         ),
       ],
+    ),
+
+    // Topic detail route (outside shell - no bottom nav)
+    GoRoute(
+      path: AppRoutes.topicDetail,
+      name: AppRoutes.topicDetailName,
+      builder: (context, state) {
+        final topicName = state.uri.queryParameters['name'] ?? '';
+        final iconCodePoint = int.tryParse(
+              state.uri.queryParameters['icon'] ?? '',
+            ) ??
+            Icons.book_rounded.codePoint;
+        return TopicDetailPage(
+          topicName: topicName,
+          topicIcon: IconData(iconCodePoint, fontFamily: 'MaterialIcons'),
+        );
+      },
     ),
 
     // Flashcard routes (outside shell - no bottom nav)

@@ -13,16 +13,43 @@ class FolderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    // Neumorphism colors - giống TopicCard
+    const neuBgColorLight = Color.fromARGB(255, 243, 243, 243);
+    const neuBgColorDark = Color(0xFF2A2A2A);
+    const neuLightShadowLight = Color(0xFFFFFFFF);
+    const neuLightShadowDark = Color(0xFF3A3A3A);
+    const neuDarkShadowLight = Color(0xFFBCBCBC);
+    const neuDarkShadowDark = Color(0xFF1A1A1A);
+    const neuTextColorLight = Color(0xFF4D4D4D);
+    const neuTextColorDark = Color(0xFF9E9E9E);
+
+    final neuBgColor = isDark ? neuBgColorDark : neuBgColorLight;
+    final neuLightShadow = isDark ? neuLightShadowDark : neuLightShadowLight;
+    final neuDarkShadow = isDark ? neuDarkShadowDark : neuDarkShadowLight;
+    final neuTextColor = isDark ? neuTextColorDark : neuTextColorLight;
+
     return Container(
       margin: const EdgeInsets.only(bottom: AppSizes.s12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: neuBgColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
+          // Dark shadow (bottom-right)
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.09),
-            blurRadius: 4,
-            offset: const Offset(0, 1),
+            color: neuDarkShadow,
+            blurRadius: 8,
+            offset: const Offset(3, 3),
+            spreadRadius: 0,
+          ),
+          // Light shadow (top-left)
+          BoxShadow(
+            color: neuLightShadow,
+            blurRadius: 8,
+            offset: const Offset(-3, -3),
+            spreadRadius: 0,
           ),
         ],
       ),
@@ -52,9 +79,10 @@ class FolderCard extends StatelessWidget {
                     children: [
                       Text(
                         folderName,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
+                          color: neuTextColor,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -62,7 +90,7 @@ class FolderCard extends StatelessWidget {
                         'Folder',
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.grey.shade500,
+                          color: neuTextColor.withValues(alpha: 0.5),
                         ),
                       ),
                     ],
@@ -72,7 +100,7 @@ class FolderCard extends StatelessWidget {
                 Icon(
                   Icons.arrow_forward_ios_rounded,
                   size: 16,
-                  color: Colors.grey.shade400,
+                  color: neuTextColor.withValues(alpha: 0.4),
                 ),
               ],
             ),

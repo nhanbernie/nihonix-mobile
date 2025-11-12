@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nihonix/core/constants/app_colors.dart';
 import 'package:nihonix/core/constants/app_sizes.dart';
+import 'package:nihonix/core/router/route_constants.dart';
 import 'package:nihonix/features/lesson/presentation/providers/lesson_provider.dart';
 import 'package:nihonix/features/lesson/presentation/widgets/topic_card.dart';
 import 'package:nihonix/shared/widgets/common_app_bar.dart';
@@ -187,63 +189,81 @@ class _LessonPageState extends ConsumerState<LessonPage> {
                   icon: Icons.music_note_rounded,
                   label: 'music',
                   onTap: () {
-                    // TODO: Navigate to topic
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=music&icon=${Icons.music_note_rounded.codePoint}',
+                    );
                   },
                 ),
                 TopicCard(
                   icon: Icons.movie_rounded,
                   label: 'cinema',
                   onTap: () {
-                    // TODO: Navigate to topic
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=cinema&icon=${Icons.movie_rounded.codePoint}',
+                    );
                   },
                 ),
                 TopicCard(
                   icon: Icons.flight_rounded,
                   label: 'travel',
                   onTap: () {
-                    // TODO: Navigate to topic
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=travel&icon=${Icons.flight_rounded.codePoint}',
+                    );
                   },
                 ),
                 TopicCard(
                   icon: Icons.pets_rounded,
                   label: 'animals',
                   onTap: () {
-                    // TODO: Navigate to topic
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=animals&icon=${Icons.pets_rounded.codePoint}',
+                    );
                   },
                 ),
                 TopicCard(
                   icon: Icons.sports_esports_rounded,
                   label: 'hobby',
                   onTap: () {
-                    // TODO: Navigate to topic
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=hobby&icon=${Icons.sports_esports_rounded.codePoint}',
+                    );
                   },
                 ),
                 TopicCard(
                   icon: Icons.cloud_rounded,
                   label: 'weather',
                   onTap: () {
-                    // TODO: Navigate to topic
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=weather&icon=${Icons.cloud_rounded.codePoint}',
+                    );
                   },
                 ),
                 TopicCard(
                   icon: Icons.restaurant_rounded,
                   label: 'food',
                   onTap: () {
-                    // TODO: Navigate to topic
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=food&icon=${Icons.restaurant_rounded.codePoint}',
+                    );
                   },
                 ),
                 TopicCard(
                   icon: Icons.sports_soccer_rounded,
                   label: 'sports',
                   onTap: () {
-                    // TODO: Navigate to topic
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=sports&icon=${Icons.sports_soccer_rounded.codePoint}',
+                    );
                   },
                 ),
                 TopicCard(
                   icon: Icons.school_rounded,
                   label: 'education',
                   onTap: () {
-                    // TODO: Navigate to topic
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=education&icon=${Icons.school_rounded.codePoint}',
+                    );
                   },
                 ),
               ],

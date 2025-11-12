@@ -9,6 +9,8 @@ import '../models/flashcard_folder_model.dart';
 import '../models/get_folders_response.dart';
 import '../models/get_sets_response.dart';
 import '../models/get_cards_response.dart';
+import '../models/create_flashcard_request.dart';
+import '../models/create_flashcard_response.dart';
 
 part 'flashcard_api.g.dart';
 
@@ -50,5 +52,17 @@ abstract class FlashcardApi {
   @GET('/flashcards/sets/{setId}/cards')
   Future<GetCardsResponse> getCardsInSet(
     @Path('setId') String setId,
+  );
+
+  // Delete a flashcard set
+  @DELETE('/flashcards/sets/{setId}')
+  Future<void> deleteFlashcardSet(
+    @Path('setId') String setId,
+  );
+
+  // Create flashcard set with cards
+  @POST('/flashcards')
+  Future<CreateFlashcardResponse> createFlashcard(
+    @Body() CreateFlashcardRequest request,
   );
 }

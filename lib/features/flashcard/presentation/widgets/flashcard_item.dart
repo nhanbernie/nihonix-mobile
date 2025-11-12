@@ -6,12 +6,16 @@ class FlashcardItem extends StatelessWidget {
   final String title;
   final String subtitle;
   final VoidCallback? onTap;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   const FlashcardItem({
     super.key,
     required this.title,
     required this.subtitle,
     this.onTap,
+    this.onEdit,
+    this.onDelete,
   });
 
   @override
@@ -70,11 +74,42 @@ class FlashcardItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                // More Icon
-                Icon(
-                  Icons.more_vert,
-                  size: 20,
-                  color: Colors.grey.shade400,
+                // More Menu
+                PopupMenuButton<String>(
+                  icon: Icon(
+                    Icons.more_vert,
+                    size: 20,
+                    color: Colors.grey.shade400,
+                  ),
+                  onSelected: (value) {
+                    if (value == 'edit' && onEdit != null) {
+                      onEdit!();
+                    } else if (value == 'delete' && onDelete != null) {
+                      onDelete!();
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'edit',
+                      child: Row(
+                        children: [
+                          Icon(Icons.edit, size: 20),
+                          SizedBox(width: 12),
+                          Text('Sửa'),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete, size: 20, color: Colors.red),
+                          SizedBox(width: 12),
+                          Text('Xóa', style: TextStyle(color: Colors.red)),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

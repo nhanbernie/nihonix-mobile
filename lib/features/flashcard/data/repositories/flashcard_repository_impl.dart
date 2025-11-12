@@ -5,6 +5,7 @@ import '../../domain/entities/flashcard_set.dart';
 import '../../domain/entities/flashcard.dart';
 import '../../domain/repositories/flashcard_repository.dart';
 import '../datasources/flashcard_remote_datasource.dart';
+import '../models/create_flashcard_request.dart';
 
 class FlashcardRepositoryImpl implements FlashcardRepository {
   final FlashcardRemoteDataSource _remoteDataSource;
@@ -97,6 +98,35 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
     try {
       final cards = await _remoteDataSource.getCardsInSet(setId);
       return cards.map((model) => model.toDomain()).toList();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteFlashcardSet(String setId) async {
+    try {
+      await _remoteDataSource.deleteFlashcardSet(setId);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<String> createFlashcard({
+    required String folderId,
+    required String setName,
+    required List<CardRequest> cards,
+  }) async {
+    try {
+      final response = await _remoteDataSource.createFlashcard(
+        folderId: folderId,
+        setName: setName,
+        cards: cards,
+      );
+      
+      // Return setId for further use
+      return response.data.setId;
     } catch (e) {
       rethrow;
     }

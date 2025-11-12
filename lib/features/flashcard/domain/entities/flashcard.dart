@@ -21,7 +21,7 @@ sealed class Flashcard with _$Flashcard {
     required String id,
     String? slug,
     required String folderId,
-    required String setId,
+    String? setId,
     required CardContent front,
     required CardContent back,
     required int order,

@@ -7,6 +7,8 @@ import '../models/create_folder_response.dart';
 import '../models/flashcard_folder_model.dart';
 import '../models/flashcard_set_model.dart';
 import '../models/flashcard_model.dart';
+import '../models/create_flashcard_request.dart';
+import '../models/create_flashcard_response.dart';
 
 class FlashcardRemoteDataSource {
   final FlashcardApi _api;
@@ -103,6 +105,34 @@ class FlashcardRemoteDataSource {
     try {
       final response = await _api.getCardsInSet(setId);
       return response.data;
+    } on DioException {
+      rethrow;
+    }
+  }
+
+  /// Delete a flashcard set
+  Future<void> deleteFlashcardSet(String setId) async {
+    try {
+      await _api.deleteFlashcardSet(setId);
+    } on DioException {
+      rethrow;
+    }
+  }
+
+  /// Create flashcard set with cards
+  Future<CreateFlashcardResponse> createFlashcard({
+    required String folderId,
+    required String setName,
+    required List<CardRequest> cards,
+  }) async {
+    try {
+      final request = CreateFlashcardRequest(
+        folderId: folderId,
+        setName: setName,
+        cards: cards,
+      );
+      final response = await _api.createFlashcard(request);
+      return response;
     } on DioException {
       rethrow;
     }

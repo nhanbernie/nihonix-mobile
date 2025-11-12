@@ -11,7 +11,7 @@ class FlashcardModel {
   @JsonKey(name: 'folder_id')
   final String folderId;
   @JsonKey(name: 'set_id')
-  final String setId;
+  final String? setId;
   final CardContentModel front;
   final CardContentModel back;
   final int order;
@@ -24,7 +24,7 @@ class FlashcardModel {
     required this.id,
     this.slug,
     required this.folderId,
-    required this.setId,
+    this.setId,
     required this.front,
     required this.back,
     required this.order,

@@ -13,6 +13,7 @@ import '../widgets/add_flashcard_sheet.dart';
 import '../widgets/folder_options_sheet.dart';
 import '../providers/flashcard_provider.dart';
 import '../providers/folder_sets_provider.dart';
+import '../providers/flashcard_di.dart';
 
 class FolderDetailPage extends ConsumerWidget {
   final String folderId;
@@ -155,6 +156,12 @@ class FolderDetailPage extends ConsumerWidget {
                     '${AppRoutes.cardStudy}?setId=${set.id}&setName=${Uri.encodeComponent(set.name)}',
                   );
                 },
+                onEdit: () {
+                  context.push(
+                    '${AppRoutes.cardForm}?setId=${set.id}&folderId=$folderId',
+                  );
+                },
+                onDelete: () => _handleDeleteSet(context, ref, set.id, set.name),
               );
             }),
 
@@ -251,6 +258,62 @@ class FolderDetailPage extends ConsumerWidget {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Lỗi khi xóa folder: $e')),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _handleDeleteSet(
+    BuildContext context,
+    WidgetRef ref,
+    String setId,
+    String setName,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Xác nhận xóa'),
+        content: Text('Bạn có chắc muốn xóa set "$setName" không?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Hủy'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: FilledButton.styleFrom(
+              backgroundColor: Colors.red,
+            ),
+            child: const Text('Xóa'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        final useCase = ref.read(deleteFlashcardSetUseCaseProvider);
+        await useCase(setId);
+        
+        // Refresh danh sách sets
+        ref.invalidate(folderSetsProvider(folderId));
+        
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Xóa set thành công'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Lỗi khi xóa set: $e'),
+              backgroundColor: Colors.red,
+            ),
           );
         }
       }

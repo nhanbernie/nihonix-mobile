@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../shared/widgets/glass_icon_button.dart';
+import '../../data/models/create_flashcard_request.dart';
+import '../providers/flashcard_di.dart';
+import '../providers/folder_sets_provider.dart';
 
-class CardFormPage extends StatefulWidget {
+class CardFormPage extends ConsumerStatefulWidget {
   final String folderId;
   final String? cardId; // null = create new, not null = edit existing
 
@@ -16,7 +20,7 @@ class CardFormPage extends StatefulWidget {
   });
 
   @override
-  State<CardFormPage> createState() => _CardFormPageState();
+  ConsumerState<CardFormPage> createState() => _CardFormPageState();
 }
 
 class FlashcardItem {
@@ -35,11 +39,12 @@ class FlashcardItem {
   }
 }
 
-class _CardFormPageState extends State<CardFormPage> {
+class _CardFormPageState extends ConsumerState<CardFormPage> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final List<FlashcardItem> _cards = [];
+  bool _isSaving = false;
 
   bool get _isEditing => widget.cardId != null;
 
@@ -76,20 +81,68 @@ class _CardFormPageState extends State<CardFormPage> {
     }
   }
 
-  void _handleSave() {
+  void _handleSave() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    // TODO: Save flashcard set with multiple cards
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Đã lưu bộ thẻ học'),
-        backgroundColor: Colors.green,
-      ),
-    );
+    if (_isSaving) return;
 
-    context.pop();
+    setState(() => _isSaving = true);
+
+    try {
+      // Build cards list
+      final cards = _cards.asMap().entries.map((entry) {
+        final index = entry.key;
+        final card = entry.value;
+        
+        return CardRequest(
+          front: CardContentRequest(
+            text: card.termController.text.trim(),
+            type: 'text',
+          ),
+          back: CardContentRequest(
+            text: card.definitionController.text.trim(),
+            type: 'text',
+          ),
+          order: index + 1,
+        );
+      }).toList();
+
+      // Call use case
+      final useCase = ref.read(createFlashcardUseCaseProvider);
+      await useCase(
+        folderId: widget.folderId,
+        setName: _titleController.text.trim(),
+        cards: cards,
+      );
+
+      // Refresh sets list
+      ref.invalidate(folderSetsProvider(widget.folderId));
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Tạo bộ thẻ học thành công'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        context.pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Lỗi khi tạo bộ thẻ: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
+    }
   }
 
   @override
@@ -122,17 +175,26 @@ class _CardFormPageState extends State<CardFormPage> {
           ),
           centerTitle: true,
           actions: [
-            TextButton(
-              onPressed: _handleSave,
-              child: Text(
-                'Lưu',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primary,
-                ),
-              ),
-            ),
+            _isSaving
+                ? const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  )
+                : TextButton(
+                    onPressed: _handleSave,
+                    child: Text(
+                      'Lưu',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
           ],
         ),
         body: Form(

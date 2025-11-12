@@ -71,8 +71,8 @@ class FlashcardRemoteDataSource {
       if (name != null) request['name'] = name;
       if (description != null) request['description'] = description;
       if (order != null) request['order'] = order;
-      final folder = await _api.updateFolder(id, request);
-      return folder;
+      final response = await _api.updateFolder(id, request);
+      return response.data;
     } on DioException {
       rethrow;
     }

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/router/route_constants.dart';
+import '../../../../shared/widgets/common_app_bar.dart';
 import '../widgets/folder_header.dart';
 import '../widgets/flashcard_item.dart';
 import '../widgets/add_flashcard_sheet.dart';
@@ -23,6 +24,13 @@ class FolderDetailPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    
+    final flashcardState = ref.watch(flashcardProvider);
+    final folder = flashcardState.folders.firstWhere(
+      (f) => f.id == folderId,
+      orElse: () => throw Exception('Folder not found'),
+    );
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -33,80 +41,38 @@ class FolderDetailPage extends ConsumerWidget {
       ),
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          surfaceTintColor: Colors.transparent,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => context.pop(),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.more_vert, color: Colors.black),
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  backgroundColor: Colors.white,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                  ),
-                  builder: (_) => FolderOptionsSheet(
-                    onEdit: () {
-                      Navigator.of(context).pop();
-                      // Navigate to folder edit route (placeholder)
-                      context.push('${AppRoutes.folderDetail}/edit?folderId=$folderId');
-                    },
-                    onDelete: () async {
-                      Navigator.of(context).pop();
-                      final confirmed = await showDialog<bool>(
-                        context: context,
-                        builder: (ctx) => AlertDialog(
-                          title: const Text('Xác nhận'),
-                          content: const Text('Bạn chắc chắn muốn xóa folder này?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.of(ctx).pop(false),
-                              child: const Text('Hủy'),
-                            ),
-                            FilledButton(
-                              onPressed: () => Navigator.of(ctx).pop(true),
-                              child: const Text('Xóa'),
-                            ),
-                          ],
-                        ),
-                      );
-
-                      if (confirmed == true) {
-                        try {
-                          final success = await ref.read(flashcardProvider.notifier).deleteFolder(folderId);
-                          if (success) {
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Xóa folder thành công')),
-                              );
-                              context.pop();
-                            }
-                          }
-                        } catch (e) {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Lỗi khi xóa folder: $e')),
-                            );
-                          }
-                        }
-                      }
-                    },
-                  ),
-                );
-              },
-            ),
-          ],
+        appBar: CommonAppBar(
+          // title: folder.name,
+          actionIcon: Icons.more_vert,
+          onActionPressed: () {
+            showModalBottomSheet(
+              context: context,
+              backgroundColor: Colors.white,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              builder: (_) => FolderOptionsSheet(
+                onEdit: () {
+                  Navigator.of(context).pop();
+                  context.push(
+                    '${AppRoutes.folderDetail}/$folderId/edit?name=${Uri.encodeComponent(folder.name)}&description=${Uri.encodeComponent(folder.description)}',
+                  );
+                },
+                onDelete: () {
+                  Navigator.of(context).pop();
+                  _handleDeleteFolder(context, ref);
+                },
+              ),
+            );
+          },
         ),
         body: Column(
           children: [
             // Folder Header
-            FolderHeader(folderName: folderName),
+            FolderHeader(
+              folderName: folder.name,
+              folderDescription: folder.description,
+            ),
 
             // Flashcard List
             Expanded(
@@ -189,5 +155,44 @@ class FolderDetailPage extends ConsumerWidget {
     );
   }
 
+  Future<void> _handleDeleteFolder(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Xác nhận'),
+        content: const Text('Bạn chắc chắn muốn xóa folder này?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Hủy'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Xóa'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        final success = await ref.read(flashcardProvider.notifier).deleteFolder(folderId);
+        if (success) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Xóa folder thành công')),
+            );
+            context.pop();
+          }
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Lỗi khi xóa folder: $e')),
+          );
+        }
+      }
+    }
+  }
 }
 

@@ -5,6 +5,7 @@ import 'package:nihonix/features/main_pages.dart';
 import 'package:nihonix/features/onboarding/presentation/pages/language_selection_page.dart';
 import 'package:nihonix/features/onboarding/presentation/pages/level_selection_page.dart';
 import 'package:nihonix/features/flashcard/presentation/pages/folder_detail_page.dart';
+import 'package:nihonix/features/flashcard/presentation/pages/folder_edit_page.dart';
 import 'package:nihonix/features/flashcard/presentation/pages/card_study_page.dart';
 import 'package:nihonix/features/flashcard/presentation/pages/card_form_page.dart';
 import 'package:nihonix/shared/layouts/main_layout.dart';
@@ -98,6 +99,21 @@ List<RouteBase> buildAppRoutes() {
         final folderName = state.uri.queryParameters['folderName'] ?? '';
         return FolderDetailPage(folderId: folderId, folderName: folderName);
       },
+      routes: [
+        GoRoute(
+          path: ':folderId/edit',
+          builder: (context, state) {
+            final folderId = state.pathParameters['folderId'] ?? '';
+            final folderName = state.uri.queryParameters['name'] ?? '';
+            final folderDescription = state.uri.queryParameters['description'];
+            return FolderEditPage(
+              folderId: folderId,
+              folderName: folderName,
+              folderDescription: folderDescription,
+            );
+          },
+        ),
+      ],
     ),
     GoRoute(
       path: AppRoutes.cardStudy,

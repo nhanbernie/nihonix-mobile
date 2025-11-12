@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import '../models/create_folder_request.dart';
 import '../models/create_folder_response.dart';
+import '../models/update_folder_response.dart';
 import '../models/flashcard_folder_model.dart';
 import '../models/get_folders_response.dart';
 
@@ -27,7 +28,7 @@ abstract class FlashcardApi {
   );
 
   @PUT('/flashcard-folders/{id}')
-  Future<FlashcardFolderModel> updateFolder(
+  Future<UpdateFolderResponse> updateFolder(
     @Path('id') String id,
     @Body() Map<String, dynamic> request,
   );

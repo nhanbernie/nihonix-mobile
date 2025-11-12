@@ -3,13 +3,13 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
+  final String? title;
   final IconData? actionIcon;
   final VoidCallback? onActionPressed;
 
   const CommonAppBar({
     super.key,
-    required this.title,
+    this.title,
     this.actionIcon,
     this.onActionPressed,
   });
@@ -26,13 +26,15 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       surfaceTintColor: Colors.transparent,
       forceMaterialTransparency: true,
       centerTitle: true,
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      title: title != null
+          ? Text(
+              title!,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            )
+          : null,
       actions: actionIcon != null && onActionPressed != null
           ? [
               Padding(

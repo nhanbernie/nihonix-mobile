@@ -155,6 +155,9 @@ class _VocabListPageState extends ConsumerState<VocabListPage> {
                             final state = ref.read(vocabGenerateProvider);
                             if (mounted) {
                               if (state.error != null) {
+                                // Clear state after showing error
+                                ref.read(vocabGenerateProvider.notifier).clearResult();
+                                
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text('Lỗi: ${state.error}'),
@@ -162,18 +165,41 @@ class _VocabListPageState extends ConsumerState<VocabListPage> {
                                   ),
                                 );
                               } else if (state.result != null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Tạo ${state.result!.generatedCount} từ vựng thành công!',
-                                    ),
-                                    backgroundColor: Colors.green,
-                                  ),
-                                );
-                                // Reload vocab sets
-                                ref
+                                // Save result data before clearing
+                                final setId = state.result!.setId;
+                                final setTitle = state.result!.getSetTitleByLanguage('en');
+                                final generatedCount = state.result!.generatedCount;
+
+                                // Reload vocab sets first
+                                await ref
                                     .read(vocabProvider.notifier)
                                     .loadVocabSetsByTopic(widget.topicId);
+
+                                // Clear generate state to hide overlay
+                                ref.read(vocabGenerateProvider.notifier).clearResult();
+
+                                // Show success message and navigate
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Tạo $generatedCount từ vựng thành công!',
+                                      ),
+                                      backgroundColor: Colors.green,
+                                      duration: const Duration(seconds: 2),
+                                    ),
+                                  );
+
+                                  // Small delay to ensure overlay is hidden
+                                  await Future.delayed(const Duration(milliseconds: 300));
+
+                                  // Navigate to vocab set detail page
+                                  if (mounted) {
+                                    context.push(
+                                      '${AppRoutes.vocabSetDetail}?setId=$setId&setName=${Uri.encodeComponent(setTitle)}',
+                                    );
+                                  }
+                                }
                               }
                             }
                           },

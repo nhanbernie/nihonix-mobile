@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nihonix/core/constants/app_colors.dart';
@@ -8,11 +9,13 @@ import 'package:nihonix/features/grammar/presentation/providers/grammar_provider
 import 'package:nihonix/features/grammar/presentation/widgets/grammar_sub_topic_card.dart';
 
 class GrammarListPage extends ConsumerStatefulWidget {
+  final String topicId;
   final String topicName;
   final IconData topicIcon;
 
   const GrammarListPage({
     super.key,
+    required this.topicId,
     required this.topicName,
     required this.topicIcon,
   });
@@ -25,8 +28,8 @@ class _GrammarListPageState extends ConsumerState<GrammarListPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(grammarProvider.notifier).loadSubTopics(widget.topicName);
+    Future.microtask(() {
+      ref.read(grammarProvider.notifier).loadSubTopics(widget.topicId);
     });
   }
 
@@ -36,134 +39,217 @@ class _GrammarListPageState extends ConsumerState<GrammarListPage> {
     final isDark = theme.brightness == Brightness.dark;
     final grammarState = ref.watch(grammarProvider);
 
-    return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF1A1A1A) : const Color(0xFFF5F5F5),
-      body: CustomScrollView(
-        slivers: [
-          // Custom App Bar with gradient
-          SliverAppBar(
-            expandedHeight: 180,
-            pinned: true,
-            backgroundColor: AppColors.primary,
-            leading: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: IconButton(
-                icon: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.arrow_back_rounded,
-                    color: Colors.white,
-                    size: 20,
-                  ),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+        systemNavigationBarColor: isDark ? const Color(0xFF2A2A2A) : Colors.white,
+        systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+      ),
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: AppColors.primary,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          surfaceTintColor: Colors.transparent,
+          forceMaterialTransparency: true,
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.3),
+                  width: 1,
                 ),
-                onPressed: () => context.pop(),
               ),
-            ),
-            flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.primary,
-                      Color(0xFFFF7028),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 60, 20, 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Icon(
-                                widget.topicIcon,
-                                color: Colors.white,
-                                size: 24,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    widget.topicName.toUpperCase(),
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                      letterSpacing: 0.5,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  const Text(
-                                    'Grammar Topics',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white70,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () => context.pop(),
+                  child: const Center(
+                    child: Icon(
+                      Icons.arrow_back_rounded,
+                      color: Colors.white,
+                      size: 20,
                     ),
                   ),
                 ),
               ),
             ),
           ),
+        ),
+        body: Stack(
+          children: [
+            // Orange header background
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.28,
+              decoration: const BoxDecoration(
+                color: AppColors.primary,
+              ),
+            ),
+            ),
 
-          // Content
-          grammarState.isLoading
-              ? const SliverFillRemaining(
-                  child: Center(child: CircularProgressIndicator()),
-                )
-              : SliverPadding(
-                  padding: const EdgeInsets.all(AppSizes.s16),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final subTopic = grammarState.subTopics[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: AppSizes.s12),
-                          child: GrammarSubTopicCard(
-                            subTopic: subTopic,
-                            isDark: isDark,
-                            index: index,
-                            onTap: () {
-                              ref
-                                  .read(grammarProvider.notifier)
-                                  .selectSubTopic(subTopic);
-                              context.push(
-                                '${AppRoutes.grammarPatternList}?slug=${subTopic.slug}&title=${subTopic.getTitleByLanguage('vi')}',
-                              );
-                            },
-                          ),
-                        );
-                      },
-                      childCount: grammarState.subTopics.length,
+            // Content
+            Column(
+              children: [
+                // Icon section
+                SafeArea(
+                  bottom: false,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: AppSizes.s32),
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.15),
+                              blurRadius: 20,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          widget.topicIcon,
+                          size: 40,
+                          color: const Color(0xFF9E9E9E),
+                        ),
+                      ),
                     ),
                   ),
                 ),
+
+                const SizedBox(height: AppSizes.s24),
+
+                // Bottom sheet with curved top
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(32),
+                        topRight: Radius.circular(32),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        // Header with title
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            AppSizes.s20,
+                            AppSizes.s16,
+                            AppSizes.s20,
+                            AppSizes.s12,
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  '${widget.topicName} Grammar',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: isDark ? Colors.white : Colors.black87,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // Divider
+                        Divider(
+                          height: 1,
+                          thickness: 1,
+                          color: isDark
+                              ? const Color(0xFF3A3A3A)
+                              : const Color(0xFFE8E8E8),
+                        ),
+
+                        // Content
+                        Expanded(
+                          child: grammarState.isLoading
+                              ? const Center(child: CircularProgressIndicator())
+                              : grammarState.subTopics.isEmpty
+                                  ? _buildEmptyState(isDark)
+                                  : _buildSubTopicsList(grammarState, isDark),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(bool isDark) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.menu_book_rounded,
+            size: 80,
+            color: isDark ? Colors.white24 : Colors.black12,
+          ),
+          const SizedBox(height: AppSizes.s16),
+          Text(
+            'No Grammar Topics',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.white60 : Colors.black54,
+            ),
+          ),
+          const SizedBox(height: AppSizes.s8),
+          Text(
+            'Grammar topics will appear here',
+            style: TextStyle(
+              fontSize: 14,
+              color: isDark ? Colors.white38 : Colors.black38,
+            ),
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildSubTopicsList(GrammarState grammarState, bool isDark) {
+    return ListView.builder(
+      padding: const EdgeInsets.all(AppSizes.s16),
+      itemCount: grammarState.subTopics.length,
+      itemBuilder: (context, index) {
+        final subTopic = grammarState.subTopics[index];
+        return Padding(
+          padding: const EdgeInsets.only(bottom: AppSizes.s12),
+          child: GrammarSubTopicCard(
+            subTopic: subTopic,
+            isDark: isDark,
+            index: index,
+            onTap: () {
+              ref.read(grammarProvider.notifier).selectSubTopic(subTopic);
+              context.push(
+                '${AppRoutes.grammarPatternList}?slug=${subTopic.slug}&title=${Uri.encodeComponent(subTopic.getTitleByLanguage('vi'))}',
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

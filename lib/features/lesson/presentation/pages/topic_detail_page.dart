@@ -251,7 +251,7 @@ class TopicDetailPage extends StatelessWidget {
                               isDark: isDark,
                               onTap: () {
                                 context.push(
-                                  '${AppRoutes.grammarList}?topic=$topicName&icon=${topicIcon.codePoint}',
+                                  '${AppRoutes.grammarList}?id=$topicId&topic=$topicName&icon=${topicIcon.codePoint}',
                                 );
                               },
                             ),

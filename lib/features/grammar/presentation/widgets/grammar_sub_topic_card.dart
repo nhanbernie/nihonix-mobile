@@ -41,12 +41,12 @@ class GrammarSubTopicCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: gradientColor.withValues(alpha: 0.3),
-            blurRadius: 16,
-            offset: const Offset(0, 6),
+            color: gradientColor.withValues(alpha: 0.25),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -54,31 +54,31 @@ class GrammarSubTopicCard extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
           child: Padding(
-            padding: const EdgeInsets.all(AppSizes.s20),
+            padding: const EdgeInsets.all(AppSizes.s16),
             child: Row(
               children: [
                 // Order number
                 Container(
-                  width: 48,
-                  height: 48,
+                  width: 40,
+                  height: 40,
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
                     child: Text(
                       '${subTopic.order}',
                       style: const TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: AppSizes.s16),
+                const SizedBox(width: AppSizes.s12),
 
                 // Content
                 Expanded(
@@ -89,17 +89,17 @@ class GrammarSubTopicCard extends StatelessWidget {
                       Text(
                         subTopic.getTitleByLanguage('vi'),
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 3),
                       // Japanese title
                       Text(
                         subTopic.getTitleByLanguage('jp'),
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 13,
                           color: Colors.white.withValues(alpha: 0.9),
                         ),
                       ),
@@ -108,7 +108,7 @@ class GrammarSubTopicCard extends StatelessWidget {
                       Text(
                         subTopic.getTitleByLanguage('en'),
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 11,
                           color: Colors.white.withValues(alpha: 0.7),
                           fontStyle: FontStyle.italic,
                         ),
@@ -119,7 +119,7 @@ class GrammarSubTopicCard extends StatelessWidget {
 
                 // Arrow
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
@@ -127,7 +127,7 @@ class GrammarSubTopicCard extends StatelessWidget {
                   child: const Icon(
                     Icons.arrow_forward_ios_rounded,
                     color: Colors.white,
-                    size: 16,
+                    size: 14,
                   ),
                 ),
               ],

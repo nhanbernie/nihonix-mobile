@@ -1,26 +1,26 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/vocab_generate_result.dart';
-import 'vocab_generate_di.dart';
+import '../../domain/entities/grammar_generate_result.dart';
+import 'grammar_generate_di.dart';
 
-class VocabGenerateState {
+class GrammarGenerateState {
   final bool isGenerating;
-  final VocabGenerateResult? result;
+  final GrammarGenerateResult? result;
   final String? error;
 
-  const VocabGenerateState({
+  const GrammarGenerateState({
     this.isGenerating = false,
     this.result,
     this.error,
   });
 
-  VocabGenerateState copyWith({
+  GrammarGenerateState copyWith({
     bool? isGenerating,
-    VocabGenerateResult? result,
+    GrammarGenerateResult? result,
     String? error,
     bool clearResult = false,
     bool clearError = false,
   }) {
-    return VocabGenerateState(
+    return GrammarGenerateState(
       isGenerating: isGenerating ?? this.isGenerating,
       result: clearResult ? null : (result ?? this.result),
       error: clearError ? null : error,
@@ -28,14 +28,14 @@ class VocabGenerateState {
   }
 }
 
-class VocabGenerateNotifier extends Notifier<VocabGenerateState> {
+class GrammarGenerateNotifier extends Notifier<GrammarGenerateState> {
   @override
-  VocabGenerateState build() {
-    return const VocabGenerateState();
+  GrammarGenerateState build() {
+    return const GrammarGenerateState();
   }
 
-  Future<void> generateVocabularyItems({
-    required String topicId,
+  Future<void> generateGrammarPatterns({
+    required String grammarSubTopicSlug,
     required String levelCode,
     required int count,
     String? customPrompt,
@@ -43,12 +43,13 @@ class VocabGenerateNotifier extends Notifier<VocabGenerateState> {
     state = state.copyWith(
       isGenerating: true,
       error: null,
+      clearResult: true,
     );
 
     try {
-      final useCase = ref.read(generateVocabularyItemsUseCaseProvider);
+      final useCase = ref.read(generateGrammarPatternsUseCaseProvider);
       final result = await useCase(
-        topicId: topicId,
+        grammarSubTopicSlug: grammarSubTopicSlug,
         levelCode: levelCode,
         count: count,
         customPrompt: customPrompt,
@@ -69,11 +70,12 @@ class VocabGenerateNotifier extends Notifier<VocabGenerateState> {
   }
 
   void clearResult() {
-    state = const VocabGenerateState();
+    state = const GrammarGenerateState();
   }
 }
 
-final vocabGenerateProvider = NotifierProvider<VocabGenerateNotifier, VocabGenerateState>(
-  VocabGenerateNotifier.new,
+final grammarGenerateProvider =
+    NotifierProvider<GrammarGenerateNotifier, GrammarGenerateState>(
+  GrammarGenerateNotifier.new,
 );
 

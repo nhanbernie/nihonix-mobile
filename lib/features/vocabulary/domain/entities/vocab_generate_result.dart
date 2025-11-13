@@ -1,5 +1,6 @@
 import 'vocab_item.dart';
 
+/// Result entity for AI-generated vocabulary set
 class VocabGenerateResult {
   final String setId;
   final String setSlug;
@@ -20,5 +21,11 @@ class VocabGenerateResult {
     required this.generatedCount,
     required this.items,
   });
+
+  /// Get set title by language code
+  /// Falls back to English if the requested language is not available
+  String getSetTitleByLanguage(String lang) {
+    return setTitle[lang] ?? setTitle['en'] ?? setTitle.values.first;
+  }
 }
 

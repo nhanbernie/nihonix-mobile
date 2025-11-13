@@ -164,12 +164,14 @@ List<RouteBase> buildAppRoutes() {
       path: AppRoutes.grammarList,
       name: AppRoutes.grammarListName,
       builder: (context, state) {
+        final topicId = state.uri.queryParameters['id'] ?? '';
         final topicName = state.uri.queryParameters['topic'] ?? '';
         final iconCodePoint = int.tryParse(
               state.uri.queryParameters['icon'] ?? '',
             ) ??
             Icons.book_rounded.codePoint;
         return GrammarListPage(
+          topicId: topicId,
           topicName: topicName,
           topicIcon: IconData(iconCodePoint, fontFamily: 'MaterialIcons'),
         );

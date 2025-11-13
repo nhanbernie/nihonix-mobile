@@ -11,6 +11,7 @@ import 'package:nihonix/features/flashcard/presentation/pages/card_form_page.dar
 import 'package:nihonix/features/flashcard/presentation/pages/generate_flashcard_page.dart';
 import 'package:nihonix/features/lesson/presentation/pages/topic_detail_page.dart';
 import 'package:nihonix/features/vocabulary/presentation/pages/vocab_list_page.dart';
+import 'package:nihonix/features/vocabulary/presentation/pages/vocab_set_detail_page.dart';
 import 'package:nihonix/features/vocabulary/presentation/pages/vocab_folder_detail_page.dart';
 import 'package:nihonix/features/grammar/presentation/pages/grammar_list_page.dart';
 import 'package:nihonix/features/grammar/presentation/pages/grammar_pattern_list_page.dart';
@@ -130,6 +131,18 @@ List<RouteBase> buildAppRoutes() {
           topicId: topicId,
           topicName: topicName,
           topicIcon: IconData(iconCodePoint, fontFamily: 'MaterialIcons'),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.vocabSetDetail,
+      name: AppRoutes.vocabSetDetailName,
+      builder: (context, state) {
+        final setId = state.uri.queryParameters['setId'] ?? '';
+        final setName = state.uri.queryParameters['setName'] ?? '';
+        return VocabSetDetailPage(
+          setId: setId,
+          setName: setName,
         );
       },
     ),

@@ -11,5 +11,10 @@ abstract class VocabSetApi {
   Future<HttpResponse<dynamic>> getVocabSetsByTopic(
     @Path('topicId') String topicId,
   );
+
+  @GET('/vocabulary-sets/{id}')
+  Future<HttpResponse<dynamic>> getVocabSetById(
+    @Path('id') String id,
+  );
 }
 

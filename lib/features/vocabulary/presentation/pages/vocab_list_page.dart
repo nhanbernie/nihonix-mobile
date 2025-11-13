@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:nihonix/core/constants/app_colors.dart';
 import 'package:nihonix/core/constants/app_sizes.dart';
 import 'package:nihonix/core/router/route_constants.dart';
+import 'package:nihonix/shared/widgets/ai_loading_overlay.dart';
 import 'package:nihonix/features/vocabulary/presentation/providers/vocab_provider.dart';
+import 'package:nihonix/features/vocabulary/presentation/providers/vocab_generate_provider.dart';
 import 'package:nihonix/features/vocabulary/presentation/widgets/vocab_folder_card.dart';
 import 'package:nihonix/features/vocabulary/presentation/widgets/create_vocab_ai_card.dart';
 
@@ -35,123 +37,178 @@ class _VocabListPageState extends ConsumerState<VocabListPage> {
   }
 
   void _showCreateDialog() {
-    final nameController = TextEditingController();
+    final countController = TextEditingController(text: '10');
     final promptController = TextEditingController();
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(24),
+      builder: (context) => Consumer(
+        builder: (context, ref, child) {
+          final generateState = ref.watch(vocabGenerateProvider);
+
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
-          ),
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Handle bar
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  margin: const EdgeInsets.only(bottom: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(24),
                 ),
               ),
-
-              Text(
-                'Create Vocabulary with AI',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Handle bar
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
                     ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'AI will generate vocabulary list based on your prompt',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey,
+                  ),
+
+                  Text(
+                    'Create Vocabulary with AI',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'AI will generate vocabulary list based on your prompt',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey,
+                        ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Count field
+                  TextField(
+                    controller: countController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Number of Words',
+                      hintText: 'e.g., 10',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      prefixIcon: const Icon(Icons.numbers),
                     ),
-              ),
-              const SizedBox(height: 24),
-
-              // Folder name field
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: 'Folder Name',
-                  hintText: 'e.g., ${widget.topicName} basics',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
                   ),
-                  prefixIcon: const Icon(Icons.folder_outlined),
-                ),
-              ),
-              const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-              // Prompt field
-              TextField(
-                controller: promptController,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  labelText: 'AI Prompt',
-                  hintText: 'Describe what vocabulary you want to learn...',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  prefixIcon: const Icon(Icons.auto_awesome),
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Create button
-              ElevatedButton(
-                onPressed: () async {
-                  if (nameController.text.isEmpty ||
-                      promptController.text.isEmpty) {
-                    return;
-                  }
-
-                  Navigator.pop(context);
-
-                  // TODO: Implement AI folder creation later
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('AI folder creation will be implemented later'),
+                  // Prompt field (optional)
+                  TextField(
+                    controller: promptController,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      labelText: 'Custom Prompt (Optional)',
+                      hintText: 'Describe specific vocabulary you want...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      prefixIcon: const Icon(Icons.auto_awesome),
                     ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
                   ),
-                ),
-                child: const Text(
-                  'Generate with AI',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                  const SizedBox(height: 24),
+
+                  // Create button
+                  ElevatedButton(
+                    onPressed: generateState.isGenerating
+                        ? null
+                        : () async {
+                            final count = int.tryParse(countController.text);
+                            if (count == null || count <= 0) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Please enter a valid number'),
+                                ),
+                              );
+                              return;
+                            }
+
+                            Navigator.pop(context);
+
+                            // Generate vocabulary
+                            await ref
+                                .read(vocabGenerateProvider.notifier)
+                                .generateVocabularyItems(
+                                  topicId: widget.topicId,
+                                  levelCode: 'N5', // TODO: Get from user level
+                                  count: count,
+                                  customPrompt: promptController.text.isEmpty
+                                      ? null
+                                      : promptController.text,
+                                );
+
+                            // Check result
+                            final state = ref.read(vocabGenerateProvider);
+                            if (mounted) {
+                              if (state.error != null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Lỗi: ${state.error}'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              } else if (state.result != null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Tạo ${state.result!.generatedCount} từ vựng thành công!',
+                                    ),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
+                                // Reload vocab sets
+                                ref
+                                    .read(vocabProvider.notifier)
+                                    .loadVocabSetsByTopic(widget.topicId);
+                              }
+                            }
+                          },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: generateState.isGenerating
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          )
+                        : const Text(
+                            'Generate with AI',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
-                ),
+                  const SizedBox(height: 16),
+                ],
               ),
-              const SizedBox(height: 16),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -161,38 +218,49 @@ class _VocabListPageState extends ConsumerState<VocabListPage> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final vocabState = ref.watch(vocabProvider);
+    final generateState = ref.watch(vocabGenerateProvider);
 
-    return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        surfaceTintColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: () => context.pop(),
-        ),
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(widget.topicIcon, size: 20),
-            const SizedBox(width: 8),
-            Text(
-              '${widget.topicName} Vocabulary',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            surfaceTintColor: Colors.transparent,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_rounded),
+              onPressed: () => context.pop(),
             ),
-          ],
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(widget.topicIcon, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  '${widget.topicName} Vocabulary',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            centerTitle: true,
+          ),
+          body: vocabState.isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : vocabState.folders.isEmpty
+                  ? _buildEmptyState(isDark)
+                  : _buildFolderList(vocabState, isDark),
         ),
-        centerTitle: true,
-      ),
-      body: vocabState.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : vocabState.folders.isEmpty
-              ? _buildEmptyState(isDark)
-              : _buildFolderList(vocabState, isDark),
+
+        // AI Loading Overlay
+        AILoadingOverlay(
+          message: 'AI đang tạo từ vựng...',
+          isVisible: generateState.isGenerating,
+        ),
+      ],
     );
   }
 
@@ -287,7 +355,7 @@ class _VocabListPageState extends ConsumerState<VocabListPage> {
                 onTap: () {
                   ref.read(vocabProvider.notifier).selectFolder(folder);
                   context.push(
-                    '${AppRoutes.vocabFolderDetail}?folderId=${folder.id}&folderName=${folder.name}',
+                    '${AppRoutes.vocabSetDetail}?setId=${folder.id}&setName=${Uri.encodeComponent(folder.name)}',
                   );
                 },
               );

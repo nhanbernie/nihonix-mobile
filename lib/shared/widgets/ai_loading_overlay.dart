@@ -61,7 +61,7 @@ class _AILoadingOverlayState extends State<AILoadingOverlay>
     if (!widget.isVisible && _fadeController.isDismissed) {
       return const SizedBox.shrink();
     }
-
+    // NOTE: hiệu ứng modal
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Container(

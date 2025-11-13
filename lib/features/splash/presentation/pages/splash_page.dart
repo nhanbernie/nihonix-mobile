@@ -88,34 +88,50 @@ class _SplashPageState extends ConsumerState<SplashPage>
 
   Future<void> _startSplashSequence() async {
     try {
-      // Check authentication status first - delay to avoid widget tree building issue
+      // Check authentication status first
       await Future.delayed(const Duration(milliseconds: 100));
       final authNotifier = ref.read(authProvider.notifier);
       await authNotifier.checkAuth();
     } catch (e) {
-      // If auth check fails, continue anyway
+      debugPrint('Auth check failed in splash: $e');
     }
 
-    // Wait 4 seconds
-    await Future.delayed(const Duration(seconds: 4));
+    // Wait 4 seconds total (including auth check time)
+    await Future.delayed(const Duration(seconds: 3));
 
     if (!mounted) return;
 
     try {
-      // Check if first time to determine where to go
+      // Get auth state after check
+      final authState = ref.read(authProvider);
+      
+      // Check preferences
       final prefs = WelcomePreferences();
       final isFirstTime = await prefs.isFirstTime();
+      final hasSelectedLanguage = await prefs.hasSelectedLanguage();
 
       if (!mounted) return;
 
-      // Navigate - Router redirect will handle protection
+      // Navigation logic
       if (isFirstTime) {
+        // First time → Welcome
         context.go(AppRoutes.welcome);
+      } else if (!hasSelectedLanguage) {
+        // Not first time but no language → Language selection
+        context.go(AppRoutes.languageSelection);
+      } else if (authState.isAuthenticated && authState.user != null) {
+        // Has token and user → Check if needs level selection
+        if (authState.user!.levelCode == null || authState.user!.levelCode!.isEmpty) {
+          context.go(AppRoutes.levelSelection);
+        } else {
+          context.go(AppRoutes.home);
+        }
       } else {
-        context.go(AppRoutes.home);
+        // No token → Login
+        context.go(AppRoutes.login);
       }
     } catch (e) {
-      // If navigation fails, go to welcome as fallback
+      debugPrint('Navigation failed in splash: $e');
       if (mounted) {
         context.go(AppRoutes.welcome);
       }

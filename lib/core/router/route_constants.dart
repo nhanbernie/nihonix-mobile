@@ -14,6 +14,8 @@ class AppRoutes {
   static const String topicDetail = '/lesson/topic';
   static const String vocabList = '/vocabulary';
   static const String vocabFolderDetail = '/vocabulary/folder';
+  static const String grammarList = '/grammar';
+  static const String grammarPatternList = '/grammar/patterns';
   static const String flashcard = '/flashcard';
   static const String folderDetail = '/flashcard/folder';
   static const String cardStudy = '/flashcard/study';
@@ -38,6 +40,8 @@ class AppRoutes {
   static const String topicDetailName = 'topicDetail';
   static const String vocabListName = 'vocabList';
   static const String vocabFolderDetailName = 'vocabFolderDetail';
+  static const String grammarListName = 'grammarList';
+  static const String grammarPatternListName = 'grammarPatternList';
   static const String flashcardName = 'flashcard';
   static const String folderDetailName = 'folderDetail';
   static const String cardStudyName = 'cardStudy';

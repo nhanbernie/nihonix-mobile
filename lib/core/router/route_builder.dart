@@ -12,6 +12,8 @@ import 'package:nihonix/features/flashcard/presentation/pages/generate_flashcard
 import 'package:nihonix/features/lesson/presentation/pages/topic_detail_page.dart';
 import 'package:nihonix/features/vocabulary/presentation/pages/vocab_list_page.dart';
 import 'package:nihonix/features/vocabulary/presentation/pages/vocab_folder_detail_page.dart';
+import 'package:nihonix/features/grammar/presentation/pages/grammar_list_page.dart';
+import 'package:nihonix/features/grammar/presentation/pages/grammar_pattern_list_page.dart';
 import 'package:nihonix/shared/layouts/main_layout.dart';
 import 'route_constants.dart';
 
@@ -136,6 +138,35 @@ List<RouteBase> buildAppRoutes() {
         return VocabFolderDetailPage(
           folderId: folderId,
           folderName: folderName,
+        );
+      },
+    ),
+
+    // Grammar routes (outside shell - no bottom nav)
+    GoRoute(
+      path: AppRoutes.grammarList,
+      name: AppRoutes.grammarListName,
+      builder: (context, state) {
+        final topicName = state.uri.queryParameters['topic'] ?? '';
+        final iconCodePoint = int.tryParse(
+              state.uri.queryParameters['icon'] ?? '',
+            ) ??
+            Icons.book_rounded.codePoint;
+        return GrammarListPage(
+          topicName: topicName,
+          topicIcon: IconData(iconCodePoint, fontFamily: 'MaterialIcons'),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.grammarPatternList,
+      name: AppRoutes.grammarPatternListName,
+      builder: (context, state) {
+        final slug = state.uri.queryParameters['slug'] ?? '';
+        final title = state.uri.queryParameters['title'] ?? '';
+        return GrammarPatternListPage(
+          slug: slug,
+          title: title,
         );
       },
     ),

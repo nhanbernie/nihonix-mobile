@@ -247,11 +247,8 @@ class TopicDetailPage extends StatelessWidget {
                                   'master grammar rules and structures\nstep by step',
                               isDark: isDark,
                               onTap: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Learning $topicName grammar'),
-                                    behavior: SnackBarBehavior.floating,
-                                  ),
+                                context.push(
+                                  '${AppRoutes.grammarList}?topic=$topicName&icon=${topicIcon.codePoint}',
                                 );
                               },
                             ),

@@ -41,6 +41,7 @@ dependencies:
   connectivity_plus: # Network status check
   flip_card: ^0.7.0 # Card flip animations
   lottie: ^3.3.2 # Lottie animations
+  flutter_smart_dialog: ^4.9.0 # Smart dialogs & overlays
   intl: # Internationalization utils
   package_info_plus: # App info (name, version)
   url_launcher: # Open URLs, calls, emails

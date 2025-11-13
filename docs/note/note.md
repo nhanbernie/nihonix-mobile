@@ -4,8 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:nihonix/core/constants/app_colors.dart';
 import 'package:nihonix/core/constants/app_sizes.dart';
 import 'package:nihonix/core/router/route_constants.dart';
-import 'package:nihonix/features/auth/presentation/providers/auth_provider.dart';
-import 'package:nihonix/features/lesson/presentation/providers/topic_provider.dart';
+import 'package:nihonix/features/lesson/presentation/providers/lesson_provider.dart';
 import 'package:nihonix/features/lesson/presentation/widgets/topic_card.dart';
 import 'package:nihonix/shared/widgets/common_app_bar.dart';
 
@@ -23,14 +22,18 @@ class LessonPage extends ConsumerStatefulWidget {
 
 class _LessonPageState extends ConsumerState<LessonPage> {
   @override
+  void initState() {
+    super.initState();
+    // Set lesson type based on preSelectedType if provided
+    if (widget.preSelectedType != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(lessonProvider.notifier).toggleLessonType(widget.preSelectedType!);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Get user's level code from auth state
-    final authState = ref.watch(authProvider);
-    final userLevelCode = authState.user?.levelCode;
-
-    // Watch topics async provider with user's level
-    final topicsAsync = ref.watch(topicsProvider(levelCode: userLevelCode));
-
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
@@ -170,138 +173,100 @@ class _LessonPageState extends ConsumerState<LessonPage> {
 
           // Scrollable grid
           Expanded(
-            child: topicsAsync.when(
-              data: (topics) {
-                if (topics.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.topic_outlined,
-                          size: 64,
-                          color: Colors.grey.shade400,
-                        ),
-                        const SizedBox(height: AppSizes.s16),
-                        Text(
-                          'No topics available',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-
-                return GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: AppSizes.s12,
-                    crossAxisSpacing: AppSizes.s12,
-                    childAspectRatio: 0.9,
-                  ),
-                  padding: EdgeInsets.only(
-                    left: AppSizes.s16,
-                    right: AppSizes.s16,
-                    top: AppSizes.s12,
-                    bottom: MediaQuery.of(context).padding.bottom + 100,
-                  ),
-                  itemCount: topics.length,
-                  itemBuilder: (context, index) {
-                    final topic = topics[index];
-                    
-                    // Get icon - use Material icon from codePoint if available
-                    IconData icon;
-                    if (topic.iconType == 'material' && topic.iconCode != null) {
-                      icon = IconData(
-                        topic.iconCode!,
-                        fontFamily: 'MaterialIcons',
-                      );
-                    } else {
-                      // Fallback icon
-                      icon = Icons.topic_rounded;
-                    }
-
-                    // Get title - prefer English, fallback to Japanese, then Vietnamese
-                    String label = topic.title['en'] ?? 
-                                  topic.title['jp'] ?? 
-                                  topic.title['vi'] ?? 
-                                  'Topic';
-
-                    return TopicCard(
-                      icon: icon,
-                      label: label,
-                      onTap: () {
-                        context.push(
-                          '${AppRoutes.topicDetail}?name=${topic.slug}&icon=${icon.codePoint}',
-                        );
-                      },
+            child: GridView.count(
+              crossAxisCount: 3,
+              padding: EdgeInsets.only(
+                left: AppSizes.s16,
+                right: AppSizes.s16,
+                top: AppSizes.s12,
+                bottom: MediaQuery.of(context).padding.bottom + 100,
+              ),
+              mainAxisSpacing: AppSizes.s12,
+              crossAxisSpacing: AppSizes.s12,
+              childAspectRatio: 0.9,
+              children: [
+                TopicCard(
+                  icon: Icons.music_note_rounded,
+                  label: 'music',
+                  onTap: () {
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=music&icon=${Icons.music_note_rounded.codePoint}',
                     );
                   },
-                );
-              },
-              loading: () => GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: AppSizes.s12,
-                  crossAxisSpacing: AppSizes.s12,
-                  childAspectRatio: 0.9,
                 ),
-                padding: EdgeInsets.only(
-                  left: AppSizes.s16,
-                  right: AppSizes.s16,
-                  top: AppSizes.s12,
-                  bottom: MediaQuery.of(context).padding.bottom + 100,
+                TopicCard(
+                  icon: Icons.movie_rounded,
+                  label: 'cinema',
+                  onTap: () {
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=cinema&icon=${Icons.movie_rounded.codePoint}',
+                    );
+                  },
                 ),
-                itemCount: 9, // Skeleton count
-                itemBuilder: (context, index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  );
-                },
-              ),
-              error: (error, stack) => Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      size: 64,
-                      color: Colors.red.shade400,
-                    ),
-                    const SizedBox(height: AppSizes.s16),
-                    Text(
-                      'Error loading topics',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                    const SizedBox(height: AppSizes.s8),
-                    Text(
-                      error.toString(),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade500,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: AppSizes.s16),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        ref.invalidate(topicsProvider);
-                      },
-                      icon: const Icon(Icons.refresh),
-                      label: const Text('Retry'),
-                    ),
-                  ],
+                TopicCard(
+                  icon: Icons.flight_rounded,
+                  label: 'travel',
+                  onTap: () {
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=travel&icon=${Icons.flight_rounded.codePoint}',
+                    );
+                  },
                 ),
-              ),
+                TopicCard(
+                  icon: Icons.pets_rounded,
+                  label: 'animals',
+                  onTap: () {
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=animals&icon=${Icons.pets_rounded.codePoint}',
+                    );
+                  },
+                ),
+                TopicCard(
+                  icon: Icons.sports_esports_rounded,
+                  label: 'hobby',
+                  onTap: () {
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=hobby&icon=${Icons.sports_esports_rounded.codePoint}',
+                    );
+                  },
+                ),
+                TopicCard(
+                  icon: Icons.cloud_rounded,
+                  label: 'weather',
+                  onTap: () {
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=weather&icon=${Icons.cloud_rounded.codePoint}',
+                    );
+                  },
+                ),
+                TopicCard(
+                  icon: Icons.restaurant_rounded,
+                  label: 'food',
+                  onTap: () {
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=food&icon=${Icons.restaurant_rounded.codePoint}',
+                    );
+                  },
+                ),
+                TopicCard(
+                  icon: Icons.sports_soccer_rounded,
+                  label: 'sports',
+                  onTap: () {
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=sports&icon=${Icons.sports_soccer_rounded.codePoint}',
+                    );
+                  },
+                ),
+                TopicCard(
+                  icon: Icons.school_rounded,
+                  label: 'education',
+                  onTap: () {
+                    context.push(
+                      '${AppRoutes.topicDetail}?name=education&icon=${Icons.school_rounded.codePoint}',
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         ],

@@ -3,6 +3,7 @@ library;
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../auth/data/models/user_model.dart';
 import 'onboarding_api.dart';
 
 part 'onboarding_remote_datasource.g.dart';
@@ -24,14 +25,23 @@ class OnboardingRemoteDataSource {
     return OnboardingRemoteDataSource(OnboardingApi(dio));
   }
 
-  Future<void> updateUserLevel(String levelCode) async {
+  Future<UserModel> updateUserLevel(String levelCode) async {
     try {
-      await _api.updateUserLevel({'level_code': levelCode});
-    } on DioException {
+      final response = await _api.updateUserLevel({'level_code': levelCode});
+      print('✅ Update Level Response: ${response.data?.toJson()}'); // DEBUG
+      
+      // Extract data from ApiResponse wrapper
+      if (response.data == null) {
+        throw Exception('API returned null data');
+      }
+      
+      return response.data!;
+    } on DioException catch (e) {
+      print('❌ Update Level Error: ${e.response?.data}'); // DEBUG
       rethrow;
     } catch (e) {
+      print('❌ Update Level Unknown Error: $e'); // DEBUG
       rethrow;
     }
   }
 }
-

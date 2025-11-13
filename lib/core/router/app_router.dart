@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'route_constants.dart';
 import 'route_builder.dart';
 import 'route_guard.dart';
@@ -16,6 +17,7 @@ class AppRouter {
       redirect: handleRouteGuard,
       routes: buildAppRoutes(),
       errorBuilder: buildErrorPage,
+      observers: [FlutterSmartDialog.observer],
     );
   }
 
@@ -26,5 +28,6 @@ class AppRouter {
     redirect: handleRouteGuard,
     routes: buildAppRoutes(),
     errorBuilder: buildErrorPage,
+    observers: [FlutterSmartDialog.observer],
   );
 }

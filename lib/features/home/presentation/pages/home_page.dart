@@ -11,6 +11,23 @@ import 'package:nihonix/features/lesson/presentation/pages/lesson_page.dart';
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
+  String _getLevelName(String? levelCode) {
+    switch (levelCode) {
+      case 'N5':
+        return 'Sơ cấp';
+      case 'N4':
+        return 'Sơ - Trung cấp';
+      case 'N3':
+        return 'Trung cấp';
+      case 'N2':
+        return 'Trung - Cao cấp';
+      case 'N1':
+        return 'Cao cấp';
+      default:
+        return 'Chưa chọn';
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
@@ -88,7 +105,7 @@ class HomePage extends ConsumerWidget {
                             const Text('🇯🇵', style: TextStyle(fontSize: 18)),
                             const SizedBox(width: 4),
                             Text(
-                              'N5',
+                              authState.user?.levelCode ?? 'N5',
                               style: Theme.of(context)
                                   .textTheme
                                   .titleSmall
@@ -100,16 +117,7 @@ class HomePage extends ConsumerWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'Upper',
-                          style:
-                              Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: colorScheme.onSurface
-                                        .withValues(alpha: 0.6),
-                                    fontSize: 9,
-                                  ),
-                        ),
-                        Text(
-                          'Intermediate',
+                          _getLevelName(authState.user?.levelCode),
                           style:
                               Theme.of(context).textTheme.labelSmall?.copyWith(
                                     color: colorScheme.onSurface

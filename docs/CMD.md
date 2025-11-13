@@ -27,7 +27,7 @@ copy vào setting.json để không hiện file gen khỏi bị rối
 "\*\*/_.g.dart": true,
 "\*_/_.freezed.dart": true,
 },
-
+cd android; .\gradlew --stop; cd 
 <!-- cho cursor -->
 
     "files.exclude": {

@@ -4,11 +4,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../shared/widgets/common_app_bar.dart';
+import '../../../../shared/widgets/level_success_dialog.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../../onboarding/presentation/providers/onboarding_providers.dart';
 import '../providers/profile_provider.dart';
 import '../widgets/avatar_picker_button.dart';
 
@@ -25,6 +28,8 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
   late TextEditingController _emailController;
   late TextEditingController _fullNameController;
   String? _selectedLanguage;
+  String? _selectedLevel;
+  bool _isUpdatingLevel = false;
 
   @override
   void initState() {
@@ -36,6 +41,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
     _emailController = TextEditingController(text: user?.email ?? '');
     _fullNameController = TextEditingController(text: user?.name ?? '');
     _selectedLanguage = user?.language ?? 'vi';
+    _selectedLevel = user?.levelCode;
   }
 
   @override
@@ -202,6 +208,11 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
 
                       // Language Dropdown
                       _buildLanguageDropdown(),
+
+                      const SizedBox(height: AppSizes.s20),
+
+                      // Level Selection
+                      _buildLevelSelector(),
 
                       const SizedBox(height: AppSizes.s40),
 
@@ -372,6 +383,216 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
             },
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildLevelSelector() {
+    final levels = [
+      {
+        'code': 'N5',
+        'name': 'Sơ cấp',
+        'description': 'Cơ bản nhất',
+        'color': Color(0xFF4CAF50),
+        'icon': Icons.looks_5,
+      },
+      {
+        'code': 'N4',
+        'name': 'Sơ - Trung cấp',
+        'description': 'Cơ bản',
+        'color': Color(0xFF2196F3),
+        'icon': Icons.looks_4,
+      },
+      {
+        'code': 'N3',
+        'name': 'Trung cấp',
+        'description': 'Trung bình',
+        'color': Color(0xFFFF9800),
+        'icon': Icons.looks_3,
+      },
+      {
+        'code': 'N2',
+        'name': 'Trung - Cao cấp',
+        'description': 'Nâng cao',
+        'color': Color(0xFFE91E63),
+        'icon': Icons.looks_two,
+      },
+      {
+        'code': 'N1',
+        'name': 'Cao cấp',
+        'description': 'Thành thạo',
+        'color': Color(0xFF9C27B0),
+        'icon': Icons.looks_one,
+      },
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section title
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Text(
+            'Cấp độ học tập',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade700,
+            ),
+          ),
+        ),
+
+        // Level cards
+        ...levels.map((level) {
+          final isSelected = _selectedLevel == level['code'];
+          final color = level['color'] as Color;
+          
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: _isUpdatingLevel 
+                  ? null 
+                  : () async {
+                      setState(() {
+                        _selectedLevel = level['code'] as String;
+                        _isUpdatingLevel = true;
+                      });
+
+                      try {
+                        final useCase = ref.read(updateUserLevelUseCaseProvider);
+                        await useCase(_selectedLevel!);
+
+                        ref.read(authProvider.notifier).setUserLevelLocally(_selectedLevel!);
+
+                        if (mounted) {
+                          // Show success dialog with Lottie
+                          SmartDialog.show(
+                            builder: (_) => LevelSuccessDialog(
+                              levelCode: level['code'] as String,
+                              levelName: level['name'] as String,
+                              levelColor: color,
+                            ),
+                            maskColor: Colors.black.withOpacity(0.6),
+                            alignment: Alignment.center,
+                          );
+                        }
+                      } catch (e) {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Lỗi: $e'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          setState(() {
+                            final user = ref.read(authProvider).user;
+                            _selectedLevel = user?.levelCode;
+                          });
+                        }
+                      } finally {
+                        if (mounted) {
+                          setState(() => _isUpdatingLevel = false);
+                        }
+                      }
+                    },
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: isSelected ? color.withOpacity(0.1) : Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isSelected ? color : Colors.grey.shade300,
+                      width: isSelected ? 2 : 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      // Icon
+                      Icon(
+                        level['icon'] as IconData,
+                        color: isSelected ? color : Colors.grey.shade400,
+                        size: 28,
+                      ),
+                      
+                      const SizedBox(width: 14),
+                      
+                      // Content
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${level['code']} - ${level['name']}',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: isSelected ? color : Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              level['description'] as String,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      
+                      // Check mark
+                      if (isSelected)
+                        Icon(
+                          Icons.check_circle,
+                          color: color,
+                          size: 22,
+                        )
+                      else
+                        Icon(
+                          Icons.circle_outlined,
+                          color: Colors.grey.shade300,
+                          size: 22,
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+
+        // Loading indicator
+        if (_isUpdatingLevel)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Đang cập nhật...',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
       ],
     );
   }

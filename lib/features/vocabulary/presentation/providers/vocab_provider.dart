@@ -1,4 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/network/providers.dart';
+import '../../data/datasources/vocab_set_api.dart';
+import '../../data/datasources/vocab_set_remote_datasource.dart';
 import '../../domain/entities/vocab_folder.dart';
 import '../../domain/entities/vocabulary_word.dart';
 
@@ -10,6 +13,7 @@ class VocabState {
   final bool isCreatingFolder;
   final String? error;
   final VocabFolder? selectedFolder;
+  final String? currentTopicId;
 
   const VocabState({
     this.folders = const [],
@@ -18,6 +22,7 @@ class VocabState {
     this.isCreatingFolder = false,
     this.error,
     this.selectedFolder,
+    this.currentTopicId,
   });
 
   VocabState copyWith({
@@ -27,6 +32,7 @@ class VocabState {
     bool? isCreatingFolder,
     String? error,
     VocabFolder? selectedFolder,
+    String? currentTopicId,
   }) {
     return VocabState(
       folders: folders ?? this.folders,
@@ -35,17 +41,43 @@ class VocabState {
       isCreatingFolder: isCreatingFolder ?? this.isCreatingFolder,
       error: error ?? this.error,
       selectedFolder: selectedFolder ?? this.selectedFolder,
+      currentTopicId: currentTopicId ?? this.currentTopicId,
     );
   }
 }
 
 class VocabNotifier extends Notifier<VocabState> {
+  VocabSetRemoteDataSource? _dataSource;
+
   @override
   VocabState build() {
-    return VocabState(
-      folders: _getMockFolders(),
-      words: _getMockWords(),
+    // Initialize data source
+    final apiClient = ref.watch(apiClientProvider);
+    final api = VocabSetApi(apiClient.dio);
+    _dataSource = VocabSetRemoteDataSource(api);
+
+    return const VocabState();
+  }
+
+  Future<void> loadVocabSetsByTopic(String topicId) async {
+    state = state.copyWith(
+      isLoading: true,
+      error: null,
+      currentTopicId: topicId,
     );
+
+    try {
+      final folders = await _dataSource!.getVocabSetsByTopic(topicId);
+      state = state.copyWith(
+        folders: folders,
+        isLoading: false,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      );
+    }
   }
 
   // Mock data for UI

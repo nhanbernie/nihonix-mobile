@@ -101,12 +101,14 @@ List<RouteBase> buildAppRoutes() {
       path: AppRoutes.topicDetail,
       name: AppRoutes.topicDetailName,
       builder: (context, state) {
+        final topicId = state.uri.queryParameters['id'] ?? '';
         final topicName = state.uri.queryParameters['name'] ?? '';
         final iconCodePoint = int.tryParse(
               state.uri.queryParameters['icon'] ?? '',
             ) ??
             Icons.book_rounded.codePoint;
         return TopicDetailPage(
+          topicId: topicId,
           topicName: topicName,
           topicIcon: IconData(iconCodePoint, fontFamily: 'MaterialIcons'),
         );
@@ -118,12 +120,14 @@ List<RouteBase> buildAppRoutes() {
       path: AppRoutes.vocabList,
       name: AppRoutes.vocabListName,
       builder: (context, state) {
+        final topicId = state.uri.queryParameters['topicId'] ?? '';
         final topicName = state.uri.queryParameters['topic'] ?? '';
         final iconCodePoint = int.tryParse(
               state.uri.queryParameters['icon'] ?? '',
             ) ??
             Icons.book_rounded.codePoint;
         return VocabListPage(
+          topicId: topicId,
           topicName: topicName,
           topicIcon: IconData(iconCodePoint, fontFamily: 'MaterialIcons'),
         );

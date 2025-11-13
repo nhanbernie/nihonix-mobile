@@ -235,7 +235,7 @@ class _LessonPageState extends ConsumerState<LessonPage> {
                       label: label,
                       onTap: () {
                         context.push(
-                          '${AppRoutes.topicDetail}?name=${topic.slug}&icon=${icon.codePoint}',
+                          '${AppRoutes.topicDetail}?id=${topic.id}&name=${topic.slug}&icon=${icon.codePoint}',
                         );
                       },
                     );

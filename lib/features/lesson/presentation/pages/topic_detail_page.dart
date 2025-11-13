@@ -6,11 +6,13 @@ import 'package:nihonix/core/constants/app_sizes.dart';
 import 'package:nihonix/core/router/route_constants.dart';
 
 class TopicDetailPage extends StatelessWidget {
+  final String topicId;
   final String topicName;
   final IconData topicIcon;
 
   const TopicDetailPage({
     super.key,
+    required this.topicId,
     required this.topicName,
     required this.topicIcon,
   });
@@ -230,6 +232,7 @@ class TopicDetailPage extends StatelessWidget {
                                   Uri(
                                     path: AppRoutes.vocabList,
                                     queryParameters: {
+                                      'topicId': topicId,
                                       'topic': topicName,
                                       'icon': topicIcon.codePoint.toString(),
                                     },

@@ -9,11 +9,13 @@ import 'package:nihonix/features/vocabulary/presentation/widgets/vocab_folder_ca
 import 'package:nihonix/features/vocabulary/presentation/widgets/create_vocab_ai_card.dart';
 
 class VocabListPage extends ConsumerStatefulWidget {
+  final String topicId;
   final String topicName;
   final IconData topicIcon;
 
   const VocabListPage({
     super.key,
+    required this.topicId,
     required this.topicName,
     required this.topicIcon,
   });
@@ -26,7 +28,10 @@ class _VocabListPageState extends ConsumerState<VocabListPage> {
   @override
   void initState() {
     super.initState();
-    // Mock data is already loaded in provider, no need to call loadFolders
+    // Load vocab sets from API
+    Future.microtask(() {
+      ref.read(vocabProvider.notifier).loadVocabSetsByTopic(widget.topicId);
+    });
   }
 
   void _showCreateDialog() {

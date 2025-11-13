@@ -179,8 +179,13 @@ List<RouteBase> buildAppRoutes() {
       name: AppRoutes.cardFormName,
       builder: (context, state) {
         final folderId = state.uri.queryParameters['folderId'] ?? '';
-        final cardId = state.uri.queryParameters['cardId'];
-        return CardFormPage(folderId: folderId, cardId: cardId);
+        final setId = state.uri.queryParameters['setId'];
+        final setName = state.uri.queryParameters['setName'];
+        return CardFormPage(
+          folderId: folderId,
+          setId: setId,
+          setName: setName,
+        );
       },
     ),
     GoRoute(

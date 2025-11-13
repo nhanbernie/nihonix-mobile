@@ -13,6 +13,7 @@ import '../../domain/usecases/delete_folder.dart';
 import '../../domain/usecases/delete_flashcard_set.dart';
 import '../../domain/usecases/create_flashcard.dart';
 import '../../domain/usecases/generate_flashcard.dart';
+import '../../domain/usecases/update_flashcard.dart';
 
 /// Provider for FlashcardRemoteDataSource
 final flashcardRemoteDataSourceProvider = Provider<FlashcardRemoteDataSource>((ref) {
@@ -84,4 +85,10 @@ final createFlashcardUseCaseProvider = Provider<CreateFlashcardUseCase>((ref) {
 final generateFlashcardUseCaseProvider = Provider<GenerateFlashcardUseCase>((ref) {
   final repository = ref.watch(flashcardRepositoryProvider);
   return GenerateFlashcardUseCase(repository);
+});
+
+/// Provider for UpdateFlashcardUseCase
+final updateFlashcardUseCaseProvider = Provider<UpdateFlashcardUseCase>((ref) {
+  final repository = ref.watch(flashcardRepositoryProvider);
+  return UpdateFlashcardUseCase(repository);
 });

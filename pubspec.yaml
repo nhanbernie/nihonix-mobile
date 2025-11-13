@@ -40,6 +40,7 @@ dependencies:
   pretty_dio_logger: # HTTP request/response logs
   connectivity_plus: # Network status check
   flip_card: ^0.7.0 # Card flip animations
+  lottie: ^3.3.2 # Lottie animations
   intl: # Internationalization utils
   package_info_plus: # App info (name, version)
   url_launcher: # Open URLs, calls, emails

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
+import '../../../../shared/widgets/ai_loading_overlay.dart';
 import '../providers/flashcard_di.dart';
 import '../providers/folder_sets_provider.dart';
 
@@ -95,15 +96,17 @@ class _GenerateFlashcardPageState extends ConsumerState<GenerateFlashcardPage> {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
-        systemNavigationBarColor: Colors.white,
-        systemNavigationBarIconBrightness: Brightness.dark,
-      ),
-      child: Scaffold(
+    return Stack(
+      children: [
+        AnnotatedRegion<SystemUiOverlayStyle>(
+          value: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark,
+            statusBarBrightness: Brightness.light,
+            systemNavigationBarColor: Colors.white,
+            systemNavigationBarIconBrightness: Brightness.dark,
+          ),
+          child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -111,7 +114,7 @@ class _GenerateFlashcardPageState extends ConsumerState<GenerateFlashcardPage> {
           surfaceTintColor: Colors.transparent,
           leading: IconButton(
             icon: const Icon(Icons.close, color: Colors.black),
-            onPressed: () => context.pop(),
+            onPressed: _isGenerating ? null : () => context.pop(),
           ),
           title: const Text(
             'Tạo flashcard bằng AI',
@@ -409,7 +412,16 @@ class _GenerateFlashcardPageState extends ConsumerState<GenerateFlashcardPage> {
             ),
           ),
         ),
-      ),
+          ),
+        ),
+        // AI Loading Overlay - Outside Scaffold to cover full screen
+        Positioned.fill(
+          child: AILoadingOverlay(
+            isVisible: _isGenerating,
+            message: 'AI đang tạo ${_cardCount.round().toInt()} flashcard...',
+          ),
+        ),
+      ],
     );
   }
 

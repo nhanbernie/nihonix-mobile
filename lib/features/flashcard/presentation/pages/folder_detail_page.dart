@@ -158,7 +158,7 @@ class FolderDetailPage extends ConsumerWidget {
                 },
                 onEdit: () {
                   context.push(
-                    '${AppRoutes.cardForm}?setId=${set.id}&folderId=$folderId',
+                    '${AppRoutes.cardForm}?setId=${set.id}&folderId=$folderId&setName=${Uri.encodeComponent(set.name)}',
                   );
                 },
                 onDelete: () => _handleDeleteSet(context, ref, set.id, set.name),

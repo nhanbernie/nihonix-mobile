@@ -10,6 +10,7 @@ import '../models/flashcard_model.dart';
 import '../models/create_flashcard_request.dart';
 import '../models/create_flashcard_response.dart';
 import '../models/generate_flashcard_request.dart';
+import '../models/update_flashcard_request.dart';
 
 class FlashcardRemoteDataSource {
   final FlashcardApi _api;
@@ -160,6 +161,25 @@ class FlashcardRemoteDataSource {
         customPrompt: customPrompt,
       );
       final response = await _api.generateFlashcard(request);
+      return response;
+    } on DioException {
+      rethrow;
+    }
+  }
+
+  /// Update flashcard set (can add/edit/delete cards in one request)
+  Future<CreateFlashcardResponse> updateFlashcard({
+    required String setId,
+    required String setName,
+    required List<UpdateFlashcardCardRequest> cards,
+  }) async {
+    try {
+      final request = UpdateFlashcardRequest(
+        setId: setId,
+        setName: setName,
+        cards: cards,
+      );
+      final response = await _api.updateFlashcard(request);
       return response;
     } on DioException {
       rethrow;

@@ -4,6 +4,7 @@ import '../entities/flashcard_folder.dart';
 import '../entities/flashcard_set.dart';
 import '../entities/flashcard.dart';
 import '../../data/models/create_flashcard_request.dart';
+import '../../data/models/update_flashcard_request.dart';
 
 abstract class FlashcardRepository {
   Future<FlashcardFolder> createFolder({
@@ -45,5 +46,11 @@ abstract class FlashcardRepository {
     required String topic,
     required int count,
     String? customPrompt,
+  });
+
+  Future<String> updateFlashcard({
+    required String setId,
+    required String setName,
+    required List<UpdateFlashcardCardRequest> cards,
   });
 }

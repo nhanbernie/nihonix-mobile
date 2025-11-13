@@ -12,6 +12,7 @@ import '../models/get_cards_response.dart';
 import '../models/create_flashcard_request.dart';
 import '../models/create_flashcard_response.dart';
 import '../models/generate_flashcard_request.dart';
+import '../models/update_flashcard_request.dart';
 
 part 'flashcard_api.g.dart';
 
@@ -71,5 +72,11 @@ abstract class FlashcardApi {
   @POST('/flashcards/generate')
   Future<CreateFlashcardResponse> generateFlashcard(
     @Body() GenerateFlashcardRequest request,
+  );
+
+  // Update flashcard set (can add/edit/delete cards)
+  @PUT('/flashcards/bulk')
+  Future<CreateFlashcardResponse> updateFlashcard(
+    @Body() UpdateFlashcardRequest request,
   );
 }

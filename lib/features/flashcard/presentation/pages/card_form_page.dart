@@ -6,17 +6,22 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../shared/widgets/glass_icon_button.dart';
 import '../../data/models/create_flashcard_request.dart';
+import '../../data/models/update_flashcard_request.dart';
+import '../../data/models/card_content_model.dart';
 import '../providers/flashcard_di.dart';
 import '../providers/folder_sets_provider.dart';
+import '../providers/set_cards_provider.dart';
 
 class CardFormPage extends ConsumerStatefulWidget {
   final String folderId;
-  final String? cardId; // null = create new, not null = edit existing
+  final String? setId; // null = create new, not null = edit existing
+  final String? setName; // Set name for edit mode
 
   const CardFormPage({
     super.key,
     required this.folderId,
-    this.cardId,
+    this.setId,
+    this.setName,
   });
 
   @override
@@ -24,10 +29,12 @@ class CardFormPage extends ConsumerStatefulWidget {
 }
 
 class FlashcardItem {
+  final String? id; // null = new card, not null = existing card
   final TextEditingController termController;
   final TextEditingController definitionController;
 
   FlashcardItem({
+    this.id,
     String? term,
     String? definition,
   })  : termController = TextEditingController(text: term),
@@ -45,15 +52,70 @@ class _CardFormPageState extends ConsumerState<CardFormPage> {
   final _descriptionController = TextEditingController();
   final List<FlashcardItem> _cards = [];
   bool _isSaving = false;
+  bool _isLoading = false;
 
-  bool get _isEditing => widget.cardId != null;
+  bool get _isEditing => widget.setId != null;
 
   @override
   void initState() {
     super.initState();
-    // Thêm 2 card mặc định
-    _addCard();
-    _addCard();
+    if (_isEditing) {
+      // Set initial title for edit mode
+      if (widget.setName != null) {
+        _titleController.text = widget.setName!;
+      }
+      _loadExistingData();
+    } else {
+      // Thêm 2 card mặc định cho create mode
+      _addCard();
+      _addCard();
+    }
+  }
+
+  Future<void> _loadExistingData() async {
+    setState(() => _isLoading = true);
+    
+    try {
+      // Get cards data
+      final cardsAsync = ref.read(setCardsProvider(widget.setId!));
+      
+      await cardsAsync.when(
+        data: (cards) async {
+          if (cards.isNotEmpty) {
+            // Set title from first card's setName (if available)
+            // Note: You might need to get set name from another API
+            // For now, we'll leave it empty or get from route params
+            
+            // Load all cards
+            setState(() {
+              _cards.clear();
+              for (var card in cards) {
+                _cards.add(FlashcardItem(
+                  id: card.id,
+                  term: card.front.text,
+                  definition: card.back.text,
+                ));
+              }
+            });
+          }
+        },
+        loading: () {},
+        error: (error, stack) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Lỗi khi tải dữ liệu: $error'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   @override
@@ -91,49 +153,92 @@ class _CardFormPageState extends ConsumerState<CardFormPage> {
     setState(() => _isSaving = true);
 
     try {
-      // Build cards list
-      final cards = _cards.asMap().entries.map((entry) {
-        final index = entry.key;
-        final card = entry.value;
-        
-        return CardRequest(
-          front: CardContentRequest(
-            text: card.termController.text.trim(),
-            type: 'text',
-          ),
-          back: CardContentRequest(
-            text: card.definitionController.text.trim(),
-            type: 'text',
-          ),
-          order: index + 1,
+      if (_isEditing) {
+        // Update mode - use bulk update API
+        final cards = _cards.asMap().entries.map((entry) {
+          final index = entry.key;
+          final card = entry.value;
+          
+          return UpdateFlashcardCardRequest(
+            id: card.id, // null = create new, not null = update existing
+            front: CardContentModel(
+              text: card.termController.text.trim(),
+              type: 'text',
+            ),
+            back: CardContentModel(
+              text: card.definitionController.text.trim(),
+              type: 'text',
+            ),
+            order: index + 1,
+          );
+        }).toList();
+
+        // Call update use case
+        final useCase = ref.read(updateFlashcardUseCaseProvider);
+        await useCase(
+          setId: widget.setId!,
+          setName: _titleController.text.trim(),
+          cards: cards,
         );
-      }).toList();
 
-      // Call use case
-      final useCase = ref.read(createFlashcardUseCaseProvider);
-      await useCase(
-        folderId: widget.folderId,
-        setName: _titleController.text.trim(),
-        cards: cards,
-      );
+        // Refresh both sets list and cards list
+        ref.invalidate(folderSetsProvider(widget.folderId));
+        ref.invalidate(setCardsProvider(widget.setId!));
 
-      // Refresh sets list
-      ref.invalidate(folderSetsProvider(widget.folderId));
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Cập nhật bộ thẻ thành công'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          context.pop();
+        }
+      } else {
+        // Create mode - use create API
+        final cards = _cards.asMap().entries.map((entry) {
+          final index = entry.key;
+          final card = entry.value;
+          
+          return CardRequest(
+            front: CardContentRequest(
+              text: card.termController.text.trim(),
+              type: 'text',
+            ),
+            back: CardContentRequest(
+              text: card.definitionController.text.trim(),
+              type: 'text',
+            ),
+            order: index + 1,
+          );
+        }).toList();
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Tạo bộ thẻ học thành công'),
-            backgroundColor: Colors.green,
-          ),
+        // Call create use case
+        final useCase = ref.read(createFlashcardUseCaseProvider);
+        await useCase(
+          folderId: widget.folderId,
+          setName: _titleController.text.trim(),
+          cards: cards,
         );
-        context.pop();
+
+        // Refresh sets list
+        ref.invalidate(folderSetsProvider(widget.folderId));
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Tạo bộ thẻ học thành công'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          context.pop();
+        }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Lỗi khi tạo bộ thẻ: $e'),
+            content: Text(_isEditing ? 'Lỗi khi cập nhật bộ thẻ: $e' : 'Lỗi khi tạo bộ thẻ: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -147,6 +252,31 @@ class _CardFormPageState extends ConsumerState<CardFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.close, color: Colors.black),
+            onPressed: () => context.pop(),
+          ),
+          title: const Text(
+            'Đang tải...',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,

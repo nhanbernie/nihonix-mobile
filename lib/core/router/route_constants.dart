@@ -23,6 +23,8 @@ class AppRoutes {
   static const String cardForm = '/flashcard/card-form';
   static const String generateFlashcard = '/flashcard/generate';
   static const String practice = '/practice';
+  static const String quizTopicSelection = '/practice/quiz/topics';
+  static const String quizPlay = '/practice/quiz/play';
   static const String forgotPassword = '/forgotPassword';
   static const String verifyCode = '/verifyCode';
   static const String resetPassword = '/resetPassword';
@@ -50,6 +52,8 @@ class AppRoutes {
   static const String cardFormName = 'cardForm';
   static const String generateFlashcardName = 'generateFlashcard';
   static const String practiceName = 'practice';
+  static const String quizTopicSelectionName = 'quizTopicSelection';
+  static const String quizPlayName = 'quizPlay';
   static const String forgotPasswordName = 'forgotPassword';
   static const String verifyCodeName = 'verifyCode';
   static const String resetPasswordName = 'resetPassword';

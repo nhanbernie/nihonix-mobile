@@ -15,6 +15,8 @@ import 'package:nihonix/features/vocabulary/presentation/pages/vocab_set_detail_
 import 'package:nihonix/features/vocabulary/presentation/pages/vocab_folder_detail_page.dart';
 import 'package:nihonix/features/grammar/presentation/pages/grammar_list_page.dart';
 import 'package:nihonix/features/grammar/presentation/pages/grammar_pattern_list_page.dart';
+import 'package:nihonix/features/practice/presentation/pages/quiz/quiz_topic_selection_page.dart';
+import 'package:nihonix/features/practice/presentation/pages/quiz/quiz_play_page.dart';
 import 'package:nihonix/shared/layouts/main_layout.dart';
 import 'route_constants.dart';
 
@@ -244,6 +246,27 @@ List<RouteBase> buildAppRoutes() {
       builder: (context, state) {
         final folderId = state.uri.queryParameters['folderId'] ?? '';
         return GenerateFlashcardPage(folderId: folderId);
+      },
+    ),
+
+    // Practice routes (outside shell - no bottom nav)
+    GoRoute(
+      path: AppRoutes.quizTopicSelection,
+      name: AppRoutes.quizTopicSelectionName,
+      builder: (context, state) => const QuizTopicSelectionPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.quizPlay,
+      name: AppRoutes.quizPlayName,
+      builder: (context, state) {
+        final topicId = state.uri.queryParameters['topicId'] ?? '';
+        final topicName = state.uri.queryParameters['topicName'] ?? '';
+        final quizType = state.uri.queryParameters['type'] ?? 'multiple_choice';
+        return QuizPlayPage(
+          topicId: topicId,
+          topicName: topicName,
+          quizType: quizType,
+        );
       },
     ),
 

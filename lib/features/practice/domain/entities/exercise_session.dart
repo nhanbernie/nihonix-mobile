@@ -4,7 +4,9 @@ import 'exercise.dart';
 part 'exercise_session.freezed.dart';
 
 @freezed
-class ExerciseSession with _$ExerciseSession {
+sealed class ExerciseSession with _$ExerciseSession {
+  const ExerciseSession._();
+  
   const factory ExerciseSession({
     required String sessionId,
     required String topicId,

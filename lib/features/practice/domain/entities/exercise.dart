@@ -3,7 +3,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'exercise.freezed.dart';
 
 @freezed
-class Exercise with _$Exercise {
+sealed class Exercise with _$Exercise {
+  const Exercise._();
+  
   const factory Exercise({
     required String id,
     required String type, // 'fill_blank' or 'multiple_choice'
@@ -15,7 +17,9 @@ class Exercise with _$Exercise {
 }
 
 @freezed
-class Question with _$Question {
+sealed class Question with _$Question {
+  const Question._();
+  
   const factory Question({
     required String text,
     String? hint,
@@ -24,7 +28,9 @@ class Question with _$Question {
 }
 
 @freezed
-class ExerciseOption with _$ExerciseOption {
+sealed class ExerciseOption with _$ExerciseOption {
+  const ExerciseOption._();
+  
   const factory ExerciseOption({
     required int id,
     required String text,
@@ -32,7 +38,9 @@ class ExerciseOption with _$ExerciseOption {
 }
 
 @freezed
-class Explanation with _$Explanation {
+sealed class Explanation with _$Explanation {
+  const Explanation._();
+  
   const factory Explanation({
     String? vi,
     String? en,

@@ -5,8 +5,9 @@ import 'package:nihonix/core/constants/app_colors.dart';
 import 'package:nihonix/core/constants/app_sizes.dart';
 import 'package:nihonix/shared/widgets/common_app_bar.dart';
 import 'package:nihonix/features/practice/presentation/providers/practice_provider.dart';
-import 'package:nihonix/features/practice/presentation/widgets/fill_blank_question_card.dart';
+import 'package:nihonix/features/practice/presentation/widgets/exercise_question_card.dart';
 import 'package:nihonix/features/practice/presentation/widgets/exercise_count_bottom_sheet.dart';
+import 'package:nihonix/features/practice/presentation/widgets/quiz_result_dialog.dart';
 import 'package:nihonix/shared/widgets/ai_loading_overlay.dart';
 import 'package:nihonix/features/practice/domain/entities/exercise_session.dart';
 
@@ -57,10 +58,41 @@ class _QuizPlayPageState extends ConsumerState<QuizPlayPage> {
             ).future);
 
       if (mounted) {
+        // Debug: Check session data
+        print('Exercise Session loaded:');
+        print('  - Session ID: ${session.sessionId}');
+        print('  - Exercise Type: ${session.exerciseType}');
+        print('  - Total Exercises: ${session.totalExercises}');
+        print('  - Exercises Count: ${session.exercises.length}');
+        
         setState(() {
           _exerciseSession = session;
           _isGenerating = false;
+          // Reset state when new session is loaded
+          _currentQuestionIndex = 0;
+          _selectedAnswers.clear();
         });
+        
+        // Show success message if exercises were generated
+        if (session.exercises.isNotEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Đã tạo ${session.exercises.length} bài tập thành công!',
+              ),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Không có bài tập nào được tạo. Vui lòng thử lại.'),
+              backgroundColor: Colors.orange,
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -97,6 +129,20 @@ class _QuizPlayPageState extends ConsumerState<QuizPlayPage> {
     }
   }
 
+  void _showResultDialog(BuildContext context, Color color) {
+    if (_exerciseSession == null) return;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => QuizResultDialog(
+        session: _exerciseSession!,
+        selectedAnswers: _selectedAnswers,
+        accentColor: color,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Get display info based on quiz type
@@ -119,10 +165,13 @@ class _QuizPlayPageState extends ConsumerState<QuizPlayPage> {
               : _buildExerciseContent(context, color, icon, title),
 
           // AI Loading Overlay
-          if (_isGenerating)
-            const AILoadingOverlay(
-              message: 'AI đang tạo bài tập...',
-            ),
+          AILoadingOverlay(
+            message: widget.quizType == 'fill_blank'
+                ? 'AI đang tạo bài tập điền vào chỗ trống...'
+                : 'AI đang tạo bài tập trắc nghiệm...',
+            isVisible: _isGenerating,
+            lottieUrl: 'https://assets5.lottiefiles.com/packages/lf20_jcikwtux.json', // Nice AI animation
+          ),
         ],
       ),
     );
@@ -207,12 +256,13 @@ class _QuizPlayPageState extends ConsumerState<QuizPlayPage> {
           // Question Card
           Expanded(
             child: SingleChildScrollView(
-              child: FillBlankQuestionCard(
+              child: ExerciseQuestionCard(
                 exercise: currentExercise,
                 currentIndex: _currentQuestionIndex,
                 totalQuestions: totalQuestions,
                 onAnswerSelected: _onAnswerSelected,
                 selectedAnswerId: _selectedAnswers[_currentQuestionIndex],
+                accentColor: color,
               ),
             ),
           ),
@@ -241,10 +291,8 @@ class _QuizPlayPageState extends ConsumerState<QuizPlayPage> {
                           if (_currentQuestionIndex < totalQuestions - 1) {
                             _nextQuestion(totalQuestions);
                           } else {
-                            // TODO: Navigate to result page
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Hoàn thành!')),
-                            );
+                            // Show result dialog
+                            _showResultDialog(context, color);
                           }
                         }
                       : null,

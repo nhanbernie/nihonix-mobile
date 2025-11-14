@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import '../../domain/entities/exercise_session.dart';
+import '../models/exercise_session_model.dart';
 import 'practice_api.dart';
 
 class PracticeRemoteDataSource {
@@ -19,7 +20,25 @@ class PracticeRemoteDataSource {
       });
 
       if (response.response.statusCode == 200 || response.response.statusCode == 201) {
-        return response.data.toDomain();
+        // API returns {success: true, data: {...}}
+        // Extract the 'data' field from raw response
+        final rawResponse = response.response.data;
+        
+        // Debug: Check response structure
+        print('Raw response type: ${rawResponse.runtimeType}');
+        print('Raw response: $rawResponse');
+        
+        if (rawResponse is Map<String, dynamic> && rawResponse.containsKey('data')) {
+          final data = rawResponse['data'] as Map<String, dynamic>;
+          print('Extracted data: $data');
+          final model = ExerciseSessionModel.fromJson(data);
+          print('Parsed model - exercises count: ${model.exercises.length}');
+          return model.toDomain();
+        } else {
+          // Fallback: try to parse response.data directly (if Retrofit already parsed it)
+          print('Using response.data directly');
+          return response.data.toDomain();
+        }
       } else {
         throw Exception('Failed to generate exercises');
       }
@@ -48,7 +67,25 @@ class PracticeRemoteDataSource {
       });
 
       if (response.response.statusCode == 200 || response.response.statusCode == 201) {
-        return response.data.toDomain();
+        // API returns {success: true, data: {...}}
+        // Extract the 'data' field from raw response
+        final rawResponse = response.response.data;
+        
+        // Debug: Check response structure
+        print('Raw response type: ${rawResponse.runtimeType}');
+        print('Raw response: $rawResponse');
+        
+        if (rawResponse is Map<String, dynamic> && rawResponse.containsKey('data')) {
+          final data = rawResponse['data'] as Map<String, dynamic>;
+          print('Extracted data: $data');
+          final model = ExerciseSessionModel.fromJson(data);
+          print('Parsed model - exercises count: ${model.exercises.length}');
+          return model.toDomain();
+        } else {
+          // Fallback: try to parse response.data directly (if Retrofit already parsed it)
+          print('Using response.data directly');
+          return response.data.toDomain();
+        }
       } else {
         throw Exception('Failed to generate exercises');
       }

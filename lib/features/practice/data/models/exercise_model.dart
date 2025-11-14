@@ -17,6 +17,15 @@ sealed class ExerciseModel with _$ExerciseModel {
   }) = _ExerciseModel;
 
   factory ExerciseModel.fromJson(Map<String, dynamic> json) {
+    // Handle order as both int and String
+    int orderValue = 0;
+    final orderData = json['order'];
+    if (orderData is int) {
+      orderValue = orderData;
+    } else if (orderData is String) {
+      orderValue = int.tryParse(orderData) ?? 0;
+    }
+    
     return ExerciseModel(
       id: json['id'] as String? ?? '',
       type: json['type'] as String? ?? '',
@@ -25,7 +34,7 @@ sealed class ExerciseModel with _$ExerciseModel {
           ?.map((e) => ExerciseOptionModel.fromJson(e as Map<String, dynamic>))
           .toList() ?? [],
       explanation: ExplanationModel.fromJson(json['explanation'] as Map<String, dynamic>? ?? {}),
-      order: json['order'] as int? ?? 0,
+      order: orderValue,
     );
   }
 
@@ -97,8 +106,17 @@ sealed class ExerciseOptionModel with _$ExerciseOptionModel {
   }) = _ExerciseOptionModel;
 
   factory ExerciseOptionModel.fromJson(Map<String, dynamic> json) {
+    // Handle both int and String id from API
+    int idValue = 0;
+    final idData = json['id'];
+    if (idData is int) {
+      idValue = idData;
+    } else if (idData is String) {
+      idValue = int.tryParse(idData) ?? 0;
+    }
+    
     return ExerciseOptionModel(
-      id: json['id'] as int? ?? 0,
+      id: idValue,
       text: json['text'] as String? ?? '',
     );
   }

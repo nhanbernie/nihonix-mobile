@@ -21,15 +21,22 @@ sealed class ExerciseSessionModel with _$ExerciseSessionModel {
   }) = _ExerciseSessionModel;
 
   factory ExerciseSessionModel.fromJson(Map<String, dynamic> json) {
+    // Helper to parse int from both int and String
+    int parseInt(dynamic value) {
+      if (value is int) return value;
+      if (value is String) return int.tryParse(value) ?? 0;
+      return 0;
+    }
+    
     return ExerciseSessionModel(
       sessionId: json['session_id'] as String? ?? '',
       topicId: json['topic_id'] as String? ?? '',
       topicTitle: Map<String, String>.from(json['topic_title'] as Map? ?? {}),
       levelCode: json['level_code'] as String? ?? '',
       exerciseType: json['exercise_type'] as String? ?? '',
-      totalExercises: json['total_exercises'] as int? ?? 0,
-      vocabularyCount: json['vocabulary_count'] as int? ?? 0,
-      grammarCount: json['grammar_count'] as int? ?? 0,
+      totalExercises: parseInt(json['total_exercises']),
+      vocabularyCount: parseInt(json['vocabulary_count']),
+      grammarCount: parseInt(json['grammar_count']),
       exercises: (json['exercises'] as List?)
           ?.map((e) => ExerciseModel.fromJson(e as Map<String, dynamic>))
           .toList() ?? [],

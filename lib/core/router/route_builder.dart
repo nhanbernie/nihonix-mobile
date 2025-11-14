@@ -17,6 +17,8 @@ import 'package:nihonix/features/grammar/presentation/pages/grammar_list_page.da
 import 'package:nihonix/features/grammar/presentation/pages/grammar_pattern_list_page.dart';
 import 'package:nihonix/features/practice/presentation/pages/quiz/quiz_topic_selection_page.dart';
 import 'package:nihonix/features/practice/presentation/pages/quiz/quiz_play_page.dart';
+import 'package:nihonix/features/practice/presentation/pages/quiz/quiz_result_page.dart';
+import 'package:nihonix/features/practice/domain/entities/exercise_session.dart';
 import 'package:nihonix/shared/layouts/main_layout.dart';
 import 'route_constants.dart';
 
@@ -266,6 +268,28 @@ List<RouteBase> buildAppRoutes() {
           topicId: topicId,
           topicName: topicName,
           quizType: quizType,
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.quizResult,
+      name: AppRoutes.quizResultName,
+      builder: (context, state) {
+        // Get data from extra (passed from dialog)
+        final extra = state.extra as Map<String, dynamic>?;
+        if (extra != null) {
+          final session = extra['session'] as ExerciseSession;
+          final selectedAnswers = extra['selectedAnswers'] as Map<int, int>;
+          final accentColor = extra['accentColor'] as Color;
+          return QuizResultPage(
+            session: session,
+            selectedAnswers: selectedAnswers,
+            accentColor: accentColor,
+          );
+        }
+        // Fallback (should not happen)
+        return const Scaffold(
+          body: Center(child: Text('No data available')),
         );
       },
     ),

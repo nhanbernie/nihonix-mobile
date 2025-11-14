@@ -34,7 +34,7 @@ class GrammarGenerateNotifier extends Notifier<GrammarGenerateState> {
     return const GrammarGenerateState();
   }
 
-  Future<void> generateGrammarPatterns({
+  Future<GrammarGenerateResult?> generateGrammarPatterns({
     required String grammarSubTopicSlug,
     required String levelCode,
     required int count,
@@ -60,12 +60,16 @@ class GrammarGenerateNotifier extends Notifier<GrammarGenerateState> {
         result: result,
         clearError: true,
       );
+      
+      return result; // Return result
     } catch (e) {
       state = state.copyWith(
         isGenerating: false,
         error: e.toString(),
         clearResult: true,
       );
+      
+      return null; // Return null on error
     }
   }
 

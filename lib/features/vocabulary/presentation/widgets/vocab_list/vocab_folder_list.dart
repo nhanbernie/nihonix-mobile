@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nihonix/core/constants/app_sizes.dart';
 import 'package:nihonix/core/router/route_constants.dart';
-import '../../domain/entities/vocab_folder.dart';
-import '../providers/vocab_provider.dart';
-import 'vocab_folder_card.dart';
-import 'create_vocab_ai_card.dart';
+import 'package:nihonix/features/vocabulary/domain/entities/vocab_folder.dart';
+import 'package:nihonix/features/vocabulary/presentation/providers/vocab_provider.dart';
+import 'package:nihonix/features/vocabulary/presentation/widgets/vocab_list/vocab_folder_card.dart';
+import 'package:nihonix/features/vocabulary/presentation/widgets/vocab_list/create_vocab_ai_card.dart';
 
 /// Vocabulary folder list widget with grid layout
 class VocabFolderList extends ConsumerWidget {

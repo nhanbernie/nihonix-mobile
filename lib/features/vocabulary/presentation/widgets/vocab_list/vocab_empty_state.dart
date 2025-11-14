@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nihonix/core/constants/app_colors.dart';
 import 'package:nihonix/core/constants/app_sizes.dart';
-import 'create_vocab_ai_card.dart';
+import 'package:nihonix/features/vocabulary/presentation/widgets/vocab_list/create_vocab_ai_card.dart';
 
 /// Empty state widget for vocabulary list page
 class VocabEmptyState extends StatelessWidget {

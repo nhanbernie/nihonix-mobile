@@ -168,15 +168,6 @@ class _GrammarListPageState extends ConsumerState<GrammarListPage> {
                           ),
                         ),
 
-                        // Divider
-                        Divider(
-                          height: 1,
-                          thickness: 1,
-                          color: isDark
-                              ? const Color(0xFF3A3A3A)
-                              : const Color(0xFFE8E8E8),
-                        ),
-
                         // Content
                         Expanded(
                           child: grammarState.isLoading

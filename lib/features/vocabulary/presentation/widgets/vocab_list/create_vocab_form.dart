@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:nihonix/core/constants/app_colors.dart';
 import 'package:nihonix/core/router/route_constants.dart';
 import 'package:nihonix/shared/widgets/common_bottom_sheet.dart';
-import '../providers/vocab_provider.dart';
-import '../providers/vocab_generate_provider.dart';
+import 'package:nihonix/features/vocabulary/presentation/providers/vocab_provider.dart';
+import 'package:nihonix/features/vocabulary/presentation/providers/vocab_generate_provider.dart';
 
 /// Form widget for creating vocabulary with AI
 class CreateVocabForm extends ConsumerStatefulWidget {

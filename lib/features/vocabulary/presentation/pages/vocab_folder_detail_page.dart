@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:nihonix/core/constants/app_sizes.dart';
 import 'package:nihonix/features/vocabulary/presentation/providers/vocab_provider.dart';
-import 'package:nihonix/features/vocabulary/presentation/widgets/vocabulary_word_card.dart';
+import 'package:nihonix/features/vocabulary/presentation/widgets/vocab_folder_detail/vocab_folder_empty_state.dart';
+import 'package:nihonix/features/vocabulary/presentation/widgets/vocab_folder_detail/vocab_folder_word_list.dart';
 
 class VocabFolderDetailPage extends ConsumerStatefulWidget {
   final String folderId;
@@ -76,49 +76,11 @@ class _VocabFolderDetailPageState extends ConsumerState<VocabFolderDetailPage> {
       body: vocabState.isLoading
           ? const Center(child: CircularProgressIndicator())
           : vocabState.words.isEmpty
-              ? _buildEmptyState(isDark)
-              : _buildWordList(vocabState, isDark),
-    );
-  }
-
-  Widget _buildEmptyState(bool isDark) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.book_outlined,
-            size: 80,
-            color: isDark ? Colors.white24 : Colors.black12,
-          ),
-          const SizedBox(height: AppSizes.s16),
-          Text(
-            'No words yet',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white60 : Colors.black54,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildWordList(VocabState vocabState, bool isDark) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(AppSizes.s16),
-      itemCount: vocabState.words.length,
-      itemBuilder: (context, index) {
-        final word = vocabState.words[index];
-        return Padding(
-          padding: const EdgeInsets.only(bottom: AppSizes.s12),
-          child: VocabularyWordCard(
-            word: word,
-            isDark: isDark,
-          ),
-        );
-      },
+              ? VocabFolderEmptyState(isDark: isDark)
+              : VocabFolderWordList(
+                  words: vocabState.words,
+                  isDark: isDark,
+                ),
     );
   }
 }

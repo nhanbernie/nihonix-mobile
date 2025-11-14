@@ -5,9 +5,9 @@ import 'package:nihonix/shared/widgets/ai_loading_overlay.dart';
 import 'package:nihonix/shared/widgets/common_bottom_sheet.dart';
 import 'package:nihonix/features/vocabulary/presentation/providers/vocab_provider.dart';
 import 'package:nihonix/features/vocabulary/presentation/providers/vocab_generate_provider.dart';
-import 'package:nihonix/features/vocabulary/presentation/widgets/create_vocab_form.dart';
-import 'package:nihonix/features/vocabulary/presentation/widgets/vocab_empty_state.dart';
-import 'package:nihonix/features/vocabulary/presentation/widgets/vocab_folder_list.dart';
+import 'package:nihonix/features/vocabulary/presentation/widgets/vocab_list/create_vocab_form.dart';
+import 'package:nihonix/features/vocabulary/presentation/widgets/vocab_list/vocab_empty_state.dart';
+import 'package:nihonix/features/vocabulary/presentation/widgets/vocab_list/vocab_folder_list.dart';
 
 class VocabListPage extends ConsumerStatefulWidget {
   final String topicId;

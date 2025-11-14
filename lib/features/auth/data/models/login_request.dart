@@ -13,7 +13,6 @@ sealed class LoginRequest with _$LoginRequest {
     required String password,
   }) = _LoginRequest;
 
-  /// Factory constructor từ JSON.
   factory LoginRequest.fromJson(Map<String, dynamic> json) =>
       _$LoginRequestFromJson(json);
 }

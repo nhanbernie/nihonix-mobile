@@ -34,7 +34,7 @@ class VocabGenerateNotifier extends Notifier<VocabGenerateState> {
     return const VocabGenerateState();
   }
 
-  Future<void> generateVocabularyItems({
+  Future<VocabGenerateResult?> generateVocabularyItems({
     required String topicId,
     required String levelCode,
     required int count,
@@ -59,12 +59,16 @@ class VocabGenerateNotifier extends Notifier<VocabGenerateState> {
         result: result,
         clearError: true,
       );
+      
+      return result; // Return result
     } catch (e) {
       state = state.copyWith(
         isGenerating: false,
         error: e.toString(),
         clearResult: true,
       );
+      
+      return null; // Return null on error
     }
   }
 

@@ -223,7 +223,7 @@ class TopicDetailPage extends StatelessWidget {
 
                             // Vocabulary card
                             _LearningCard(
-                              title: 'vocabulary jam',
+                              title: 'vocabulary',
                               subtitle:
                                   'find easy-to-understand definitions &\nlearn new words fast',
                               isDark: isDark,

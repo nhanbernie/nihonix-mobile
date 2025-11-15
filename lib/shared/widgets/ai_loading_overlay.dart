@@ -64,9 +64,9 @@ class _AILoadingOverlayState extends State<AILoadingOverlay>
       return const SizedBox.shrink();
     }
     // NOTE: hiệu ứng modal
-    // Only block interaction when visible
-    return AbsorbPointer(
-      absorbing: widget.isVisible,
+    // Only block interaction when visible - use IgnorePointer to completely ignore when not visible
+    return IgnorePointer(
+      ignoring: !widget.isVisible,
       child: FadeTransition(
         opacity: _fadeAnimation,
         child: Container(
@@ -86,47 +86,49 @@ class _AILoadingOverlayState extends State<AILoadingOverlay>
                 ),
               ],
             ),
-            child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Lottie Animation - AI Robot or custom
-              Lottie.network(
-                widget.lottieUrl ?? 
-                'https://assets2.lottiefiles.com/packages/lf20_xyadoh9h.json',
-                width: 200,
-                height: 200,
-                fit: BoxFit.contain,
-                repeat: true,
-                animate: true,
-                errorBuilder: (context, error, stackTrace) {
-                  // Fallback to custom animated widget
-                  return const _AILoadingAnimation();
-                },
-              ),
-              const SizedBox(height: 24),
-              // Message
-              Text(
-                widget.message,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Vui lòng đợi trong giây lát...',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade600,
-                ),
-              ),
-            ],
+            child: widget.isVisible
+                ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Lottie Animation - AI Robot or custom
+                      Lottie.network(
+                        widget.lottieUrl ?? 
+                        'https://assets2.lottiefiles.com/packages/lf20_xyadoh9h.json',
+                        width: 200,
+                        height: 200,
+                        fit: BoxFit.contain,
+                        repeat: true,
+                        animate: true,
+                        errorBuilder: (context, error, stackTrace) {
+                          // Fallback to custom animated widget
+                          return const _AILoadingAnimation();
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      // Message
+                      Text(
+                        widget.message,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Vui lòng đợi trong giây lát...',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ],
+                  )
+                : const SizedBox.shrink(),
+            ),
           ),
-        ),
-        ),
         ),
       ),
     );

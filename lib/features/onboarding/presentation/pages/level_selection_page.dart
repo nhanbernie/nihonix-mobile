@@ -22,7 +22,7 @@ class _LevelSelectionPageState extends ConsumerState<LevelSelectionPage> {
 
   final List<Map<String, dynamic>> _levels = [
     {
-      'code': 'BEGINNER',
+      'code': 'N5',
       'name': 'Chưa học bao giờ',
       'description': 'Bắt đầu từ con số 0',
       'icon': Icons.emoji_emotions,
@@ -89,8 +89,9 @@ class _LevelSelectionPageState extends ConsumerState<LevelSelectionPage> {
           ),
         );
 
-        // Refresh auth state so route guard sees updated user.levelCode
-        // Update local auth state so route guard won't redirect back to login
+        // Update local auth state so route guard sees updated user.levelCode
+        // Don't call checkAuth() here as it may fail or return stale data
+        // The local update is sufficient for route guard to allow navigation
         try {
           ref.read(authProvider.notifier).setUserLevelLocally(levelCode);
         } catch (e) {
@@ -98,9 +99,8 @@ class _LevelSelectionPageState extends ConsumerState<LevelSelectionPage> {
           print('[Onboarding] setUserLevelLocally error: $e');
         }
 
-  ref.read(authProvider.notifier).checkAuth();
-
-        // Use path-based navigation (same approach as login page)
+        // Navigate to home - route guard will check local state
+        // and allow access since user now has levelCode
         try {
           context.go(AppRoutes.home);
         } catch (navErr) {

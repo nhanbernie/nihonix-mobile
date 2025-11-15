@@ -22,6 +22,15 @@ import 'package:nihonix/features/practice/domain/entities/exercise_session.dart'
 import 'package:nihonix/shared/layouts/main_layout.dart';
 import 'route_constants.dart';
 
+/// Helper to create IconData with const fontFamily for tree-shaking
+IconData _createMaterialIcon(int codePoint) {
+  return IconData(
+    codePoint,
+    fontFamily: 'MaterialIcons',
+    fontPackage: null,
+  );
+}
+
 List<RouteBase> buildAppRoutes() {
   return [
     GoRoute(
@@ -115,7 +124,7 @@ List<RouteBase> buildAppRoutes() {
         return TopicDetailPage(
           topicId: topicId,
           topicName: topicName,
-          topicIcon: IconData(iconCodePoint, fontFamily: 'MaterialIcons'),
+          topicIcon: _createMaterialIcon(iconCodePoint),
         );
       },
     ),
@@ -134,7 +143,7 @@ List<RouteBase> buildAppRoutes() {
         return VocabListPage(
           topicId: topicId,
           topicName: topicName,
-          topicIcon: IconData(iconCodePoint, fontFamily: 'MaterialIcons'),
+          topicIcon: _createMaterialIcon(iconCodePoint),
         );
       },
     ),
@@ -177,7 +186,7 @@ List<RouteBase> buildAppRoutes() {
         return GrammarListPage(
           topicId: topicId,
           topicName: topicName,
-          topicIcon: IconData(iconCodePoint, fontFamily: 'MaterialIcons'),
+          topicIcon: _createMaterialIcon(iconCodePoint),
         );
       },
     ),

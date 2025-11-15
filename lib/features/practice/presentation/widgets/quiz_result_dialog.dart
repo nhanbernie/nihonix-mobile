@@ -6,7 +6,7 @@ import 'package:nihonix/core/router/route_constants.dart';
 import 'package:nihonix/features/practice/domain/entities/exercise.dart';
 import 'package:nihonix/features/practice/domain/entities/exercise_session.dart';
 
-/// Simple quiz result dialog showing only score with Lottie animation
+/// Simple and beautiful quiz result dialog
 class QuizResultDialog extends StatelessWidget {
   final ExerciseSession session;
   final Map<int, int> selectedAnswers; // questionIndex -> optionId
@@ -77,14 +77,25 @@ class QuizResultDialog extends StatelessWidget {
   /// Get Lottie animation URL based on score
   String _getLottieUrl(int score) {
     if (score >= 80) {
-      // Excellent - celebration animation (confetti)
+      // Excellent - celebration/confetti animation
       return 'https://assets5.lottiefiles.com/packages/lf20_jcikwtux.json';
     } else if (score >= 60) {
-      // Good - trophy animation
+      // Good - success/trophy animation
       return 'https://assets5.lottiefiles.com/packages/lf20_vybwn7df.json';
     } else {
-      // Keep trying - encouragement animation (star)
-      return 'https://assets5.lottiefiles.com/packages/lf20_vybwn7df.json';
+      // Keep trying - star/encouragement animation
+      return 'https://assets5.lottiefiles.com/packages/lf20_jcikwtux.json';
+    }
+  }
+
+  /// Get message based on score
+  String _getMessage(int score) {
+    if (score >= 80) {
+      return 'Xuất sắc! 🎉';
+    } else if (score >= 60) {
+      return 'Tốt lắm! 💪';
+    } else {
+      return 'Cố gắng thêm nhé! 💪';
     }
   }
 
@@ -92,189 +103,135 @@ class QuizResultDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final result = _calculateResults();
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    // Get Lottie URL based on score
     final lottieUrl = _getLottieUrl(result.score);
 
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: const EdgeInsets.all(AppSizes.s16),
+      insetPadding: const EdgeInsets.all(AppSizes.s24),
       child: Container(
         decoration: BoxDecoration(
           color: isDark ? const Color(0xFF1A1A1A) : Colors.white,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(28),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
+              color: Colors.black.withOpacity(0.15),
+              blurRadius: 24,
+              offset: const Offset(0, 8),
             ),
           ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Header with gradient
+            // Lottie Animation Section
             Container(
               padding: const EdgeInsets.only(
                 top: AppSizes.s32,
                 left: AppSizes.s24,
                 right: AppSizes.s24,
-                bottom: AppSizes.s16,
-              ),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    accentColor,
-                    accentColor.withOpacity(0.7),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(24),
-                  topRight: Radius.circular(24),
-                ),
               ),
               child: Column(
                 children: [
                   // Lottie Animation
                   SizedBox(
-                    width: 150,
-                    height: 150,
+                    width: 180,
+                    height: 180,
                     child: Lottie.network(
                       lottieUrl,
                       fit: BoxFit.contain,
                       repeat: true,
                       errorBuilder: (context, error, stackTrace) {
-                        // Fallback to a simple icon if Lottie fails
+                        // Fallback icon
                         return Container(
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: accentColor.withOpacity(0.1),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            result.score >= 60 ? Icons.celebration : Icons.emoji_events,
-                            size: 80,
-                            color: Colors.white,
+                            result.score >= 60 
+                                ? Icons.celebration_rounded 
+                                : Icons.emoji_events_rounded,
+                            size: 100,
+                            color: accentColor,
                           ),
                         );
                       },
                     ),
                   ),
-                  const SizedBox(height: AppSizes.s16),
+                  const SizedBox(height: AppSizes.s24),
                   
-                  // Score Circle
+                  // Score Display
                   Container(
-                    width: 120,
-                    height: 120,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSizes.s32,
+                      vertical: AppSizes.s20,
+                    ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
-                        width: 3,
-                      ),
-                    ),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '${result.score}%',
-                            style: const TextStyle(
-                              fontSize: 36,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            '${result.correctCount}/${result.totalQuestions}',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white.withOpacity(0.9),
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                      gradient: LinearGradient(
+                        colors: [
+                          accentColor,
+                          accentColor.withOpacity(0.8),
                         ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: accentColor.withOpacity(0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          '${result.score}%',
+                          style: const TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            height: 1.0,
+                          ),
+                        ),
+                        const SizedBox(height: AppSizes.s8),
+                        Text(
+                          '${result.correctCount}/${result.totalQuestions} câu đúng',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white.withOpacity(0.9),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: AppSizes.s16),
+                  const SizedBox(height: AppSizes.s20),
                   
-                  // Title
+                  // Message
                   Text(
-                    'Kết quả bài làm',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: AppSizes.s8),
-                  
-                  // Message based on score
-                  Text(
-                    result.score >= 80
-                        ? 'Xuất sắc! Bạn làm rất tốt! 🎉'
-                        : result.score >= 60
-                            ? 'Tốt lắm! Tiếp tục phát huy! 💪'
-                            : 'Cố gắng thêm nhé! Bạn sẽ làm tốt hơn! 💪',
-                    textAlign: TextAlign.center,
+                    _getMessage(result.score),
                     style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white.withOpacity(0.95),
-                      height: 1.4,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black87,
                     ),
                   ),
                 ],
               ),
             ),
 
-            // Content
+            // Action Buttons
             Padding(
               padding: const EdgeInsets.all(AppSizes.s24),
               child: Column(
                 children: [
-                  // Summary text
-                  Container(
-                    padding: const EdgeInsets.all(AppSizes.s16),
-                    decoration: BoxDecoration(
-                      color: isDark 
-                          ? const Color(0xFF2A2A2A) 
-                          : accentColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.check_circle_rounded,
-                          color: accentColor,
-                          size: 24,
-                        ),
-                        const SizedBox(width: AppSizes.s12),
-                        Text(
-                          'Bạn đã trả lời đúng ${result.correctCount} câu',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: isDark ? Colors.white : Colors.black87,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  
-                  const SizedBox(height: AppSizes.s24),
-                  
-                  // Action Buttons
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.of(context).pop(); // Close dialog
-                        // Navigate to result page
+                        Navigator.of(context).pop();
                         context.push(
                           '${AppRoutes.quizResult}?sessionId=${session.sessionId}',
                           extra: {
@@ -289,7 +246,7 @@ class QuizResultDialog extends StatelessWidget {
                         'Xem kết quả chi tiết',
                         style: TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
@@ -297,33 +254,29 @@ class QuizResultDialog extends StatelessWidget {
                         backgroundColor: accentColor,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(14),
                         ),
-                        elevation: 4,
+                        elevation: 0,
                       ),
                     ),
                   ),
                   const SizedBox(height: AppSizes.s12),
                   SizedBox(
                     width: double.infinity,
-                    child: OutlinedButton(
+                    child: TextButton(
                       onPressed: () {
-                        Navigator.of(context).pop(); // Close dialog
-                        Navigator.of(context).pop(); // Pop quiz page
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
                       },
-                      style: OutlinedButton.styleFrom(
+                      style: TextButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: AppSizes.s16),
-                        side: BorderSide(color: accentColor, width: 2),
-                        foregroundColor: accentColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                        foregroundColor: isDark ? Colors.white70 : Colors.black54,
                       ),
                       child: const Text(
                         'Hoàn thành',
                         style: TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),

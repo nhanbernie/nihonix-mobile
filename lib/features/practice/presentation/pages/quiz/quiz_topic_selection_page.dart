@@ -10,6 +10,15 @@ import 'package:nihonix/features/lesson/presentation/widgets/topic_card.dart';
 import 'package:nihonix/features/practice/presentation/widgets/quiz_type_bottom_sheet.dart';
 import 'package:nihonix/shared/widgets/common_app_bar.dart';
 
+/// Helper to create IconData with const fontFamily for tree-shaking
+IconData _createMaterialIcon(int codePoint) {
+  return IconData(
+    codePoint,
+    fontFamily: 'MaterialIcons',
+    fontPackage: null,
+  );
+}
+
 class QuizTopicSelectionPage extends ConsumerWidget {
   const QuizTopicSelectionPage({super.key});
 
@@ -156,10 +165,7 @@ class QuizTopicSelectionPage extends ConsumerWidget {
                     // Get icon - use Material icon from codePoint if available
                     IconData icon;
                     if (topic.iconType == 'material' && topic.iconCode != null) {
-                      icon = IconData(
-                        topic.iconCode!,
-                        fontFamily: 'MaterialIcons',
-                      );
+                      icon = _createMaterialIcon(topic.iconCode!);
                     } else {
                       // Fallback icon
                       icon = Icons.topic_rounded;

@@ -7,8 +7,8 @@ Lý do: extendBody khiến body kéo dài xuống bottom bar, dễ vỡ bố c�
 Trước: final size = MediaQuery.of(context).size
 Sau: không có
 Lý do: MediaQuery rebuild khi đổi orientation, gây giật.
-3) Dùng withValues() thay withOpacity() (Dòng 51)
-Trước: withOpacity(0.05)
+3) Dùng withValues() thay withValues(alpha: ) (Dòng 51)
+Trước: withValues(alpha: 0.05)
 Sau: withValues(alpha: 0.05)
 Lý do: withOpacity deprecated, tránh cảnh báo lint.
 4) Fixed position thay percentage (Dòng 46–47)

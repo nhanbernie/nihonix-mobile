@@ -187,7 +187,7 @@ class ErrorCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: AppColors.error.withOpacity(0.1),
+      color: AppColors.error.withValues(alpha: 0.1),
       child: Padding(
         padding: const EdgeInsets.all(AppSizes.s16),
         child: Column(

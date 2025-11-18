@@ -28,9 +28,9 @@ class LanguageOptionCard extends StatelessWidget {
     final neuBgColor = isDark ? neuBgColorDark : neuBgColorLight;
 
     final neuDarkShadow =
-        isDark ? Colors.black.withOpacity(0.5) : Colors.black.withOpacity(0.2);
+        isDark ? Colors.black.withValues(alpha: 0.5) : Colors.black.withValues(alpha: 0.2);
     final neuLightShadow =
-        isDark ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.8);
+        isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.8);
 
     return Material(
       color: Colors.transparent,
@@ -59,7 +59,7 @@ class LanguageOptionCard extends StatelessWidget {
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: AppColors.primary.withOpacity(0.4),
+                      color: AppColors.primary.withValues(alpha: 0.4),
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),

@@ -34,9 +34,9 @@ class LevelCard extends StatelessWidget {
     final neuBgColor = isDark ? neuBgColorDark : neuBgColorLight;
 
     final neuDarkShadow =
-        isDark ? Colors.black.withOpacity(0.5) : Colors.black.withOpacity(0.2);
+        isDark ? Colors.black.withValues(alpha: 0.5) : Colors.black.withValues(alpha: 0.2);
     final neuLightShadow =
-        isDark ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.8);
+        isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.8);
 
     return Material(
       color: Colors.transparent,
@@ -52,7 +52,7 @@ class LevelCard extends StatelessWidget {
                 ? LinearGradient(
                     colors: [
                       color,
-                      color.withOpacity(0.8),
+                      color.withValues(alpha: 0.8),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -62,7 +62,7 @@ class LevelCard extends StatelessWidget {
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: color.withOpacity(0.4),
+                      color: color.withValues(alpha: 0.4),
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),
@@ -89,8 +89,8 @@ class LevelCard extends StatelessWidget {
                 padding: const EdgeInsets.all(AppSizes.s12),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? Colors.white.withOpacity(0.2)
-                      : color.withOpacity(0.1),
+                      ? Colors.white.withValues(alpha: 0.2)
+                      : color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(
@@ -122,11 +122,11 @@ class LevelCard extends StatelessWidget {
                       description,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: isSelected
-                                ? Colors.white.withOpacity(0.9)
+                                ? Colors.white.withValues(alpha: 0.9)
                                 : (isDark
                                     ? AppColors.onBackgroundDark
-                                        .withOpacity(0.7)
-                                    : AppColors.onBackground.withOpacity(0.7)),
+                                        .withValues(alpha: 0.7)
+                                    : AppColors.onBackground.withValues(alpha: 0.7)),
                           ),
                     ),
                   ],

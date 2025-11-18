@@ -99,7 +99,7 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.grey.shade300),
                   boxShadow: [

@@ -96,7 +96,7 @@ class _GrammarPatternCardState extends State<GrammarPatternCard> {
                     style: TextStyle(
                       fontSize: 15,
                       color: widget.isDark
-                          ? Colors.white.withOpacity(0.87)
+                          ? Colors.white.withValues(alpha: 0.87)
                           : Colors.black87,
                       height: 1.5,
                     ),
@@ -219,7 +219,7 @@ class _GrammarPatternCardState extends State<GrammarPatternCard> {
                             vertical: 5,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.primary.withOpacity(0.1),
+                            color: AppColors.primary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(

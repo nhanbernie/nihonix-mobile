@@ -71,7 +71,7 @@ class _AILoadingOverlayState extends State<AILoadingOverlay>
         opacity: _fadeAnimation,
         child: Container(
           color: widget.isVisible
-              ? Colors.black.withOpacity(0.7)
+              ? Colors.black.withValues(alpha: 0.7)
               : Colors.transparent,
           child: Center(
             child: Container(
@@ -82,7 +82,7 @@ class _AILoadingOverlayState extends State<AILoadingOverlay>
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: 0.2),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),
@@ -181,7 +181,7 @@ class _AILoadingAnimationState extends State<_AILoadingAnimation>
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: const Color(0xFF6C63FF).withOpacity(0.3),
+                  color: const Color(0xFF6C63FF).withValues(alpha: 0.3),
                   width: 3,
                 ),
               ),
@@ -195,7 +195,7 @@ class _AILoadingAnimationState extends State<_AILoadingAnimation>
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: const Color(0xFF6C63FF).withOpacity(0.5),
+                  color: const Color(0xFF6C63FF).withValues(alpha: 0.5),
                   width: 3,
                 ),
               ),

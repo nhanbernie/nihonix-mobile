@@ -161,8 +161,8 @@ class _LevelSelectionPageState extends ConsumerState<LevelSelectionPage> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                AppColors.primary.withOpacity(0.1),
-                AppColors.accent3.withOpacity(0.05),
+                AppColors.primary.withValues(alpha: 0.1),
+                AppColors.accent3.withValues(alpha: 0.05),
               ],
             ),
           ),
@@ -195,8 +195,8 @@ class _LevelSelectionPageState extends ConsumerState<LevelSelectionPage> {
                       'Chọn trình độ phù hợp để chúng tôi gợi ý nội dung học tập',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: isDark
-                                ? AppColors.onBackgroundDark.withOpacity(0.7)
-                                : AppColors.onBackground.withOpacity(0.7),
+                                ? AppColors.onBackgroundDark.withValues(alpha: 0.7)
+                                : AppColors.onBackground.withValues(alpha: 0.7),
                           ),
                       textAlign: TextAlign.center,
                     ),

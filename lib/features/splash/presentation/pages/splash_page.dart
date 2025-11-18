@@ -172,7 +172,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
                   end: Alignment.bottomCenter,
                   colors: [
                     AppColors.background,
-                    AppColors.primary.withOpacity(0.15),
+                    AppColors.primary.withValues(alpha: 0.15),
                   ],
                 ),
               ),

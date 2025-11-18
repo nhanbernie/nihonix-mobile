@@ -26,7 +26,7 @@ class WelcomeSlide3 extends StatelessWidget {
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: Colors.amber.withOpacity(0.1),
+                  color: Colors.amber.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -67,7 +67,7 @@ class WelcomeSlide3 extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  // color: AppColors.primary.withOpacity(0.05),
+                  // color: AppColors.primary.withValues(alpha: 0.05),
                   color: AppColors.primary.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(16),
                 ),

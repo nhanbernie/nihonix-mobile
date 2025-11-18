@@ -227,7 +227,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               child: ElevatedButton(
                 onPressed: isLoading ? null : _handleLogin,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary.withOpacity(0.8),
+                  backgroundColor: AppColors.primary.withValues(alpha: 0.8),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25),

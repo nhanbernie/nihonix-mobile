@@ -103,7 +103,7 @@ class _FeatureIcon extends StatelessWidget {
           width: 80,
           height: 80,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Icon(

@@ -199,7 +199,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
               child: ElevatedButton(
                 onPressed: isLoading ? null : _handleRegister,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary.withOpacity(0.8),
+                  backgroundColor: AppColors.primary.withValues(alpha: 0.8),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25),

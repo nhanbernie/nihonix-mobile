@@ -1,4 +1,4 @@
-import 'package:json_annotation/json_annotation.dart';
+// import 'package:json_annotation/json_annotation.dart';
 import '../../../../../core/network/converters/api_response_converter.dart';
 import '../../models/topic_model.dart';
 

@@ -77,7 +77,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   end: Alignment.bottomCenter,
                   colors: [
                     AppColors.background,
-                    AppColors.primary.withOpacity(0.03),
+                    AppColors.primary.withValues(alpha: 0.03),
                   ],
                 ),
               ),
@@ -194,7 +194,7 @@ class _DecorativeCurvesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppColors.primary.withOpacity(0.08) // Ultra light orange curves
+      ..color = AppColors.primary.withValues(alpha: 0.08) // Ultra light orange curves
       ..style = PaintingStyle.fill;
 
     // First curve (top)

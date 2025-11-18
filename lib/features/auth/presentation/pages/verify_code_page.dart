@@ -94,7 +94,7 @@ class _VerifyCodePageState extends ConsumerState<VerifyCodePage> {
                     : _handleVerifyCode,
                 isLoading: forgotPasswordState.isLoading,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary.withOpacity(0.8),
+                  backgroundColor: AppColors.primary.withValues(alpha: 0.8),
                 ),
                 child: const Text(
                   'Xác thực',
@@ -139,9 +139,9 @@ class _VerifyCodePageState extends ConsumerState<VerifyCodePage> {
                   margin: const EdgeInsets.only(top: AppSizes.s16),
                   padding: const EdgeInsets.all(AppSizes.s12),
                   decoration: BoxDecoration(
-                    color: AppColors.error.withOpacity(0.1),
+                    color: AppColors.error.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-                    border: Border.all(color: AppColors.error.withOpacity(0.3)),
+                    border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
                   ),
                   child: Text(
                     forgotPasswordState.error!,

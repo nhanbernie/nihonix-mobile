@@ -290,7 +290,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -348,7 +348,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -478,7 +478,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                                 levelName: level['name'] as String,
                                 levelColor: color,
                               ),
-                              maskColor: Colors.black.withOpacity(0.6),
+                              maskColor: Colors.black.withValues(alpha: 0.6),
                               alignment: Alignment.center,
                             );
                           }
@@ -506,7 +506,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   decoration: BoxDecoration(
-                    color: isSelected ? color.withOpacity(0.1) : Colors.white,
+                    color: isSelected ? color.withValues(alpha: 0.1) : Colors.white,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: isSelected ? color : Colors.grey.shade300,

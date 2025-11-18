@@ -44,13 +44,13 @@ class GrammarPatternGenerateCard extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             AppColors.primary,
-            AppColors.primary.withOpacity(0.8),
+            AppColors.primary.withValues(alpha: 0.8),
           ],
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
+            color: AppColors.primary.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -63,7 +63,7 @@ class GrammarPatternGenerateCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: const Icon(
@@ -92,7 +92,7 @@ class GrammarPatternGenerateCard extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               height: 1.5,
             ),
           ),
@@ -143,13 +143,13 @@ class GrammarPatternGenerateCard extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             AppColors.primary,
-            AppColors.primary.withOpacity(0.8),
+            AppColors.primary.withValues(alpha: 0.8),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.2),
+            color: AppColors.primary.withValues(alpha: 0.2),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -165,7 +165,7 @@ class GrammarPatternGenerateCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Icon(
@@ -193,7 +193,7 @@ class GrammarPatternGenerateCard extends StatelessWidget {
                       'Create grammar patterns',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                       ),
                     ),
                   ],

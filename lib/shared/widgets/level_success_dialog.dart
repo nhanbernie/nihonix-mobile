@@ -47,7 +47,7 @@ class LevelSuccessDialog extends StatelessWidget {
                     width: 120,
                     height: 120,
                     decoration: BoxDecoration(
-                      color: levelColor.withOpacity(0.1),
+                      color: levelColor.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -82,7 +82,7 @@ class LevelSuccessDialog extends StatelessWidget {
               gradient: LinearGradient(
                 colors: [
                   levelColor,
-                  levelColor.withOpacity(0.8),
+                  levelColor.withValues(alpha: 0.8),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -90,7 +90,7 @@ class LevelSuccessDialog extends StatelessWidget {
               borderRadius: BorderRadius.circular(14),
               boxShadow: [
                 BoxShadow(
-                  color: levelColor.withOpacity(0.3),
+                  color: levelColor.withValues(alpha: 0.3),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),

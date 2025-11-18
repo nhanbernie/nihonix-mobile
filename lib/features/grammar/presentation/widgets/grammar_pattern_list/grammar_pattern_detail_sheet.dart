@@ -73,7 +73,7 @@ class GrammarPatternDetailSheet extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
+                      color: AppColors.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
@@ -209,7 +209,7 @@ class GrammarPatternDetailSheet extends StatelessWidget {
                               vertical: 5,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.primary.withOpacity(0.1),
+                              color: AppColors.primary.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
@@ -269,7 +269,7 @@ class GrammarPatternDetailSheet extends StatelessWidget {
               explanation,
               style: TextStyle(
                 fontSize: 16,
-                color: isDark ? Colors.white.withOpacity(0.87) : Colors.black87,
+                color: isDark ? Colors.white.withValues(alpha: 0.87) : Colors.black87,
                 height: 1.4,
               ),
             ),

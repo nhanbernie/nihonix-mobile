@@ -121,7 +121,7 @@ class _CardLoadingWidgetState extends State<CardLoadingWidget>
             width: widget.width ?? double.infinity,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppSizes.cardRadius),
-              color: AppColors.greyLight.withOpacity(_animation.value),
+              color: AppColors.greyLight.withValues(alpha: _animation.value),
             ),
           );
         },

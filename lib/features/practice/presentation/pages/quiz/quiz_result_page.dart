@@ -107,13 +107,13 @@ class QuizResultPage extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     accentColor,
-                    accentColor.withOpacity(0.8),
+                    accentColor.withValues(alpha: 0.8),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: accentColor.withOpacity(0.3),
+                    color: accentColor.withValues(alpha: 0.3),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -126,7 +126,7 @@ class QuizResultPage extends StatelessWidget {
                     width: 120,
                     height: 120,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                     child: Center(
@@ -223,7 +223,7 @@ class _StatChip extends StatelessWidget {
         vertical: AppSizes.s8,
       ),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
+        color: Colors.white.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -269,13 +269,13 @@ class _QuestionResultCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isCorrect
-              ? Colors.green.withOpacity(0.3)
-              : Colors.red.withOpacity(0.3),
+              ? Colors.green.withValues(alpha: 0.3)
+              : Colors.red.withValues(alpha: 0.3),
           width: 2,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -316,8 +316,8 @@ class _QuestionResultCard extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: isCorrect
-                      ? Colors.green.withOpacity(0.1)
-                      : Colors.red.withOpacity(0.1),
+                      ? Colors.green.withValues(alpha: 0.1)
+                      : Colors.red.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -350,10 +350,10 @@ class _QuestionResultCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(AppSizes.s12),
               decoration: BoxDecoration(
-                color: Colors.amber.withOpacity(0.1),
+                color: Colors.amber.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: Colors.amber.withOpacity(0.3),
+                  color: Colors.amber.withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
@@ -385,7 +385,7 @@ class _QuestionResultCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(AppSizes.s12),
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
+                color: Colors.blue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -435,10 +435,10 @@ class _QuestionResultCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(AppSizes.s12),
               decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.1),
+                color: Colors.grey.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: Colors.grey.withOpacity(0.3),
+                  color: Colors.grey.withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
@@ -484,10 +484,10 @@ class _QuestionResultCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(AppSizes.s16),
               decoration: BoxDecoration(
-                color: accentColor.withOpacity(0.1),
+                color: accentColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: accentColor.withOpacity(0.3),
+                  color: accentColor.withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
@@ -572,13 +572,13 @@ class _AnswerOption extends StatelessWidget {
       padding: const EdgeInsets.all(AppSizes.s12),
       decoration: BoxDecoration(
         color: isCorrect
-            ? Colors.green.withOpacity(0.1)
-            : Colors.red.withOpacity(0.1),
+            ? Colors.green.withValues(alpha: 0.1)
+            : Colors.red.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isCorrect
-              ? Colors.green.withOpacity(0.3)
-              : Colors.red.withOpacity(0.3),
+              ? Colors.green.withValues(alpha: 0.3)
+              : Colors.red.withValues(alpha: 0.3),
           width: 1,
         ),
       ),

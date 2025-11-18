@@ -103,7 +103,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
                     forgotPasswordState.isLoading ? null : _handleSendCode,
                 isLoading: forgotPasswordState.isLoading,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary.withOpacity(0.8),
+                  backgroundColor: AppColors.primary.withValues(alpha: 0.8),
                 ),
                 child: Text(
                   forgotPasswordState.isCodeSent
@@ -136,9 +136,9 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
                   margin: const EdgeInsets.only(top: AppSizes.s16),
                   padding: const EdgeInsets.all(AppSizes.s12),
                   decoration: BoxDecoration(
-                    color: AppColors.error.withOpacity(0.1),
+                    color: AppColors.error.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-                    border: Border.all(color: AppColors.error.withOpacity(0.3)),
+                    border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
                   ),
                   child: Text(
                     forgotPasswordState.error!,
@@ -156,10 +156,10 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
                   margin: const EdgeInsets.only(top: AppSizes.s16),
                   padding: const EdgeInsets.all(AppSizes.s12),
                   decoration: BoxDecoration(
-                    color: AppColors.success.withOpacity(0.1),
+                    color: AppColors.success.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
                     border:
-                        Border.all(color: AppColors.success.withOpacity(0.3)),
+                        Border.all(color: AppColors.success.withValues(alpha: 0.3)),
                   ),
                 ),
             ],

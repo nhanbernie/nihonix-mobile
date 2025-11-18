@@ -1,53 +1,52 @@
-flutter analyze lib/core/network/ --no-fatal-infos
-flutter clean
-flutter get
-flutter analyze => lệnh này để check lỗi như npm run build vậy
-flutter analyze --no-fatal-infos => không cần biết mấy info
-flutter test
-flutter build apk
-flutter build apk --debug
-flutter pub run build_runner build --delete-conflicting-outputs
-dart run build_runner build --delete-conflicting-outputs
-=> code gen
+# Flutter Command Reference
 
-flutter build apk --release --split-per-abi lệnh build apk
+## Analyze & Test
+- `flutter analyze` → tương tự `npm run build` để bắt lỗi chung
+- `flutter analyze --no-fatal-infos` → bỏ qua warning thông tin
+- `flutter analyze lib/core/network/ --no-fatal-infos` → giới hạn thư mục network
+- `flutter analyze lib/shared/layouts/auth_layout.dart` → kiểm tra file cụ thể
+- `flutter test`
 
-flutter analyze lib/shared/layouts/auth_layout.dart => check cụ thể
+## Dependency & Cleanup
+- `flutter clean`
+- `flutter get`
+- `cd android; .\gradlew --stop; cd -`
 
+## Build & Release
+- `flutter build apk`
+- `flutter build apk --debug`
+- `flutter build apk --release --split-per-abi`
 
-do dùng cái này nên mình build trước cho thư viện này freezed
-dart run build_runner build --delete-conflicting-outputs
+## Code Generation
+- `dart run build_runner build --delete-conflicting-outputs`
+- `flutter pub run build_runner build --delete-conflicting-outputs`
+- Ghi chú: cần chạy trước khi dùng thư viện `freezed`.
 
-copy vào setting.json để không hiện file gen khỏi bị rối
+## Runtime Env Overrides
+```sh
+flutter run \
+  --dart-define=API_URL=https://api.dev.com \
+  --dart-define=SENTRY_DSN=abcd1234
+```
+
+## IDE Noise Reduction
+Thêm vào `settings.json` để ẩn file sinh tự động:
+```jsonc
 "files.exclude": {
-"**/\*.g.dart": true,
-"**/_.freezed.dart": true
+  "**/*.g.dart": true,
+  "**/*.freezed.dart": true
 },
 "search.exclude": {
-"\*\*/_.g.dart": true,
-"\*_/_.freezed.dart": true,
-},
-cd android; .\gradlew --stop; cd 
-<!-- cho cursor -->
+  "**/*.g.dart": true,
+  "**/*.freezed.dart": true
+}
+```
 
-    "files.exclude": {
-      "**/*.g.dart": true,
-      "**/*.freezed.dart": true
-    },
-    "search.exclude": {
-      "**/*.g.dart": true,
-      "**/*.freezed.dart": true
-    }
+## Assets & Icons
+- `dart run flutter_launcher_icons:main`
+- `flutter pub run flutter_launcher_icons` → reload icon cho toàn app
+- `flutter pub run flutter_native_splash:create` → cấu hình splash
 
-dart run flutter_launcher_icons:main
-flutter pub run flutter_launcher_icons
-dùng lệnh này để load lại icon cho cả app
-
-
-flutter pub run flutter_native_splash:create
-dùng lệnh này để config vào splash
-
-
-flutter run -d emulator-5554 --verbose *>&1 | Tee-Object -FilePath .\run.log
-lệnh để check engine của flutter (hiện tại đang dùng emulator thay vì skia như trước khoản 2024)
-lệnh đầu để check all lỗi từng cái nhỏ nhất (may be)
+## Logging & Engine Check
+- `flutter run -d emulator-5554 --verbose *>&1 | Tee-Object -FilePath .\run.log`
+  - Dùng để log chi tiết và kiểm tra engine (hiện emulator thay vì Skia ~2024)

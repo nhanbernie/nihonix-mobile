@@ -11,7 +11,6 @@ import '../models/reset_password_request.dart';
 
 part 'auth_api.g.dart';
 
-/// Retrofit sẽ auto generate implementation class _AuthApi.
 @RestApi()
 abstract class AuthApi {
   factory AuthApi(Dio dio, {String? baseUrl}) = _AuthApi;

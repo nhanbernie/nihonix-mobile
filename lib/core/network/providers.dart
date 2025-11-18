@@ -14,15 +14,7 @@ final networkInfoProvider = Provider<ConnectivityNetworkInfo>((ref) {
   return ConnectivityNetworkInfo();
 });
 
-/// Provider cho ApiClient
-///
-/// Sử dụng:
-/// ```dart
-/// final apiClient = ref.read(apiClientProvider);
-/// final response = await apiClient.dio.get('/users/me');
-/// ```
 final apiClientProvider = Provider<ApiClient>((ref) {
-  // Sử dụng EnvConfig để lấy API URL từ .env file
   final baseUrl = EnvConfig.apiBaseUrl;
 
   return ApiClient(

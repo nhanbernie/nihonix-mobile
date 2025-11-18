@@ -1,7 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Environment Configuration
-/// Dùng để lấy các giá trị từ .env file
 class EnvConfig {
   static String get apiBaseUrl {
     final envUrl = dotenv.env['API_BASE_URL'];
@@ -9,13 +8,12 @@ class EnvConfig {
       return envUrl;
     }
 
-    // Fallback nếu không có ENV
-    return 'https://api.example.com';
+    return 'https://nihonix-server.onrender.com/api';
   }
 
   static int get apiTimeout =>
       int.tryParse(dotenv.env['API_TIMEOUT'] ?? '60000') ??
-      60000; // Tăng lên 60 giây
+      60000; 
 
   static String get appEnv => dotenv.env['APP_ENV'] ?? 'development';
 

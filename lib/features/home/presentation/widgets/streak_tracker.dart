@@ -131,12 +131,13 @@ class StreakTracker extends StatelessWidget {
                 ),
           ),
           const SizedBox(height: AppSizes.s12),
-          
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(7, (index) {
               final days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-              final isCompleted = index < weekProgress.length && weekProgress[index];
+              final isCompleted =
+                  index < weekProgress.length && weekProgress[index];
               final isToday = index == 3; // Example: Thursday is today
 
               return _DayCircle(
@@ -263,9 +264,7 @@ class _DayCircle extends StatelessWidget {
           width: 36,
           height: 36,
           decoration: BoxDecoration(
-            color: isCompleted
-                ? AppColors.primary
-                : neuBgColor,
+            color: isCompleted ? AppColors.primary : neuBgColor,
             shape: BoxShape.circle,
             border: isToday
                 ? Border.all(

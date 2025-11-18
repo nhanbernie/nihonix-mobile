@@ -25,7 +25,9 @@ class GrammarPatternEmptyState extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(40),
               decoration: BoxDecoration(
-                color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05),
+                color: isDark
+                    ? Colors.white.withOpacity(0.05)
+                    : Colors.black.withOpacity(0.05),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -68,4 +70,3 @@ class GrammarPatternEmptyState extends StatelessWidget {
     );
   }
 }
-

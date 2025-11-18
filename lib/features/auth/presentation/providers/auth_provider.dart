@@ -171,12 +171,14 @@ class AuthNotifier extends Notifier<AuthState> {
   /// Used after profile update to sync auth state
   /// IMPORTANT: Only updates user field, keeps isAuthenticated and token intact
   void updateUser(User updatedUser) {
-    print('🔵 BEFORE updateUser: isAuth=${state.isAuthenticated}, token=${state.accessToken?.substring(0, 20)}..., user=${state.user?.name}');
+    print(
+        '🔵 BEFORE updateUser: isAuth=${state.isAuthenticated}, token=${state.accessToken?.substring(0, 20)}..., user=${state.user?.name}');
     state = state.copyWith(
       user: updatedUser,
       // Explicitly keep isAuthenticated and accessToken from current state
     );
-    print('🟢 AFTER updateUser: isAuth=${state.isAuthenticated}, token=${state.accessToken?.substring(0, 20)}..., user=${state.user?.name}');
+    print(
+        '🟢 AFTER updateUser: isAuth=${state.isAuthenticated}, token=${state.accessToken?.substring(0, 20)}..., user=${state.user?.name}');
   }
 
   String _mapErrorToMessage(Object error) {

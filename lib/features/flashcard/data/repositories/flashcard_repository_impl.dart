@@ -125,7 +125,7 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
         setName: setName,
         cards: cards,
       );
-      
+
       // Return setId for further use
       return response.data.setId;
     } catch (e) {
@@ -153,7 +153,7 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
         count: count,
         customPrompt: customPrompt,
       );
-      
+
       // Return setId for further use
       return response.data.setId;
     } catch (e) {
@@ -173,7 +173,7 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
         setName: setName,
         cards: cards,
       );
-      
+
       // Return setId
       return response.data.setId;
     } catch (e) {

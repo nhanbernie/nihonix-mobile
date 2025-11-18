@@ -131,4 +131,3 @@ class MilestoneCard extends StatelessWidget {
     );
   }
 }
-

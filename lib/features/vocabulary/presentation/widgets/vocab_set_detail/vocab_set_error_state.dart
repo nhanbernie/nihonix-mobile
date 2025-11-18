@@ -60,4 +60,3 @@ class VocabSetErrorState extends ConsumerWidget {
     );
   }
 }
-

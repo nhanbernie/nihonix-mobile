@@ -8,19 +8,19 @@ part 'generate_flashcard_request.g.dart';
 class GenerateFlashcardRequest {
   @JsonKey(name: 'folder_id')
   final String folderId;
-  
+
   @JsonKey(name: 'set_name')
   final String setName;
-  
+
   @JsonKey(name: 'level_code')
   final String levelCode;
-  
+
   final String difficulty;
-  
+
   final String topic;
-  
+
   final int count;
-  
+
   @JsonKey(name: 'custom_prompt')
   final String? customPrompt;
 

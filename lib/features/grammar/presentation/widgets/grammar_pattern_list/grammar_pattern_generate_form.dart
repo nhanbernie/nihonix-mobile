@@ -55,7 +55,8 @@ class _GrammarPatternGenerateFormState
     // Save references BEFORE popping dialog
     final navigator = Navigator.of(context);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
-    final customPrompt = promptController.text.isEmpty ? null : promptController.text;
+    final customPrompt =
+        promptController.text.isEmpty ? null : promptController.text;
 
     // Save provider notifiers
     final generateNotifier = ref.read(grammarGenerateProvider.notifier);
@@ -174,4 +175,3 @@ class _GrammarPatternGenerateFormState
     );
   }
 }
-

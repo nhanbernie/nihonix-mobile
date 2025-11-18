@@ -136,7 +136,8 @@ class AuthRemoteDataSource implements IAuthRefreshService {
 
       // response is now typed as RefreshResponse (see model)
       if (response.accessToken.isEmpty || response.refreshToken.isEmpty) {
-        throw UnauthorizedException(message: 'Invalid refresh response: missing tokens');
+        throw UnauthorizedException(
+            message: 'Invalid refresh response: missing tokens');
       }
 
       return (

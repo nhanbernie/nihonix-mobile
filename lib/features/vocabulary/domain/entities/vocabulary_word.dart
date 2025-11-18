@@ -18,4 +18,3 @@ class VocabularyWord {
     this.isMastered = false,
   });
 }
-

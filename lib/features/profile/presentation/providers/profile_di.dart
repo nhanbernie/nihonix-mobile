@@ -8,7 +8,8 @@ import '../../domain/repositories/profile_repository.dart';
 import '../../domain/usecases/update_profile.dart';
 
 /// Provider for ProfileRemoteDataSource
-final profileRemoteDataSourceProvider = Provider<ProfileRemoteDataSource>((ref) {
+final profileRemoteDataSourceProvider =
+    Provider<ProfileRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return ProfileRemoteDataSource.fromDio(apiClient.dio);
 });
@@ -24,4 +25,3 @@ final updateProfileUseCaseProvider = Provider<UpdateProfileUseCase>((ref) {
   final repository = ref.watch(profileRepositoryProvider);
   return UpdateProfileUseCase(repository);
 });
-

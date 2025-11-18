@@ -74,18 +74,18 @@ class _CardFormPageState extends ConsumerState<CardFormPage> {
 
   Future<void> _loadExistingData() async {
     setState(() => _isLoading = true);
-    
+
     try {
       // Get cards data
       final cardsAsync = ref.read(setCardsProvider(widget.setId!));
-      
+
       await cardsAsync.when(
         data: (cards) async {
           if (cards.isNotEmpty) {
             // Set title from first card's setName (if available)
             // Note: You might need to get set name from another API
             // For now, we'll leave it empty or get from route params
-            
+
             // Load all cards
             setState(() {
               _cards.clear();
@@ -158,7 +158,7 @@ class _CardFormPageState extends ConsumerState<CardFormPage> {
         final cards = _cards.asMap().entries.map((entry) {
           final index = entry.key;
           final card = entry.value;
-          
+
           return UpdateFlashcardCardRequest(
             id: card.id, // null = create new, not null = update existing
             front: CardContentModel(
@@ -199,7 +199,7 @@ class _CardFormPageState extends ConsumerState<CardFormPage> {
         final cards = _cards.asMap().entries.map((entry) {
           final index = entry.key;
           final card = entry.value;
-          
+
           return CardRequest(
             front: CardContentRequest(
               text: card.termController.text.trim(),
@@ -238,7 +238,9 @@ class _CardFormPageState extends ConsumerState<CardFormPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(_isEditing ? 'Lỗi khi cập nhật bộ thẻ: $e' : 'Lỗi khi tạo bộ thẻ: $e'),
+            content: Text(_isEditing
+                ? 'Lỗi khi cập nhật bộ thẻ: $e'
+                : 'Lỗi khi tạo bộ thẻ: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -375,9 +377,9 @@ class _CardFormPageState extends ConsumerState<CardFormPage> {
                     ),
                     const SizedBox(height: AppSizes.s4),
                     Divider(color: AppColors.primary, thickness: 2),
-                    
+
                     const SizedBox(height: AppSizes.s16),
-                    
+
                     // Description (Optional)
                     GestureDetector(
                       onTap: () {
@@ -403,7 +405,8 @@ class _CardFormPageState extends ConsumerState<CardFormPage> {
                 child: ListView.separated(
                   padding: const EdgeInsets.all(AppSizes.s16),
                   itemCount: _cards.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: AppSizes.s16),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: AppSizes.s16),
                   itemBuilder: (context, index) => _buildCardItem(index),
                 ),
               ),
@@ -464,7 +467,8 @@ class _CardFormPageState extends ConsumerState<CardFormPage> {
               const Spacer(),
               if (_cards.length > 1)
                 IconButton(
-                  icon: Icon(Icons.delete_outline, color: Colors.grey.shade400, size: 20),
+                  icon: Icon(Icons.delete_outline,
+                      color: Colors.grey.shade400, size: 20),
                   onPressed: () => _removeCard(index),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -516,10 +520,10 @@ class _CardFormPageState extends ConsumerState<CardFormPage> {
           ),
 
           const SizedBox(height: AppSizes.s12),
-          
+
           // Divider
           Divider(height: 1, color: Colors.grey.shade300),
-          
+
           const SizedBox(height: AppSizes.s12),
 
           // DEFINITION Field
@@ -567,4 +571,3 @@ class _CardFormPageState extends ConsumerState<CardFormPage> {
     );
   }
 }
-

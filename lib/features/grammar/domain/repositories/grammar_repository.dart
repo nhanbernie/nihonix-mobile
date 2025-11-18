@@ -9,4 +9,3 @@ abstract class GrammarRepository {
 
   Future<List<GrammarPattern>> getGrammarPatterns(String grammarSubTopicSlug);
 }
-

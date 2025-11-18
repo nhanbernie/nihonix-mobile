@@ -28,4 +28,3 @@ class VocabGenerateResult {
     return setTitle[lang] ?? setTitle['en'] ?? setTitle.values.first;
   }
 }
-

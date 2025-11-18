@@ -41,7 +41,8 @@ class GrammarRemoteDataSource {
     }
   }
 
-  Future<List<GrammarPattern>> getGrammarPatterns(String grammarSubTopicSlug) async {
+  Future<List<GrammarPattern>> getGrammarPatterns(
+      String grammarSubTopicSlug) async {
     try {
       final response = await _api.getGrammarPatterns(
         grammarSubTopicSlug: grammarSubTopicSlug,
@@ -57,7 +58,7 @@ class GrammarRemoteDataSource {
       // Map API response to GrammarPattern
       return data.map((item) {
         final json = item as Map<String, dynamic>;
-        
+
         // Parse usage examples
         final examplesList = json['usage_examples'] as List<dynamic>? ?? [];
         final examples = examplesList.map((ex) {
@@ -77,11 +78,14 @@ class GrammarRemoteDataSource {
           levelCode: json['level_code'] as String? ?? '',
           patternJp: json['pattern_jp'] as String? ?? '',
           patternRomaji: json['pattern_romaji'] as String? ?? '',
-          explanation: Map<String, String>.from(json['explanation'] as Map? ?? {}),
+          explanation:
+              Map<String, String>.from(json['explanation'] as Map? ?? {}),
           usageExamples: examples,
-          conjugationRules: Map<String, dynamic>.from(json['conjugation_rules'] as Map? ?? {}),
+          conjugationRules: Map<String, dynamic>.from(
+              json['conjugation_rules'] as Map? ?? {}),
           levelDifficulty: json['level_difficulty'] as String? ?? '',
-          grammarPoints: List<String>.from(json['grammar_points'] as List? ?? []),
+          grammarPoints:
+              List<String>.from(json['grammar_points'] as List? ?? []),
           order: json['order'] as int? ?? 0,
         );
       }).toList();
@@ -90,4 +94,3 @@ class GrammarRemoteDataSource {
     }
   }
 }
-

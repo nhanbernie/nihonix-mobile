@@ -51,4 +51,3 @@ class VocabSetTopic {
     required this.order,
   });
 }
-

@@ -16,7 +16,8 @@ import '../../domain/usecases/generate_flashcard.dart';
 import '../../domain/usecases/update_flashcard.dart';
 
 /// Provider for FlashcardRemoteDataSource
-final flashcardRemoteDataSourceProvider = Provider<FlashcardRemoteDataSource>((ref) {
+final flashcardRemoteDataSourceProvider =
+    Provider<FlashcardRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return FlashcardRemoteDataSource.fromDio(apiClient.dio);
 });
@@ -28,7 +29,8 @@ final flashcardRepositoryProvider = Provider<FlashcardRepository>((ref) {
 });
 
 /// Provider for CreateFlashcardFolderUseCase
-final createFlashcardFolderUseCaseProvider = Provider<CreateFlashcardFolderUseCase>((ref) {
+final createFlashcardFolderUseCaseProvider =
+    Provider<CreateFlashcardFolderUseCase>((ref) {
   final repository = ref.watch(flashcardRepositoryProvider);
   return CreateFlashcardFolderUseCase(repository);
 });
@@ -70,7 +72,8 @@ final deleteFolderUseCaseProvider = Provider<DeleteFolderUseCase>((ref) {
 });
 
 /// Provider for DeleteFlashcardSetUseCase
-final deleteFlashcardSetUseCaseProvider = Provider<DeleteFlashcardSetUseCase>((ref) {
+final deleteFlashcardSetUseCaseProvider =
+    Provider<DeleteFlashcardSetUseCase>((ref) {
   final repository = ref.watch(flashcardRepositoryProvider);
   return DeleteFlashcardSetUseCase(repository);
 });
@@ -82,7 +85,8 @@ final createFlashcardUseCaseProvider = Provider<CreateFlashcardUseCase>((ref) {
 });
 
 /// Provider for GenerateFlashcardUseCase
-final generateFlashcardUseCaseProvider = Provider<GenerateFlashcardUseCase>((ref) {
+final generateFlashcardUseCaseProvider =
+    Provider<GenerateFlashcardUseCase>((ref) {
   final repository = ref.watch(flashcardRepositoryProvider);
   return GenerateFlashcardUseCase(repository);
 });

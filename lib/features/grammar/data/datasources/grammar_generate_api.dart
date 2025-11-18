@@ -12,4 +12,3 @@ abstract class GrammarGenerateApi {
     @Body() required Map<String, dynamic> body,
   });
 }
-

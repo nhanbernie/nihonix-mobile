@@ -6,7 +6,7 @@ import '../../domain/entities/flashcard_folder.dart';
 part 'flashcard_folder_model.g.dart';
 
 /// Flashcard Folder Model (Data Layer)
-/// 
+///
 /// Data transfer object for API communication
 @JsonSerializable()
 class FlashcardFolderModel {
@@ -15,10 +15,10 @@ class FlashcardFolderModel {
   final String name;
   final String description;
   final int order;
-  
+
   @JsonKey(name: 'created_at')
   final String createdAt;
-  
+
   @JsonKey(name: 'updated_at')
   final String updatedAt;
 

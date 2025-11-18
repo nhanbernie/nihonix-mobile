@@ -157,4 +157,3 @@ class VocabNotifier extends Notifier<VocabState> {
 final vocabProvider = NotifierProvider<VocabNotifier, VocabState>(
   VocabNotifier.new,
 );
-

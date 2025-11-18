@@ -10,4 +10,3 @@ class GetGrammarPatternsUseCase {
     return await _repository.getGrammarPatterns(grammarSubTopicSlug);
   }
 }
-

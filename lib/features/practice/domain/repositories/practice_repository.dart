@@ -11,4 +11,3 @@ abstract class PracticeRepository {
     required int exerciseCount,
   });
 }
-

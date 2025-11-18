@@ -211,4 +211,3 @@ class GrammarPatternGenerateCard extends StatelessWidget {
     );
   }
 }
-

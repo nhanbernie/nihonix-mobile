@@ -13,20 +13,22 @@ final vocabGenerateApiProvider = Provider<VocabGenerateApi>((ref) {
 });
 
 // DataSource Provider
-final vocabGenerateRemoteDataSourceProvider = Provider<VocabGenerateRemoteDataSource>((ref) {
+final vocabGenerateRemoteDataSourceProvider =
+    Provider<VocabGenerateRemoteDataSource>((ref) {
   final api = ref.watch(vocabGenerateApiProvider);
   return VocabGenerateRemoteDataSource(api);
 });
 
 // Repository Provider
-final vocabGenerateRepositoryProvider = Provider<VocabGenerateRepository>((ref) {
+final vocabGenerateRepositoryProvider =
+    Provider<VocabGenerateRepository>((ref) {
   final dataSource = ref.watch(vocabGenerateRemoteDataSourceProvider);
   return VocabGenerateRepositoryImpl(dataSource);
 });
 
 // UseCase Provider
-final generateVocabularyItemsUseCaseProvider = Provider<GenerateVocabularyItemsUseCase>((ref) {
+final generateVocabularyItemsUseCaseProvider =
+    Provider<GenerateVocabularyItemsUseCase>((ref) {
   final repository = ref.watch(vocabGenerateRepositoryProvider);
   return GenerateVocabularyItemsUseCase(repository);
 });
-

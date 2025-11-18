@@ -18,4 +18,3 @@ abstract class GrammarApi {
     @Query('grammar_sub_topic_slug') required String grammarSubTopicSlug,
   });
 }
-

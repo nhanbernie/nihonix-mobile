@@ -27,7 +27,7 @@ class UpdateFlashcardUseCase {
     // Validate each card
     for (var i = 0; i < cards.length; i++) {
       final card = cards[i];
-      
+
       if (card.front.text.trim().isEmpty) {
         throw ArgumentError('Card ${i + 1}: Front text cannot be empty');
       }

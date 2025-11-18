@@ -27,8 +27,10 @@ class VocabSetDetailPage extends ConsumerWidget {
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
         statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
-        systemNavigationBarColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
-        systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        systemNavigationBarColor:
+            isDark ? const Color(0xFF1A1A1A) : Colors.white,
+        systemNavigationBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
       ),
       child: Scaffold(
         backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
@@ -43,7 +45,6 @@ class VocabSetDetailPage extends ConsumerWidget {
                     isDark: isDark,
                   ),
                 ),
-
                 VocabSetItemList(
                   items: vocabSet.items,
                   isDark: isDark,
@@ -64,4 +65,3 @@ class VocabSetDetailPage extends ConsumerWidget {
     );
   }
 }
-

@@ -44,8 +44,10 @@ class _GrammarListPageState extends ConsumerState<GrammarListPage> {
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.dark,
-        systemNavigationBarColor: isDark ? const Color(0xFF2A2A2A) : Colors.white,
-        systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        systemNavigationBarColor:
+            isDark ? const Color(0xFF2A2A2A) : Colors.white,
+        systemNavigationBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
       ),
       child: Scaffold(
         extendBodyBehindAppBar: true,
@@ -90,12 +92,12 @@ class _GrammarListPageState extends ConsumerState<GrammarListPage> {
               top: 0,
               left: 0,
               right: 0,
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.28,
-              decoration: const BoxDecoration(
-                color: AppColors.primary,
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.28,
+                decoration: const BoxDecoration(
+                  color: AppColors.primary,
+                ),
               ),
-            ),
             ),
 
             // Content
@@ -160,7 +162,8 @@ class _GrammarListPageState extends ConsumerState<GrammarListPage> {
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
-                                    color: isDark ? Colors.white : Colors.black87,
+                                    color:
+                                        isDark ? Colors.white : Colors.black87,
                                   ),
                                 ),
                               ),

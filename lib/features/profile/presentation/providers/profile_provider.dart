@@ -91,7 +91,7 @@ class ProfileNotifier extends Notifier<ProfileState> {
 
       if (currentUser != null) {
         final updatedUser = currentUser.copyWith(
-          avatar: avatarUrl, 
+          avatar: avatarUrl,
         );
 
         ref.read(authProvider.notifier).updateUser(updatedUser);
@@ -121,4 +121,3 @@ class ProfileNotifier extends Notifier<ProfileState> {
 final profileProvider = NotifierProvider<ProfileNotifier, ProfileState>(
   ProfileNotifier.new,
 );
-

@@ -6,7 +6,7 @@ part 'exercise_session.freezed.dart';
 @freezed
 sealed class ExerciseSession with _$ExerciseSession {
   const ExerciseSession._();
-  
+
   const factory ExerciseSession({
     required String sessionId,
     required String topicId,
@@ -19,4 +19,3 @@ sealed class ExerciseSession with _$ExerciseSession {
     required List<Exercise> exercises,
   }) = _ExerciseSession;
 }
-

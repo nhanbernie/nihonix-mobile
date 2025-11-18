@@ -27,4 +27,3 @@ final generateGrammarPatternsUseCaseProvider =
   return GenerateGrammarPatternsUseCase(
       ref.read(grammarGenerateRepositoryProvider));
 });
-

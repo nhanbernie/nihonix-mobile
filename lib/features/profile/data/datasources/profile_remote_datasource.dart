@@ -8,7 +8,7 @@ import '../models/update_profile_response.dart';
 import '../models/upload_avatar_response.dart';
 
 /// Remote DataSource for Profile
-/// 
+///
 /// Wrapper around ProfileApi to handle:
 /// - API calls
 /// - Response parsing

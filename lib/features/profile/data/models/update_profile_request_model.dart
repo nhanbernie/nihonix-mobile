@@ -42,4 +42,3 @@ sealed class UpdateProfileRequestModel with _$UpdateProfileRequestModel {
     );
   }
 }
-

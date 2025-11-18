@@ -72,4 +72,3 @@ class VocabEmptyState extends StatelessWidget {
     );
   }
 }
-

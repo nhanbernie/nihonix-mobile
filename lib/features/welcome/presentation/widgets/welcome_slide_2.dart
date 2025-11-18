@@ -36,45 +36,45 @@ class WelcomeSlide2 extends StatelessWidget {
 
               // Feature icons grid
               Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _FeatureIcon(
-                icon: Icons.mobile_friendly,
-                label: 'Mobile',
-                color: AppColors.primary,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _FeatureIcon(
+                    icon: Icons.mobile_friendly,
+                    label: 'Mobile',
+                    color: AppColors.primary,
+                  ),
+                  _FeatureIcon(
+                    icon: Icons.cloud_sync,
+                    label: 'Cloud Sync',
+                    color: AppColors.primary,
+                  ),
+                  _FeatureIcon(
+                    icon: Icons.offline_bolt,
+                    label: 'Offline',
+                    color: AppColors.primary,
+                  ),
+                ],
               ),
-              _FeatureIcon(
-                icon: Icons.cloud_sync,
-                label: 'Cloud Sync',
-                color: AppColors.primary,
+
+              const SizedBox(height: AppSizes.s48),
+
+              // Feature list
+              _FeatureItem(
+                icon: Icons.check_circle,
+                text: 'Learn at your own pace',
               ),
-              _FeatureIcon(
-                icon: Icons.offline_bolt,
-                label: 'Offline',
-                color: AppColors.primary,
+              const SizedBox(height: AppSizes.s16),
+              _FeatureItem(
+                icon: Icons.check_circle,
+                text: 'Offline mode available',
               ),
-            ],
-          ),
+              const SizedBox(height: AppSizes.s16),
+              _FeatureItem(
+                icon: Icons.check_circle,
+                text: 'Sync across all devices',
+              ),
 
-          const SizedBox(height: AppSizes.s48),
-
-          // Feature list
-          _FeatureItem(
-            icon: Icons.check_circle,
-            text: 'Learn at your own pace',
-          ),
-          const SizedBox(height: AppSizes.s16),
-          _FeatureItem(
-            icon: Icons.check_circle,
-            text: 'Offline mode available',
-          ),
-          const SizedBox(height: AppSizes.s16),
-          _FeatureItem(
-            icon: Icons.check_circle,
-            text: 'Sync across all devices',
-          ),
-
-          const SizedBox(height: AppSizes.s48),
+              const SizedBox(height: AppSizes.s48),
             ],
           ),
         ),
@@ -158,4 +158,3 @@ class _FeatureItem extends StatelessWidget {
     );
   }
 }
-

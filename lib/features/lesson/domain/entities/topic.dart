@@ -5,7 +5,7 @@ part 'topic.freezed.dart';
 @freezed
 sealed class Topic with _$Topic {
   const Topic._();
-  
+
   const factory Topic({
     required String id,
     required String slug,

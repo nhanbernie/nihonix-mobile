@@ -59,7 +59,7 @@ class VocabGenerateNotifier extends Notifier<VocabGenerateState> {
         result: result,
         clearError: true,
       );
-      
+
       return result; // Return result
     } catch (e) {
       state = state.copyWith(
@@ -67,7 +67,7 @@ class VocabGenerateNotifier extends Notifier<VocabGenerateState> {
         error: e.toString(),
         clearResult: true,
       );
-      
+
       return null; // Return null on error
     }
   }
@@ -77,7 +77,7 @@ class VocabGenerateNotifier extends Notifier<VocabGenerateState> {
   }
 }
 
-final vocabGenerateProvider = NotifierProvider<VocabGenerateNotifier, VocabGenerateState>(
+final vocabGenerateProvider =
+    NotifierProvider<VocabGenerateNotifier, VocabGenerateState>(
   VocabGenerateNotifier.new,
 );
-

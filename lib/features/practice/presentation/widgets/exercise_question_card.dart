@@ -28,7 +28,7 @@ class ExerciseQuestionCard extends StatefulWidget {
 
 class _ExerciseQuestionCardState extends State<ExerciseQuestionCard> {
   Color get _accentColor => widget.accentColor ?? AppColors.accent2;
-  
+
   String get _typeLabel {
     switch (widget.exercise.type) {
       case 'fill_blank':
@@ -39,7 +39,7 @@ class _ExerciseQuestionCardState extends State<ExerciseQuestionCard> {
         return 'Bài tập';
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -117,7 +117,7 @@ class _ExerciseQuestionCardState extends State<ExerciseQuestionCard> {
                   height: 1.5,
                 ),
               ),
-              
+
               if (widget.exercise.question.hint != null) ...[
                 const SizedBox(height: AppSizes.s12),
                 // Hint
@@ -202,7 +202,7 @@ class _ExerciseQuestionCardState extends State<ExerciseQuestionCard> {
 
         ...widget.exercise.options.map((option) {
           final isSelected = widget.selectedAnswerId == option.id;
-          
+
           return Padding(
             padding: const EdgeInsets.only(bottom: AppSizes.s12),
             child: _OptionButton(
@@ -241,14 +241,11 @@ class _OptionButton extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(AppSizes.s16),
           decoration: BoxDecoration(
-            color: isSelected 
-                ? accentColor.withValues(alpha: 0.1)
-                : Colors.white,
+            color:
+                isSelected ? accentColor.withValues(alpha: 0.1) : Colors.white,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: isSelected 
-                  ? accentColor
-                  : Colors.grey.shade300,
+              color: isSelected ? accentColor : Colors.grey.shade300,
               width: isSelected ? 2 : 1.5,
             ),
           ),
@@ -282,7 +279,8 @@ class _OptionButton extends StatelessWidget {
                   text,
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                    fontWeight:
+                        isSelected ? FontWeight.w600 : FontWeight.normal,
                     color: isSelected ? accentColor : Colors.grey.shade800,
                   ),
                 ),
@@ -294,4 +292,3 @@ class _OptionButton extends StatelessWidget {
     );
   }
 }
-

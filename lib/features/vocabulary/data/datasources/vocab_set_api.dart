@@ -17,4 +17,3 @@ abstract class VocabSetApi {
     @Path('id') String id,
   );
 }
-

@@ -29,12 +29,12 @@ class OnboardingRemoteDataSource {
     try {
       final response = await _api.updateUserLevel({'level_code': levelCode});
       print('✅ Update Level Response: ${response.data?.toJson()}'); // DEBUG
-      
+
       // Extract data from ApiResponse wrapper
       if (response.data == null) {
         throw Exception('API returned null data');
       }
-      
+
       return response.data!;
     } on DioException catch (e) {
       print('❌ Update Level Error: ${e.response?.data}'); // DEBUG

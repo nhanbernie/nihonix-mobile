@@ -30,4 +30,3 @@ final getGrammarPatternsUseCaseProvider =
     Provider<GetGrammarPatternsUseCase>((ref) {
   return GetGrammarPatternsUseCase(ref.read(grammarRepositoryProvider));
 });
-

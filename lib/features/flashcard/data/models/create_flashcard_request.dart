@@ -8,10 +8,10 @@ part 'create_flashcard_request.g.dart';
 class CreateFlashcardRequest {
   @JsonKey(name: 'folder_id')
   final String folderId;
-  
+
   @JsonKey(name: 'set_name')
   final String setName;
-  
+
   final List<CardRequest> cards;
 
   const CreateFlashcardRequest({

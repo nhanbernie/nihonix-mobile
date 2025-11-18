@@ -55,8 +55,9 @@ class _CreateVocabFormState extends ConsumerState<CreateVocabForm> {
     final navigator = Navigator.of(context);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final router = GoRouter.of(context);
-    final customPrompt = promptController.text.isEmpty ? null : promptController.text;
-    
+    final customPrompt =
+        promptController.text.isEmpty ? null : promptController.text;
+
     // Save provider notifiers
     final generateNotifier = ref.read(vocabGenerateProvider.notifier);
     final vocabNotifier = ref.read(vocabProvider.notifier);
@@ -179,4 +180,3 @@ class _CreateVocabFormState extends ConsumerState<CreateVocabForm> {
     );
   }
 }
-

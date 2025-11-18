@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -52,7 +51,8 @@ class AppBottomNavBar extends StatelessWidget {
           const SizedBox(width: 8),
           _buildNavItem(context, 2, Icons.style_rounded, AppStrings.flashcard),
           const SizedBox(width: 8),
-          _buildNavItem(context, 3, Icons.psychology_rounded, AppStrings.practice),
+          _buildNavItem(
+              context, 3, Icons.psychology_rounded, AppStrings.practice),
         ],
       ),
     );

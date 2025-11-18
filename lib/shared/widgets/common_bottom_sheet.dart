@@ -66,7 +66,7 @@ class _BottomSheetContainer extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // Custom content
             child,
           ],
@@ -102,7 +102,7 @@ class BottomSheetContent extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
         ),
-        
+
         // Subtitle (optional)
         if (subtitle != null) ...[
           const SizedBox(height: 8),
@@ -113,13 +113,12 @@ class BottomSheetContent extends StatelessWidget {
                 ),
           ),
         ],
-        
+
         const SizedBox(height: 24),
-        
+
         // Custom children
         ...children,
       ],
     );
   }
 }
-

@@ -59,9 +59,9 @@ class ApiClient {
         refreshPath: '/auth/refresh',
       ),
     );
-    
+
     dio.interceptors.add(authInterceptor);
-    
+
     // Set Dio instance sau khi thêm vào interceptors
     authInterceptor.setDio(dio);
 

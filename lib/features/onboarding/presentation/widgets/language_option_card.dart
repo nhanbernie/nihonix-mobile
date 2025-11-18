@@ -27,12 +27,10 @@ class LanguageOptionCard extends StatelessWidget {
     const neuBgColorDark = Color(0xFF2A2A2A);
     final neuBgColor = isDark ? neuBgColorDark : neuBgColorLight;
 
-    final neuDarkShadow = isDark
-        ? Colors.black.withOpacity(0.5)
-        : Colors.black.withOpacity(0.2);
-    final neuLightShadow = isDark
-        ? Colors.white.withOpacity(0.05)
-        : Colors.white.withOpacity(0.8);
+    final neuDarkShadow =
+        isDark ? Colors.black.withOpacity(0.5) : Colors.black.withOpacity(0.2);
+    final neuLightShadow =
+        isDark ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.8);
 
     return Material(
       color: Colors.transparent,
@@ -89,7 +87,7 @@ class LanguageOptionCard extends StatelessWidget {
                 style: const TextStyle(fontSize: 40),
               ),
               const SizedBox(width: AppSizes.s20),
-              
+
               // Language name
               Expanded(
                 child: Text(
@@ -104,7 +102,7 @@ class LanguageOptionCard extends StatelessWidget {
                       ),
                 ),
               ),
-              
+
               // Check icon if selected
               if (isSelected)
                 const Icon(
@@ -119,4 +117,3 @@ class LanguageOptionCard extends StatelessWidget {
     );
   }
 }
-

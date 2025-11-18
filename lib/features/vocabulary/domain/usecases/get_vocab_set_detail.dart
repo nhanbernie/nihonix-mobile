@@ -10,4 +10,3 @@ class GetVocabSetDetailUseCase {
     return await _repository.getVocabSetById(id);
   }
 }
-

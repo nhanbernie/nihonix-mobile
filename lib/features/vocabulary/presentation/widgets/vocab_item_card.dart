@@ -27,9 +27,7 @@ class VocabItemCard extends ConsumerWidget {
           color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isDark
-                ? const Color(0xFF3A3A3A)
-                : const Color(0xFFE8E8E8),
+            color: isDark ? const Color(0xFF3A3A3A) : const Color(0xFFE8E8E8),
             width: 1,
           ),
           boxShadow: [
@@ -131,4 +129,3 @@ class VocabItemCard extends ConsumerWidget {
     );
   }
 }
-

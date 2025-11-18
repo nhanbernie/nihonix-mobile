@@ -75,132 +75,133 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
           ),
           child: SafeArea(
             child: Padding(
-            padding: const EdgeInsets.only(
-              left: AppSizes.s24,
-              right: AppSizes.s24,
-              top: AppSizes.s32,
-              bottom: 80, // Space for floating button
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Logo & Title
-                const Icon(
-                  Icons.language,
-                  size: 80,
-                  color: AppColors.primary,
-                ),
-                const SizedBox(height: AppSizes.s24),
-                
-                Text(
-                  'Nihonix',
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
-                      ),
-                ),
-                const SizedBox(height: AppSizes.s8),
-                
-                Text(
-                  'Học tiếng Nhật hiệu quả',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: isDark
-                            ? AppColors.onBackgroundDark.withOpacity(0.7)
-                            : AppColors.onBackground.withOpacity(0.7),
-                      ),
-                ),
-                
-                const SizedBox(height: AppSizes.s48),
-                
-                // Subtitle
-                Text(
-                  'Chọn ngôn ngữ / Select Language',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: isDark
-                            ? AppColors.onBackgroundDark
-                            : AppColors.onBackground,
-                      ),
-                ),
-                
-                const SizedBox(height: AppSizes.s32),
-                
-                // Language Options
-                LanguageOptionCard(
-                  flag: '🇻🇳',
-                  languageName: 'Tiếng Việt',
-                  languageCode: 'vi',
-                  isSelected: _selectedLanguage == 'vi',
-                  onTap: () => _selectLanguage('vi'),
-                ),
-
-                const SizedBox(height: AppSizes.s16),
-
-                LanguageOptionCard(
-                  flag: '🇬🇧',
-                  languageName: 'English',
-                  languageCode: 'en',
-                  isSelected: _selectedLanguage == 'en',
-                  onTap: () => _selectLanguage('en'),
-                ),
-
-                const SizedBox(height: AppSizes.s16),
-
-                LanguageOptionCard(
-                  flag: '🇯🇵',
-                  languageName: '日本語',
-                  languageCode: 'ja',
-                  isSelected: _selectedLanguage == 'ja',
-                  onTap: () => _selectLanguage('ja'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      // Floating confirm button
-      floatingActionButton: _selectedLanguage != null && !_isLoading
-          ? Padding(
               padding: const EdgeInsets.only(
                 left: AppSizes.s24,
                 right: AppSizes.s24,
-                // bottom: AppSizes.s24, // Add bottom padding for system nav bar
+                top: AppSizes.s32,
+                bottom: 80, // Space for floating button
               ),
-              child: SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: FloatingActionButton.extended(
-                  onPressed: () => _handleLanguageSelection(_selectedLanguage!),
-                  backgroundColor: AppColors.primary,
-                  elevation: 8,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(28),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Logo & Title
+                  const Icon(
+                    Icons.language,
+                    size: 80,
+                    color: AppColors.primary,
                   ),
-                  label: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Xác nhận',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                      const SizedBox(width: AppSizes.s8),
-                      const Icon(
-                        Icons.check_rounded,
-                        color: Colors.white,
-                        size: 24,
-                      ),
-                    ],
+                  const SizedBox(height: AppSizes.s24),
+
+                  Text(
+                    'Nihonix',
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary,
+                        ),
+                  ),
+                  const SizedBox(height: AppSizes.s8),
+
+                  Text(
+                    'Học tiếng Nhật hiệu quả',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: isDark
+                              ? AppColors.onBackgroundDark.withOpacity(0.7)
+                              : AppColors.onBackground.withOpacity(0.7),
+                        ),
+                  ),
+
+                  const SizedBox(height: AppSizes.s48),
+
+                  // Subtitle
+                  Text(
+                    'Chọn ngôn ngữ / Select Language',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: isDark
+                              ? AppColors.onBackgroundDark
+                              : AppColors.onBackground,
+                        ),
+                  ),
+
+                  const SizedBox(height: AppSizes.s32),
+
+                  // Language Options
+                  LanguageOptionCard(
+                    flag: '🇻🇳',
+                    languageName: 'Tiếng Việt',
+                    languageCode: 'vi',
+                    isSelected: _selectedLanguage == 'vi',
+                    onTap: () => _selectLanguage('vi'),
+                  ),
+
+                  const SizedBox(height: AppSizes.s16),
+
+                  LanguageOptionCard(
+                    flag: '🇬🇧',
+                    languageName: 'English',
+                    languageCode: 'en',
+                    isSelected: _selectedLanguage == 'en',
+                    onTap: () => _selectLanguage('en'),
+                  ),
+
+                  const SizedBox(height: AppSizes.s16),
+
+                  LanguageOptionCard(
+                    flag: '🇯🇵',
+                    languageName: '日本語',
+                    languageCode: 'ja',
+                    isSelected: _selectedLanguage == 'ja',
+                    onTap: () => _selectLanguage('ja'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        // Floating confirm button
+        floatingActionButton: _selectedLanguage != null && !_isLoading
+            ? Padding(
+                padding: const EdgeInsets.only(
+                  left: AppSizes.s24,
+                  right: AppSizes.s24,
+                  // bottom: AppSizes.s24, // Add bottom padding for system nav bar
+                ),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: FloatingActionButton.extended(
+                    onPressed: () =>
+                        _handleLanguageSelection(_selectedLanguage!),
+                    backgroundColor: AppColors.primary,
+                    elevation: 8,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28),
+                    ),
+                    label: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Xác nhận',
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                        const SizedBox(width: AppSizes.s8),
+                        const Icon(
+                          Icons.check_rounded,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            )
-          : null,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    ),
+              )
+            : null,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      ),
     );
   }
 }
-

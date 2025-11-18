@@ -104,7 +104,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
     try {
       // Get auth state after check
       final authState = ref.read(authProvider);
-      
+
       // Check preferences
       final prefs = WelcomePreferences();
       final isFirstTime = await prefs.isFirstTime();
@@ -121,7 +121,8 @@ class _SplashPageState extends ConsumerState<SplashPage>
         context.go(AppRoutes.languageSelection);
       } else if (authState.isAuthenticated && authState.user != null) {
         // Has token and user → Check if needs level selection
-        if (authState.user!.levelCode == null || authState.user!.levelCode!.isEmpty) {
+        if (authState.user!.levelCode == null ||
+            authState.user!.levelCode!.isEmpty) {
           context.go(AppRoutes.levelSelection);
         } else {
           context.go(AppRoutes.home);

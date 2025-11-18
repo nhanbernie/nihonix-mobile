@@ -13,7 +13,8 @@ class ExerciseCountBottomSheet extends StatefulWidget {
   });
 
   @override
-  State<ExerciseCountBottomSheet> createState() => _ExerciseCountBottomSheetState();
+  State<ExerciseCountBottomSheet> createState() =>
+      _ExerciseCountBottomSheetState();
 
   static Future<int?> show({
     required BuildContext context,
@@ -39,8 +40,8 @@ class _ExerciseCountBottomSheetState extends State<ExerciseCountBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final color = widget.exerciseType == 'fill_blank' 
-        ? AppColors.accent2 
+    final color = widget.exerciseType == 'fill_blank'
+        ? AppColors.accent2
         : AppColors.accent1;
 
     return Container(
@@ -252,9 +253,8 @@ class _CountOption extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: AppSizes.s16),
           decoration: BoxDecoration(
-            color: isSelected 
-                ? color.withValues(alpha: 0.1)
-                : Colors.transparent,
+            color:
+                isSelected ? color.withValues(alpha: 0.1) : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isSelected ? color : Colors.grey.shade300,
@@ -286,4 +286,3 @@ class _CountOption extends StatelessWidget {
     );
   }
 }
-

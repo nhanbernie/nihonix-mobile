@@ -56,4 +56,3 @@ Future<ExerciseSession> generateMultipleChoiceExercises(
     exerciseCount: exerciseCount,
   );
 }
-

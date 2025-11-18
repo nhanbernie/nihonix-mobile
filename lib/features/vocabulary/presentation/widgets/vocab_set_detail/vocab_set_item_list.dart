@@ -60,4 +60,3 @@ class VocabSetItemList extends StatelessWidget {
     );
   }
 }
-

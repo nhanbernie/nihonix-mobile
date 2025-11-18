@@ -51,11 +51,14 @@ class GrammarGenerateRemoteDataSource {
           levelCode: json['level_code'] as String? ?? '',
           patternJp: json['pattern_jp'] as String? ?? '',
           patternRomaji: json['pattern_romaji'] as String? ?? '',
-          explanation: Map<String, String>.from(json['explanation'] as Map? ?? {}),
+          explanation:
+              Map<String, String>.from(json['explanation'] as Map? ?? {}),
           usageExamples: examples,
-          conjugationRules: Map<String, dynamic>.from(json['conjugation_rules'] as Map? ?? {}),
+          conjugationRules: Map<String, dynamic>.from(
+              json['conjugation_rules'] as Map? ?? {}),
           levelDifficulty: json['level_difficulty'] as String? ?? '',
-          grammarPoints: List<String>.from(json['grammar_points'] as List? ?? []),
+          grammarPoints:
+              List<String>.from(json['grammar_points'] as List? ?? []),
           order: json['order'] as int? ?? 0,
         );
       }).toList();
@@ -71,4 +74,3 @@ class GrammarGenerateRemoteDataSource {
     }
   }
 }
-

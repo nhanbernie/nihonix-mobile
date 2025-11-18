@@ -9,7 +9,9 @@ class RefreshResponse {
 
   factory RefreshResponse.fromJson(Map<String, dynamic> json) {
     // Support wrapped response { data: { accessToken, refreshToken } } or direct payload
-    final data = json['data'] is Map<String, dynamic> ? json['data'] as Map<String, dynamic> : json;
+    final data = json['data'] is Map<String, dynamic>
+        ? json['data'] as Map<String, dynamic>
+        : json;
 
     final access = data['accessToken'] ?? data['access_token'];
     final refresh = data['refreshToken'] ?? data['refresh_token'];

@@ -61,4 +61,3 @@ class WelcomeSlide1 extends StatelessWidget {
     );
   }
 }
-

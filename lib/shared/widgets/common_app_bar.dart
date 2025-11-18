@@ -65,8 +65,8 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
                           borderRadius: BorderRadius.circular(20),
                           onTap: onActionPressed,
                           child: Center(
-                            child: Icon(actionIcon,
-                                color: Colors.black, size: 20),
+                            child:
+                                Icon(actionIcon, color: Colors.black, size: 20),
                           ),
                         ),
                       ),
@@ -79,4 +79,3 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 }
-

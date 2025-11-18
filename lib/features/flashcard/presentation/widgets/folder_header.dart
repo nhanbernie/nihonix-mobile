@@ -85,15 +85,15 @@ class _FolderHeaderState extends State<FolderHeader> {
             ),
           ),
           const SizedBox(height: AppSizes.s16),
-          
+
           // Folder Name (Editable or Static)
           _buildNameField(),
-          
+
           const SizedBox(height: AppSizes.s12),
 
           // Folder Description (Editable or Static)
           if (widget.isEditable) _buildDescriptionField(),
-          
+
           const SizedBox(height: AppSizes.s24),
         ],
       ),

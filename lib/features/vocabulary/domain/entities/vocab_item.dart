@@ -39,4 +39,3 @@ class VocabExample {
     required this.sentenceEn,
   });
 }
-

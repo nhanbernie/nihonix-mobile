@@ -11,4 +11,3 @@ Future<List<Topic>> topics(Ref ref, {String? levelCode}) async {
   final useCase = ref.read(getTopicsUseCaseProvider);
   return await useCase(levelCode: levelCode);
 }
-

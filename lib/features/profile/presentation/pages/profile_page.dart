@@ -40,30 +40,25 @@ class ProfilePage extends ConsumerWidget {
                 child: Column(
                   children: [
                     const SizedBox(height: AppSizes.s16),
-
                     ProfileActionButton(
                       icon: Icons.edit_outlined,
                       label: 'Sửa thông tin',
                       onTap: () => context.push(AppRoutes.profileEdit),
                     ),
-
                     const SizedBox(height: AppSizes.s12),
-
                     ProfileActionButton(
                       icon: Icons.dark_mode_outlined,
                       label: 'Chế độ tối',
-                      onTap: () => ref.read(themeProvider.notifier).toggleTheme(),
+                      onTap: () =>
+                          ref.read(themeProvider.notifier).toggleTheme(),
                     ),
-
                     const SizedBox(height: AppSizes.s12),
-
                     ProfileActionButton(
                       icon: Icons.logout,
                       label: 'Đăng xuất',
                       onTap: () => _handleLogout(context, ref),
                       isDestructive: true,
                     ),
-
                     const SizedBox(height: AppSizes.s24),
                   ],
                 ),

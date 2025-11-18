@@ -28,7 +28,7 @@ class _FlashcardPageState extends ConsumerState<FlashcardPage> {
   @override
   Widget build(BuildContext context) {
     final flashcardState = ref.watch(flashcardProvider);
-    
+
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
@@ -38,7 +38,7 @@ class _FlashcardPageState extends ConsumerState<FlashcardPage> {
         onActionPressed: () => _showCreateFolderDialog(context),
       ),
       body: ListView(
-        // const Box 
+        // const Box
 
         padding: EdgeInsets.only(
           top: MediaQuery.of(context).padding.top +
@@ -117,7 +117,8 @@ class _FlashcardPageState extends ConsumerState<FlashcardPage> {
                 padding: const EdgeInsets.all(AppSizes.s24),
                 child: Column(
                   children: [
-                    const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                    const Icon(Icons.error_outline,
+                        size: 48, color: Colors.red),
                     const SizedBox(height: AppSizes.s12),
                     Text(
                       'Lỗi: ${flashcardState.error}',
@@ -126,7 +127,8 @@ class _FlashcardPageState extends ConsumerState<FlashcardPage> {
                     ),
                     const SizedBox(height: AppSizes.s16),
                     FilledButton.icon(
-                      onPressed: () => ref.read(flashcardProvider.notifier).loadFolders(),
+                      onPressed: () =>
+                          ref.read(flashcardProvider.notifier).loadFolders(),
                       icon: const Icon(Icons.refresh),
                       label: const Text('Thử lại'),
                     ),
@@ -167,16 +169,16 @@ class _FlashcardPageState extends ConsumerState<FlashcardPage> {
           // Folder list
           else
             ...flashcardState.folders.map((folder) => Padding(
-              padding: const EdgeInsets.only(bottom: AppSizes.s12),
-              child: FolderCard(
-                folderName: folder.name,
-                onTap: () {
-                  context.push(
-                    '${AppRoutes.folderDetail}?folderId=${folder.id}&folderName=${Uri.encodeComponent(folder.name)}',
-                  );
-                },
-              ),
-            )),
+                  padding: const EdgeInsets.only(bottom: AppSizes.s12),
+                  child: FolderCard(
+                    folderName: folder.name,
+                    onTap: () {
+                      context.push(
+                        '${AppRoutes.folderDetail}?folderId=${folder.id}&folderName=${Uri.encodeComponent(folder.name)}',
+                      );
+                    },
+                  ),
+                )),
         ],
       ),
     );
@@ -233,11 +235,12 @@ class _FlashcardPageState extends ConsumerState<FlashcardPage> {
 
               // Call API to create folder
               final description = descriptionController.text.trim();
-              final success = await ref.read(flashcardProvider.notifier).createFolder(
-                name: name,
-                description: description.isEmpty ? null : description,
-                order: 1, // Backend requires order >= 1
-              );
+              final success =
+                  await ref.read(flashcardProvider.notifier).createFolder(
+                        name: name,
+                        description: description.isEmpty ? null : description,
+                        order: 1, // Backend requires order >= 1
+                      );
 
               if (context.mounted) {
                 if (success) {
@@ -248,7 +251,8 @@ class _FlashcardPageState extends ConsumerState<FlashcardPage> {
                     ),
                   );
                 } else {
-                  final error = ref.read(flashcardProvider).error ?? 'Có lỗi xảy ra';
+                  final error =
+                      ref.read(flashcardProvider).error ?? 'Có lỗi xảy ra';
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Lỗi: $error'),
@@ -265,4 +269,3 @@ class _FlashcardPageState extends ConsumerState<FlashcardPage> {
     );
   }
 }
-

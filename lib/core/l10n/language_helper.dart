@@ -72,4 +72,3 @@ class LanguageModel {
   @override
   String toString() => '$flag $nativeName';
 }
-

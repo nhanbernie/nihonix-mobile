@@ -101,8 +101,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-              'Đăng ký thành công! Vui lòng đăng nhập để tiếp tục'),
+          content: Text('Đăng ký thành công! Vui lòng đăng nhập để tiếp tục'),
           backgroundColor: Colors.green,
         ),
       );

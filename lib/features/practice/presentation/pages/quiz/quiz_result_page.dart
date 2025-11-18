@@ -26,7 +26,7 @@ class QuizResultPage extends StatelessWidget {
     for (int i = 0; i < session.exercises.length; i++) {
       final exercise = session.exercises[i];
       final selectedAnswerId = selectedAnswers[i];
-      
+
       // Assume correct answer is option with id: 1
       int? correctAnswerId;
       if (exercise.options.isNotEmpty) {
@@ -40,10 +40,10 @@ class QuizResultPage extends StatelessWidget {
           correctAnswerId = exercise.options.first.id;
         }
       }
-      
-      final isCorrect = selectedAnswerId != null && 
-                       correctAnswerId != null && 
-                       selectedAnswerId == correctAnswerId;
+
+      final isCorrect = selectedAnswerId != null &&
+          correctAnswerId != null &&
+          selectedAnswerId == correctAnswerId;
 
       if (isCorrect) {
         correctCount++;
@@ -61,7 +61,8 @@ class QuizResultPage extends StatelessWidget {
     }
 
     final totalQuestions = session.exercises.length;
-    final score = totalQuestions > 0 ? (correctCount / totalQuestions * 100).round() : 0;
+    final score =
+        totalQuestions > 0 ? (correctCount / totalQuestions * 100).round() : 0;
 
     return QuizResult(
       score: score,
@@ -477,7 +478,8 @@ class _QuestionResultCard extends StatelessWidget {
           ],
 
           // Explanation
-          if (exercise.explanation.vi != null || exercise.explanation.en != null) ...[
+          if (exercise.explanation.vi != null ||
+              exercise.explanation.en != null) ...[
             const SizedBox(height: AppSizes.s16),
             Container(
               padding: const EdgeInsets.all(AppSizes.s16),
@@ -520,7 +522,8 @@ class _QuestionResultCard extends StatelessWidget {
                         height: 1.5,
                       ),
                     ),
-                  if (exercise.explanation.en != null && exercise.explanation.vi == null) ...[
+                  if (exercise.explanation.en != null &&
+                      exercise.explanation.vi == null) ...[
                     const SizedBox(height: AppSizes.s8),
                     Text(
                       exercise.explanation.en!,
@@ -634,4 +637,3 @@ class QuestionResult {
     required this.isCorrect,
   });
 }
-

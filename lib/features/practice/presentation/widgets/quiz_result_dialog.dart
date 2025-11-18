@@ -28,7 +28,7 @@ class QuizResultDialog extends StatelessWidget {
     for (int i = 0; i < session.exercises.length; i++) {
       final exercise = session.exercises[i];
       final selectedAnswerId = selectedAnswers[i];
-      
+
       // Assume correct answer is option with id: 1
       int? correctAnswerId;
       if (exercise.options.isNotEmpty) {
@@ -42,10 +42,10 @@ class QuizResultDialog extends StatelessWidget {
           correctAnswerId = exercise.options.first.id;
         }
       }
-      
-      final isCorrect = selectedAnswerId != null && 
-                       correctAnswerId != null && 
-                       selectedAnswerId == correctAnswerId;
+
+      final isCorrect = selectedAnswerId != null &&
+          correctAnswerId != null &&
+          selectedAnswerId == correctAnswerId;
 
       if (isCorrect) {
         correctCount++;
@@ -63,7 +63,8 @@ class QuizResultDialog extends StatelessWidget {
     }
 
     final totalQuestions = session.exercises.length;
-    final score = totalQuestions > 0 ? (correctCount / totalQuestions * 100).round() : 0;
+    final score =
+        totalQuestions > 0 ? (correctCount / totalQuestions * 100).round() : 0;
 
     return QuizResult(
       score: score,
@@ -148,8 +149,8 @@ class QuizResultDialog extends StatelessWidget {
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            result.score >= 60 
-                                ? Icons.celebration_rounded 
+                            result.score >= 60
+                                ? Icons.celebration_rounded
                                 : Icons.emoji_events_rounded,
                             size: 100,
                             color: accentColor,
@@ -159,7 +160,7 @@ class QuizResultDialog extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: AppSizes.s24),
-                  
+
                   // Score Display
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -208,7 +209,7 @@ class QuizResultDialog extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: AppSizes.s20),
-                  
+
                   // Message
                   Text(
                     _getMessage(result.score),
@@ -250,7 +251,8 @@ class QuizResultDialog extends StatelessWidget {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: AppSizes.s16),
+                        padding:
+                            const EdgeInsets.symmetric(vertical: AppSizes.s16),
                         backgroundColor: accentColor,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
@@ -269,8 +271,10 @@ class QuizResultDialog extends StatelessWidget {
                         Navigator.of(context).pop();
                       },
                       style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: AppSizes.s16),
-                        foregroundColor: isDark ? Colors.white70 : Colors.black54,
+                        padding:
+                            const EdgeInsets.symmetric(vertical: AppSizes.s16),
+                        foregroundColor:
+                            isDark ? Colors.white70 : Colors.black54,
                       ),
                       child: const Text(
                         'Hoàn thành',

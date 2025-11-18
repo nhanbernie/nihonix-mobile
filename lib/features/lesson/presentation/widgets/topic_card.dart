@@ -89,4 +89,3 @@ class TopicCard extends StatelessWidget {
     );
   }
 }
-

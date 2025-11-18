@@ -19,16 +19,18 @@ class PracticeRemoteDataSource {
         'exercise_count': exerciseCount,
       });
 
-      if (response.response.statusCode == 200 || response.response.statusCode == 201) {
+      if (response.response.statusCode == 200 ||
+          response.response.statusCode == 201) {
         // API returns {success: true, data: {...}}
         // Extract the 'data' field from raw response
         final rawResponse = response.response.data;
-        
+
         // Debug: Check response structure
         print('Raw response type: ${rawResponse.runtimeType}');
         print('Raw response: $rawResponse');
-        
-        if (rawResponse is Map<String, dynamic> && rawResponse.containsKey('data')) {
+
+        if (rawResponse is Map<String, dynamic> &&
+            rawResponse.containsKey('data')) {
           final data = rawResponse['data'] as Map<String, dynamic>;
           print('Extracted data: $data');
           final model = ExerciseSessionModel.fromJson(data);
@@ -66,16 +68,18 @@ class PracticeRemoteDataSource {
         'exercise_count': exerciseCount,
       });
 
-      if (response.response.statusCode == 200 || response.response.statusCode == 201) {
+      if (response.response.statusCode == 200 ||
+          response.response.statusCode == 201) {
         // API returns {success: true, data: {...}}
         // Extract the 'data' field from raw response
         final rawResponse = response.response.data;
-        
+
         // Debug: Check response structure
         print('Raw response type: ${rawResponse.runtimeType}');
         print('Raw response: $rawResponse');
-        
-        if (rawResponse is Map<String, dynamic> && rawResponse.containsKey('data')) {
+
+        if (rawResponse is Map<String, dynamic> &&
+            rawResponse.containsKey('data')) {
           final data = rawResponse['data'] as Map<String, dynamic>;
           print('Extracted data: $data');
           final model = ExerciseSessionModel.fromJson(data);
@@ -102,4 +106,3 @@ class PracticeRemoteDataSource {
     }
   }
 }
-

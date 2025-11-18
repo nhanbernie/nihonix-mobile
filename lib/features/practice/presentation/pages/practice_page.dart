@@ -153,4 +153,3 @@ class PracticePage extends ConsumerWidget {
     );
   }
 }
-

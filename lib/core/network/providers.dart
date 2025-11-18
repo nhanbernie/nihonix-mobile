@@ -15,7 +15,7 @@ final networkInfoProvider = Provider<ConnectivityNetworkInfo>((ref) {
 });
 
 final apiClientProvider = Provider<ApiClient>((ref) {
-  final baseUrl = EnvConfig.apiBaseUrl;
+  final baseUrl = EnvConfig().apiBaseUrl;
 
   return ApiClient(
     baseUrl: baseUrl,

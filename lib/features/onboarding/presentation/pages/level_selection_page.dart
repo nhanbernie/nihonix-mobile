@@ -166,7 +166,7 @@ class _LevelSelectionPageState extends ConsumerState<LevelSelectionPage> {
               ],
             ),
           ),
-            child: Column(
+          child: Column(
             children: [
               // Header
               Padding(
@@ -181,12 +181,13 @@ class _LevelSelectionPageState extends ConsumerState<LevelSelectionPage> {
                     const SizedBox(height: AppSizes.s16),
                     Text(
                       'Trình độ tiếng Nhật của bạn?',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: isDark
-                                ? AppColors.onBackgroundDark
-                                : AppColors.onBackground,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: isDark
+                                    ? AppColors.onBackgroundDark
+                                    : AppColors.onBackground,
+                              ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: AppSizes.s8),
@@ -225,59 +226,58 @@ class _LevelSelectionPageState extends ConsumerState<LevelSelectionPage> {
                       color: level['color'],
                       isSelected: _selectedLevel == level['code'],
                       isLoading: _isLoading && _selectedLevel == level['code'],
-                      onTap: _isLoading
-                          ? null
-                          : () => _selectLevel(level['code']),
+                      onTap:
+                          _isLoading ? null : () => _selectLevel(level['code']),
                     );
                   },
                 ),
               ),
             ],
           ),
-      ),
-      // Floating confirm button
-      floatingActionButton: _selectedLevel != null && !_isLoading
-          ? Padding(
-              padding: const EdgeInsets.only(
-                left: AppSizes.s24,
-                right: AppSizes.s24,
-                bottom: AppSizes.s24,
-              ),
-              child: SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: FloatingActionButton.extended(
-                  onPressed: () => _handleLevelSelection(_selectedLevel!),
-                  backgroundColor: AppColors.primary,
-                  elevation: 8,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(28),
-                  ),
-                  label: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Xác nhận',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                      const SizedBox(width: AppSizes.s8),
-                      const Icon(
-                        Icons.check_rounded,
-                        color: Colors.white,
-                        size: 24,
-                      ),
-                    ],
+        ),
+        // Floating confirm button
+        floatingActionButton: _selectedLevel != null && !_isLoading
+            ? Padding(
+                padding: const EdgeInsets.only(
+                  left: AppSizes.s24,
+                  right: AppSizes.s24,
+                  bottom: AppSizes.s24,
+                ),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: FloatingActionButton.extended(
+                    onPressed: () => _handleLevelSelection(_selectedLevel!),
+                    backgroundColor: AppColors.primary,
+                    elevation: 8,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28),
+                    ),
+                    label: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Xác nhận',
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                        const SizedBox(width: AppSizes.s8),
+                        const Icon(
+                          Icons.check_rounded,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            )
-          : null,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    ),
+              )
+            : null,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      ),
     );
   }
 }
-

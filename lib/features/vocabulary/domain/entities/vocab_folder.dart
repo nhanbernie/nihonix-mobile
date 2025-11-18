@@ -20,6 +20,6 @@ class VocabFolder {
     this.isAiGenerated = false,
   });
 
-  String get displayWordCount => '$wordCount ${wordCount == 1 ? 'word' : 'words'}';
+  String get displayWordCount =>
+      '$wordCount ${wordCount == 1 ? 'word' : 'words'}';
 }
-

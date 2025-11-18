@@ -11,7 +11,7 @@ import 'package:nihonix/core/validation/models/password.dart';
 import 'package:nihonix/core/validation/validation_errors.dart';
 import 'package:nihonix/core/storage/username_storage.dart';
 import 'package:nihonix/shared/widgets/custom_input_field.dart';
-import 'package:nihonix/shared/layouts/auth_layout.dart'; 
+import 'package:nihonix/shared/layouts/auth_layout.dart';
 import '../widgets/remember_me_checkbox.dart';
 import '../widgets/social_login_buttons.dart';
 import '../providers/auth_provider.dart';

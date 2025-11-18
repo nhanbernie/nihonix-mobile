@@ -14,6 +14,6 @@ abstract class OnboardingApi {
 
   @PATCH('/users/me/level')
   @UserApiResponseConverter()
-  Future<ApiResponse<UserModel>> updateUserLevel(@Body() Map<String, String> body);
+  Future<ApiResponse<UserModel>> updateUserLevel(
+      @Body() Map<String, String> body);
 }
-

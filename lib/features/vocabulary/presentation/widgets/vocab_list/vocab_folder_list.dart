@@ -71,4 +71,3 @@ class VocabFolderList extends ConsumerWidget {
     );
   }
 }
-

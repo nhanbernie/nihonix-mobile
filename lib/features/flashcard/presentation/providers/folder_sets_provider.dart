@@ -17,7 +17,8 @@ sealed class FolderSetsState with _$FolderSetsState {
 /// Folder Sets Provider (Family - one instance per folder ID)
 /// Uses GetSetsInFolderUseCase following Clean Architecture
 /// Usage: ref.watch(folderSetsProvider('folderId'))
-final folderSetsProvider = FutureProvider.family<List<FlashcardSet>, String>((ref, folderId) async {
+final folderSetsProvider =
+    FutureProvider.family<List<FlashcardSet>, String>((ref, folderId) async {
   final useCase = ref.watch(getSetsInFolderUseCaseProvider);
   return await useCase(folderId);
 });

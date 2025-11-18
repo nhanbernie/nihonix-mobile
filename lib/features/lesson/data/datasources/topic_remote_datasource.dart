@@ -14,11 +14,11 @@ class TopicRemoteDataSource {
   Future<List<TopicModel>> getTopics({String? levelCode}) async {
     try {
       final response = await _api.getTopics(levelCode: levelCode);
-      
+
       if (response.data == null) {
         throw Exception('API returned null data');
       }
-      
+
       return response.data!;
     } on DioException catch (e) {
       throw Exception('Failed to fetch topics: ${e.message}');

@@ -94,11 +94,14 @@ class GrammarPatternDetailSheet extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (pattern.explanation['vi'] != null)
-                          _buildExplanationRow('🇻🇳', pattern.explanation['vi']!),
+                          _buildExplanationRow(
+                              '🇻🇳', pattern.explanation['vi']!),
                         if (pattern.explanation['en'] != null)
-                          _buildExplanationRow('🇬🇧', pattern.explanation['en']!),
+                          _buildExplanationRow(
+                              '🇬🇧', pattern.explanation['en']!),
                         if (pattern.explanation['jp'] != null)
-                          _buildExplanationRow('🇯🇵', pattern.explanation['jp']!),
+                          _buildExplanationRow(
+                              '🇯🇵', pattern.explanation['jp']!),
                       ],
                     ),
                   ),
@@ -128,7 +131,8 @@ class GrammarPatternDetailSheet extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
-                                    color: isDark ? Colors.white : Colors.black87,
+                                    color:
+                                        isDark ? Colors.white : Colors.black87,
                                     height: 1.5,
                                   ),
                                 ),
@@ -138,7 +142,9 @@ class GrammarPatternDetailSheet extends StatelessWidget {
                                   example.sentenceRomaji,
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: isDark ? Colors.white60 : Colors.black54,
+                                    color: isDark
+                                        ? Colors.white60
+                                        : Colors.black54,
                                     fontStyle: FontStyle.italic,
                                   ),
                                 ),
@@ -153,7 +159,9 @@ class GrammarPatternDetailSheet extends StatelessWidget {
                                         example.sentenceVi,
                                         style: TextStyle(
                                           fontSize: 14,
-                                          color: isDark ? Colors.white70 : Colors.black54,
+                                          color: isDark
+                                              ? Colors.white70
+                                              : Colors.black54,
                                         ),
                                       ),
                                     ),
@@ -170,7 +178,9 @@ class GrammarPatternDetailSheet extends StatelessWidget {
                                         example.sentenceEn,
                                         style: TextStyle(
                                           fontSize: 14,
-                                          color: isDark ? Colors.white70 : Colors.black54,
+                                          color: isDark
+                                              ? Colors.white70
+                                              : Colors.black54,
                                         ),
                                       ),
                                     ),
@@ -269,4 +279,3 @@ class GrammarPatternDetailSheet extends StatelessWidget {
     );
   }
 }
-

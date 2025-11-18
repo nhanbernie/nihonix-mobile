@@ -18,4 +18,3 @@ abstract class PracticeApi {
     @Body() Map<String, dynamic> body,
   );
 }
-

@@ -161,10 +161,11 @@ class QuizTopicSelectionPage extends ConsumerWidget {
                   itemCount: topics.length,
                   itemBuilder: (context, index) {
                     final topic = topics[index];
-                    
+
                     // Get icon - use Material icon from codePoint if available
                     IconData icon;
-                    if (topic.iconType == 'material' && topic.iconCode != null) {
+                    if (topic.iconType == 'material' &&
+                        topic.iconCode != null) {
                       icon = _createMaterialIcon(topic.iconCode!);
                     } else {
                       // Fallback icon
@@ -172,10 +173,10 @@ class QuizTopicSelectionPage extends ConsumerWidget {
                     }
 
                     // Get title - prefer English, fallback to Japanese, then Vietnamese
-                    String label = topic.title['en'] ?? 
-                                  topic.title['jp'] ?? 
-                                  topic.title['vi'] ?? 
-                                  'Topic';
+                    String label = topic.title['en'] ??
+                        topic.title['jp'] ??
+                        topic.title['vi'] ??
+                        'Topic';
 
                     return TopicCard(
                       icon: icon,
@@ -270,4 +271,3 @@ class QuizTopicSelectionPage extends ConsumerWidget {
     );
   }
 }
-

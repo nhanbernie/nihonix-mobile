@@ -135,11 +135,10 @@ class ProfileHeader extends StatelessWidget {
                   children: [
                     Text(
                       'Your Points',
-                      style:
-                          Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primary,
-                              ),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primary,
+                          ),
                     ),
                     const SizedBox(height: 4),
                     Text(

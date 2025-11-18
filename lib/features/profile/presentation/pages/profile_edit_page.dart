@@ -1,6 +1,3 @@
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -114,7 +111,6 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
         appBar: const CommonAppBar(title: 'Edit Profile'),
         body: Column(
           children: [
-
             // Form
             Expanded(
               child: SingleChildScrollView(
@@ -133,8 +129,8 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                         onImageSelected: (imageFile) async {
                           // Upload avatar
                           await ref.read(profileProvider.notifier).uploadAvatar(
-                            imageFile: imageFile,
-                          );
+                                imageFile: imageFile,
+                              );
 
                           // Show result
                           if (mounted) {
@@ -221,9 +217,11 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                         width: double.infinity,
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: profileState.isLoading ? null : _handleSave,
+                          onPressed:
+                              profileState.isLoading ? null : _handleSave,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary.withValues(alpha: 0.8),
+                            backgroundColor:
+                                AppColors.primary.withValues(alpha: 0.8),
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25),
@@ -236,7 +234,8 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                                   height: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
                                   ),
                                 )
                               : const Text(
@@ -273,7 +272,8 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
       children: [
         // Label
         Padding(
-          padding: const EdgeInsets.only(left: AppSizes.s4, bottom: AppSizes.s8),
+          padding:
+              const EdgeInsets.only(left: AppSizes.s4, bottom: AppSizes.s8),
           child: Text(
             label,
             style: TextStyle(
@@ -330,7 +330,8 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
       children: [
         // Label
         Padding(
-          padding: const EdgeInsets.only(left: AppSizes.s4, bottom: AppSizes.s8),
+          padding:
+              const EdgeInsets.only(left: AppSizes.s4, bottom: AppSizes.s8),
           child: Text(
             'Ngôn ngữ',
             style: TextStyle(
@@ -446,60 +447,64 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
         ...levels.map((level) {
           final isSelected = _selectedLevel == level['code'];
           final color = level['color'] as Color;
-          
+
           return Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: _isUpdatingLevel 
-                  ? null 
-                  : () async {
-                      setState(() {
-                        _selectedLevel = level['code'] as String;
-                        _isUpdatingLevel = true;
-                      });
+                onTap: _isUpdatingLevel
+                    ? null
+                    : () async {
+                        setState(() {
+                          _selectedLevel = level['code'] as String;
+                          _isUpdatingLevel = true;
+                        });
 
-                      try {
-                        final useCase = ref.read(updateUserLevelUseCaseProvider);
-                        await useCase(_selectedLevel!);
+                        try {
+                          final useCase =
+                              ref.read(updateUserLevelUseCaseProvider);
+                          await useCase(_selectedLevel!);
 
-                        ref.read(authProvider.notifier).setUserLevelLocally(_selectedLevel!);
+                          ref
+                              .read(authProvider.notifier)
+                              .setUserLevelLocally(_selectedLevel!);
 
-                        if (mounted) {
-                          // Show success dialog with Lottie
-                          SmartDialog.show(
-                            builder: (_) => LevelSuccessDialog(
-                              levelCode: level['code'] as String,
-                              levelName: level['name'] as String,
-                              levelColor: color,
-                            ),
-                            maskColor: Colors.black.withOpacity(0.6),
-                            alignment: Alignment.center,
-                          );
+                          if (mounted) {
+                            // Show success dialog with Lottie
+                            SmartDialog.show(
+                              builder: (_) => LevelSuccessDialog(
+                                levelCode: level['code'] as String,
+                                levelName: level['name'] as String,
+                                levelColor: color,
+                              ),
+                              maskColor: Colors.black.withOpacity(0.6),
+                              alignment: Alignment.center,
+                            );
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Lỗi: $e'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            setState(() {
+                              final user = ref.read(authProvider).user;
+                              _selectedLevel = user?.levelCode;
+                            });
+                          }
+                        } finally {
+                          if (mounted) {
+                            setState(() => _isUpdatingLevel = false);
+                          }
                         }
-                      } catch (e) {
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Lỗi: $e'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          setState(() {
-                            final user = ref.read(authProvider).user;
-                            _selectedLevel = user?.levelCode;
-                          });
-                        }
-                      } finally {
-                        if (mounted) {
-                          setState(() => _isUpdatingLevel = false);
-                        }
-                      }
-                    },
+                      },
                 borderRadius: BorderRadius.circular(12),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   decoration: BoxDecoration(
                     color: isSelected ? color.withOpacity(0.1) : Colors.white,
                     borderRadius: BorderRadius.circular(12),
@@ -516,9 +521,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                         color: isSelected ? color : Colors.grey.shade400,
                         size: 28,
                       ),
-                      
+
                       const SizedBox(width: 14),
-                      
+
                       // Content
                       Expanded(
                         child: Column(
@@ -543,7 +548,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                           ],
                         ),
                       ),
-                      
+
                       // Check mark
                       if (isSelected)
                         Icon(
@@ -578,7 +583,8 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                     height: 16,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(AppColors.primary),
                     ),
                   ),
                   const SizedBox(width: 8),

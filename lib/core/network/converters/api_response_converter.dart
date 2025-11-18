@@ -2,9 +2,10 @@ import 'package:json_annotation/json_annotation.dart';
 import '../api_response.dart';
 
 /// Generic converter for ApiResponse<T>
-class ApiResponseConverter<T> implements JsonConverter<ApiResponse<T>, Map<String, dynamic>> {
+class ApiResponseConverter<T>
+    implements JsonConverter<ApiResponse<T>, Map<String, dynamic>> {
   final T Function(Object?) fromJsonT;
-  
+
   const ApiResponseConverter(this.fromJsonT);
 
   @override

@@ -58,48 +58,48 @@ class _LessonPageState extends ConsumerState<LessonPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-          // Search bar
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSizes.s16,
-              vertical: AppSizes.s12,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(50),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.06),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.search_rounded,
-                  color: Colors.grey.shade400,
-                  size: 24,
-                ),
-                const SizedBox(width: AppSizes.s12),
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Find any topic',
-                      hintStyle: TextStyle(
-                        color: Colors.grey.shade400,
-                        fontSize: 16,
+                // Search bar
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.s16,
+                    vertical: AppSizes.s12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(50),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.06),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
                       ),
-                      border: InputBorder.none,
-                      isDense: true,
-                      contentPadding: EdgeInsets.zero,
-                    ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.search_rounded,
+                        color: Colors.grey.shade400,
+                        size: 24,
+                      ),
+                      const SizedBox(width: AppSizes.s12),
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Find any topic',
+                            hintStyle: TextStyle(
+                              color: Colors.grey.shade400,
+                              fontSize: 16,
+                            ),
+                            border: InputBorder.none,
+                            isDense: true,
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
                 const SizedBox(height: AppSizes.s20),
 
                 // Progress card
@@ -220,10 +220,11 @@ class _LessonPageState extends ConsumerState<LessonPage> {
                   itemCount: topics.length,
                   itemBuilder: (context, index) {
                     final topic = topics[index];
-                    
+
                     // Get icon - use Material icon from codePoint if available
                     IconData icon;
-                    if (topic.iconType == 'material' && topic.iconCode != null) {
+                    if (topic.iconType == 'material' &&
+                        topic.iconCode != null) {
                       icon = _createMaterialIcon(topic.iconCode!);
                     } else {
                       // Fallback icon
@@ -231,10 +232,10 @@ class _LessonPageState extends ConsumerState<LessonPage> {
                     }
 
                     // Get title - prefer English, fallback to Japanese, then Vietnamese
-                    String label = topic.title['en'] ?? 
-                                  topic.title['jp'] ?? 
-                                  topic.title['vi'] ?? 
-                                  'Topic';
+                    String label = topic.title['en'] ??
+                        topic.title['jp'] ??
+                        topic.title['vi'] ??
+                        'Topic';
 
                     return TopicCard(
                       icon: icon,

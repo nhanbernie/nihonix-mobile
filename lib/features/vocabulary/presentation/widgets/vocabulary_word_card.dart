@@ -19,9 +19,7 @@ class VocabularyWordCard extends StatelessWidget {
         color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark
-              ? const Color(0xFF3A3A3A)
-              : const Color(0xFFE8E8E8),
+          color: isDark ? const Color(0xFF3A3A3A) : const Color(0xFFE8E8E8),
           width: 1,
         ),
         boxShadow: [
@@ -92,9 +90,8 @@ class VocabularyWordCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isDark
-                    ? const Color(0xFF1A1A1A)
-                    : const Color(0xFFF5F5F5),
+                color:
+                    isDark ? const Color(0xFF1A1A1A) : const Color(0xFFF5F5F5),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(

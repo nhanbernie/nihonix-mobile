@@ -42,7 +42,9 @@ class _CardStudyPageState extends ConsumerState<CardStudyPage> {
 
   void _initializeControllers(int cardCount) {
     if (_flipControllers.isEmpty || _flipControllers.length != cardCount) {
-      _flipControllers = {for (var i = 0; i < cardCount; i++) i: FlipCardController()};
+      _flipControllers = {
+        for (var i = 0; i < cardCount; i++) i: FlipCardController()
+      };
     }
   }
 
@@ -246,7 +248,8 @@ class _CardStudyPageState extends ConsumerState<CardStudyPage> {
                   LinearProgressIndicator(
                     value: (_currentCardIndex + 1) / cards.length,
                     backgroundColor: Colors.grey.shade200,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(AppColors.primary),
                     borderRadius: BorderRadius.circular(4),
                     minHeight: 6,
                   ),
@@ -265,7 +268,7 @@ class _CardStudyPageState extends ConsumerState<CardStudyPage> {
                 itemBuilder: (context, index) {
                   final currentCard = cards[index];
                   final flipController = _flipControllers[index]!;
-                  
+
                   return AnimatedBuilder(
                     animation: _pageController,
                     builder: (context, child) {
@@ -275,7 +278,7 @@ class _CardStudyPageState extends ConsumerState<CardStudyPage> {
                         // Scale effect: zoom out khi kéo, zoom in khi về giữa
                         value = (1 - (value.abs() * 0.15)).clamp(0.85, 1.0);
                       }
-                      
+
                       return Center(
                         child: Transform.scale(
                           scale: value,
@@ -327,7 +330,9 @@ class _CardStudyPageState extends ConsumerState<CardStudyPage> {
                   // Next Button
                   _buildNavButton(
                     icon: Icons.arrow_forward,
-                    onPressed: _currentCardIndex < cards.length - 1 ? () => _nextCard(cards.length) : null,
+                    onPressed: _currentCardIndex < cards.length - 1
+                        ? () => _nextCard(cards.length)
+                        : null,
                   ),
                 ],
               ),
@@ -352,8 +357,14 @@ class _CardStudyPageState extends ConsumerState<CardStudyPage> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: isBack
-              ? [AppColors.accent2.withValues(alpha: 0.2), AppColors.accent1.withValues(alpha: 0.2)]
-              : [AppColors.primary.withValues(alpha: 0.2), AppColors.accent3.withValues(alpha: 0.2)],
+              ? [
+                  AppColors.accent2.withValues(alpha: 0.2),
+                  AppColors.accent1.withValues(alpha: 0.2)
+                ]
+              : [
+                  AppColors.primary.withValues(alpha: 0.2),
+                  AppColors.accent3.withValues(alpha: 0.2)
+                ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -455,4 +466,3 @@ class _CardStudyPageState extends ConsumerState<CardStudyPage> {
     );
   }
 }
-

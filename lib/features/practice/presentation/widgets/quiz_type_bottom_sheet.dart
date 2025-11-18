@@ -196,4 +196,3 @@ class _QuizTypeOption extends StatelessWidget {
     );
   }
 }
-

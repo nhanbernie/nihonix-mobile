@@ -22,4 +22,3 @@ class VocabGenerateRepositoryImpl implements VocabGenerateRepository {
     );
   }
 }
-

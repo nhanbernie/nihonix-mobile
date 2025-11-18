@@ -94,7 +94,6 @@ class _VocabListPageState extends ConsumerState<VocabListPage> {
                       isDark: isDark,
                     ),
         ),
-
         AILoadingOverlay(
           message: 'AI đang tạo từ vựng...',
           isVisible: generateState.isGenerating,

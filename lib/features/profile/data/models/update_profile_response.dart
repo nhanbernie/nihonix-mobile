@@ -15,7 +15,7 @@ sealed class UpdateProfileResponse with _$UpdateProfileResponse {
   }) = _UpdateProfileResponse;
 
   /// From JSON
-  /// 
+  ///
   /// API Response structure:
   /// {
   ///   "success": true,
@@ -36,4 +36,3 @@ sealed class UpdateProfileResponse with _$UpdateProfileResponse {
     );
   }
 }
-

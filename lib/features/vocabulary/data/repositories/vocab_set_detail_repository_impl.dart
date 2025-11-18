@@ -12,4 +12,3 @@ class VocabSetDetailRepositoryImpl implements VocabSetDetailRepository {
     return await _remoteDataSource.getVocabSetById(id);
   }
 }
-

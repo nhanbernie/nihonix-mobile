@@ -21,9 +21,7 @@ class VocabFolderCard extends StatelessWidget {
         color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark
-              ? const Color(0xFF3A3A3A)
-              : const Color(0xFFE8E8E8),
+          color: isDark ? const Color(0xFF3A3A3A) : const Color(0xFFE8E8E8),
           width: 1,
         ),
         boxShadow: [

@@ -23,98 +23,102 @@ class WelcomeSlide3 extends StatelessWidget {
 
               // Trophy icon
               Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              color: Colors.amber.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.emoji_events,
-              size: 70,
-              color: Colors.amber,
-            ),
-          ),
-
-          const SizedBox(height: AppSizes.s48),
-
-          // Title
-          Text(
-            'Track Your\nProgress',
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  height: 1.2,
-                  color: AppColors.textPrimary,
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  color: Colors.amber.withOpacity(0.1),
+                  shape: BoxShape.circle,
                 ),
-            textAlign: TextAlign.center,
-          ),
-
-          const SizedBox(height: AppSizes.s24),
-
-          // Description
-          Text(
-            'Monitor your learning journey and\ncelebrate your achievements',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppColors.textSecondary,
-                  height: 1.5,
+                child: const Icon(
+                  Icons.emoji_events,
+                  size: 70,
+                  color: Colors.amber,
                 ),
-            textAlign: TextAlign.center,
-          ),
+              ),
 
-          const SizedBox(height: AppSizes.s48),
+              const SizedBox(height: AppSizes.s48),
 
-          // Progress demo
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              // color: AppColors.primary.withOpacity(0.05),
-              color: AppColors.primary.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Learning Progress',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+              // Title
+              Text(
+                'Track Your\nProgress',
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      height: 1.2,
+                      color: AppColors.textPrimary,
                     ),
-                    Text(
-                      '50%',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
+                textAlign: TextAlign.center,
+              ),
+
+              const SizedBox(height: AppSizes.s24),
+
+              // Description
+              Text(
+                'Monitor your learning journey and\ncelebrate your achievements',
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: AppColors.textSecondary,
+                      height: 1.5,
+                    ),
+                textAlign: TextAlign.center,
+              ),
+
+              const SizedBox(height: AppSizes.s48),
+
+              // Progress demo
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  // color: AppColors.primary.withOpacity(0.05),
+                  color: AppColors.primary.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Learning Progress',
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                        ),
+                        Text(
+                          '50%',
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: AppColors.primary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: const LinearProgressIndicator(
+                        value: 0.5,
+                        minHeight: 8,
+                        backgroundColor: AppColors.neutralGreyLight,
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(AppColors.primary),
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: const LinearProgressIndicator(
-                    value: 0.5,
-                    minHeight: 8,
-                    backgroundColor: AppColors.neutralGreyLight,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                  ),
-                ),
-              ],
-            ),
-          ),
+              ),
 
-          const SizedBox(height: AppSizes.s32),
+              const SizedBox(height: AppSizes.s32),
 
-          // Achievement stats
-          _StatItem(icon: Icons.local_fire_department, text: '7 Day Streak'),
-          const SizedBox(height: AppSizes.s12),
-          _StatItem(icon: Icons.star, text: '15 Achievements'),
-          const SizedBox(height: AppSizes.s12),
-          _StatItem(icon: Icons.trending_up, text: '80% Completion'),
+              // Achievement stats
+              _StatItem(
+                  icon: Icons.local_fire_department, text: '7 Day Streak'),
+              const SizedBox(height: AppSizes.s12),
+              _StatItem(icon: Icons.star, text: '15 Achievements'),
+              const SizedBox(height: AppSizes.s12),
+              _StatItem(icon: Icons.trending_up, text: '80% Completion'),
 
-          const SizedBox(height: AppSizes.s48),
+              const SizedBox(height: AppSizes.s48),
             ],
           ),
         ),
@@ -154,4 +158,3 @@ class _StatItem extends StatelessWidget {
     );
   }
 }
-

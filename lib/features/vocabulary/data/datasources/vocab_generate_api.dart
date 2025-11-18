@@ -12,4 +12,3 @@ abstract class VocabGenerateApi {
     @Body() Map<String, dynamic> body,
   );
 }
-

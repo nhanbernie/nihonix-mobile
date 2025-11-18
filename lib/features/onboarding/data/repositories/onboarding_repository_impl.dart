@@ -13,4 +13,3 @@ class OnboardingRepositoryImpl implements OnboardingRepository {
     return userModel.toDomain();
   }
 }
-

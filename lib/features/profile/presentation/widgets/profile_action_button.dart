@@ -47,9 +47,8 @@ class ProfileActionButton extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                color: isDestructive
-                    ? AppColors.error
-                    : const Color(0xFF2C3E50),
+                color:
+                    isDestructive ? AppColors.error : const Color(0xFF2C3E50),
               ),
               const SizedBox(width: AppSizes.s16),
               Text(

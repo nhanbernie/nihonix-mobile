@@ -72,7 +72,9 @@ Future<String?> handleRouteGuard(
       }
       // Check if user has level_code
       final user = authState.user;
-      if (user != null && user.levelCode != null && user.levelCode!.isNotEmpty) {
+      if (user != null &&
+          user.levelCode != null &&
+          user.levelCode!.isNotEmpty) {
         // Already has level, go to home
         return AppRoutes.home;
       }

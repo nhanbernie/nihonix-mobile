@@ -34,9 +34,9 @@ class AuthForm extends StatelessWidget {
         children: [
           // Form fields
           ...children.map((child) => Padding(
-            padding: const EdgeInsets.only(bottom: AppSizes.s16),
-            child: child,
-          )),
+                padding: const EdgeInsets.only(bottom: AppSizes.s16),
+                child: child,
+              )),
 
           const SizedBox(height: AppSizes.s24),
 

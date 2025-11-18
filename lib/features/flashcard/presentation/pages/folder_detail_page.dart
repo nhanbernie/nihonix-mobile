@@ -27,7 +27,6 @@ class FolderDetailPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    
     final flashcardState = ref.watch(flashcardProvider);
     final folder = flashcardState.folders.firstWhere(
       (f) => f.id == folderId,
@@ -113,7 +112,8 @@ class FolderDetailPage extends ConsumerWidget {
                       context: context,
                       backgroundColor: Colors.white,
                       shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(20)),
                       ),
                       builder: (_) => AddFlashcardSheet(folderId: folderId),
                     );
@@ -161,7 +161,8 @@ class FolderDetailPage extends ConsumerWidget {
                     '${AppRoutes.cardForm}?setId=${set.id}&folderId=$folderId&setName=${Uri.encodeComponent(set.name)}',
                   );
                 },
-                onDelete: () => _handleDeleteSet(context, ref, set.id, set.name),
+                onDelete: () =>
+                    _handleDeleteSet(context, ref, set.id, set.name),
               );
             }),
 
@@ -174,7 +175,8 @@ class FolderDetailPage extends ConsumerWidget {
                   context: context,
                   backgroundColor: Colors.white,
                   shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(20)),
                   ),
                   builder: (_) => AddFlashcardSheet(folderId: folderId),
                 ),
@@ -245,7 +247,8 @@ class FolderDetailPage extends ConsumerWidget {
 
     if (confirmed == true) {
       try {
-        final success = await ref.read(flashcardProvider.notifier).deleteFolder(folderId);
+        final success =
+            await ref.read(flashcardProvider.notifier).deleteFolder(folderId);
         if (success) {
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -295,10 +298,10 @@ class FolderDetailPage extends ConsumerWidget {
       try {
         final useCase = ref.read(deleteFlashcardSetUseCaseProvider);
         await useCase(setId);
-        
+
         // Refresh danh sách sets
         ref.invalidate(folderSetsProvider(folderId));
-        
+
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -320,4 +323,3 @@ class FolderDetailPage extends ConsumerWidget {
     }
   }
 }
-

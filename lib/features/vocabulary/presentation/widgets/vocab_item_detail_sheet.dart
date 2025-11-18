@@ -71,18 +71,18 @@ class VocabItemDetailSheet extends ConsumerWidget {
                         },
                       ),
                     ],
-                      ),
-                      const SizedBox(height: 8.0),
+                  ),
+                  const SizedBox(height: 8.0),
 
-                      // Kana
+                  // Kana
                   Text(
                     item.kana,
                     style: TextStyle(
                       fontSize: 20,
                       color: isDark ? Colors.white70 : Colors.black54,
-              ),
-            ),
-            const SizedBox(height: 4.0),
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
 
                   // Romaji
                   Text(
@@ -112,11 +112,11 @@ class VocabItemDetailSheet extends ConsumerWidget {
                         color: AppColors.primary,
                         fontWeight: FontWeight.w600,
                       ),
-                        ),
-                      ),
-                      const SizedBox(height: 24.0),
+                    ),
+                  ),
+                  const SizedBox(height: 24.0),
 
-                      // Meanings
+                  // Meanings
                   _buildSection(
                     'Meanings',
                     Column(
@@ -157,17 +157,20 @@ class VocabItemDetailSheet extends ConsumerWidget {
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
-                                    color: isDark ? Colors.white : Colors.black87,
+                                    color:
+                                        isDark ? Colors.white : Colors.black87,
                                     height: 1.5,
-              ),
-            ),
-            const SizedBox(height: 8.0),
+                                  ),
+                                ),
+                                const SizedBox(height: 8.0),
                                 // Romaji
                                 Text(
                                   example.sentenceRomaji,
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: isDark ? Colors.white60 : Colors.black54,
+                                    color: isDark
+                                        ? Colors.white60
+                                        : Colors.black54,
                                     fontStyle: FontStyle.italic,
                                   ),
                                 ),
@@ -182,7 +185,9 @@ class VocabItemDetailSheet extends ConsumerWidget {
                                         example.sentenceVi,
                                         style: TextStyle(
                                           fontSize: 14,
-                                          color: isDark ? Colors.white70 : Colors.black54,
+                                          color: isDark
+                                              ? Colors.white70
+                                              : Colors.black54,
                                         ),
                                       ),
                                     ),
@@ -199,7 +204,9 @@ class VocabItemDetailSheet extends ConsumerWidget {
                                         example.sentenceEn,
                                         style: TextStyle(
                                           fontSize: 14,
-                                          color: isDark ? Colors.white70 : Colors.black54,
+                                          color: isDark
+                                              ? Colors.white70
+                                              : Colors.black54,
                                         ),
                                       ),
                                     ),
@@ -266,4 +273,3 @@ class VocabItemDetailSheet extends ConsumerWidget {
     );
   }
 }
-

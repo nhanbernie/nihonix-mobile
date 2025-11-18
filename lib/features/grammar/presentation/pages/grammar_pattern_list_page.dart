@@ -45,8 +45,10 @@ class _GrammarPatternListPageState
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
         statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
-        systemNavigationBarColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
-        systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        systemNavigationBarColor:
+            isDark ? const Color(0xFF1A1A1A) : Colors.white,
+        systemNavigationBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
       ),
       child: Stack(
         children: [
@@ -86,13 +88,13 @@ class _GrammarPatternListPageState
                       ),
           ),
 
-        // AI Loading Overlay
-        AILoadingOverlay(
-          message: 'Generating grammar patterns...',
-          isVisible: generateState.isGenerating,
-        ),
-      ],
-    ),
+          // AI Loading Overlay
+          AILoadingOverlay(
+            message: 'Generating grammar patterns...',
+            isVisible: generateState.isGenerating,
+          ),
+        ],
+      ),
     );
   }
 }

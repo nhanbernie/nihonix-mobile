@@ -27,9 +27,8 @@ class _GrammarPatternCardState extends State<GrammarPatternCard> {
         color: widget.isDark ? const Color(0xFF2A2A2A) : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: widget.isDark
-              ? const Color(0xFF3A3A3A)
-              : const Color(0xFFE8E8E8),
+          color:
+              widget.isDark ? const Color(0xFF3A3A3A) : const Color(0xFFE8E8E8),
           width: 1,
         ),
       ),

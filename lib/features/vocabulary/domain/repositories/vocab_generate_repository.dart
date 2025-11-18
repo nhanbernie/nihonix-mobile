@@ -8,4 +8,3 @@ abstract class VocabGenerateRepository {
     String? customPrompt,
   });
 }
-

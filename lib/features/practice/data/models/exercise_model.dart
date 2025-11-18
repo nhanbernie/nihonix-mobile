@@ -25,15 +25,19 @@ sealed class ExerciseModel with _$ExerciseModel {
     } else if (orderData is String) {
       orderValue = int.tryParse(orderData) ?? 0;
     }
-    
+
     return ExerciseModel(
       id: json['id'] as String? ?? '',
       type: json['type'] as String? ?? '',
-      question: QuestionModel.fromJson(json['question'] as Map<String, dynamic>? ?? {}),
+      question: QuestionModel.fromJson(
+          json['question'] as Map<String, dynamic>? ?? {}),
       options: (json['options'] as List?)
-          ?.map((e) => ExerciseOptionModel.fromJson(e as Map<String, dynamic>))
-          .toList() ?? [],
-      explanation: ExplanationModel.fromJson(json['explanation'] as Map<String, dynamic>? ?? {}),
+              ?.map((e) =>
+                  ExerciseOptionModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      explanation: ExplanationModel.fromJson(
+          json['explanation'] as Map<String, dynamic>? ?? {}),
       order: orderValue,
     );
   }
@@ -114,7 +118,7 @@ sealed class ExerciseOptionModel with _$ExerciseOptionModel {
     } else if (idData is String) {
       idValue = int.tryParse(idData) ?? 0;
     }
-    
+
     return ExerciseOptionModel(
       id: idValue,
       text: json['text'] as String? ?? '',
@@ -166,4 +170,3 @@ sealed class ExplanationModel with _$ExplanationModel {
     );
   }
 }
-

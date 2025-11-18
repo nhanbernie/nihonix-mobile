@@ -33,7 +33,7 @@ class _AILoadingOverlayState extends State<AILoadingOverlay>
       parent: _fadeController,
       curve: Curves.easeInOut,
     );
-    
+
     // Start animation if initially visible
     if (widget.isVisible) {
       _fadeController.forward();
@@ -70,63 +70,65 @@ class _AILoadingOverlayState extends State<AILoadingOverlay>
       child: FadeTransition(
         opacity: _fadeAnimation,
         child: Container(
-          color: widget.isVisible ? Colors.black.withOpacity(0.7) : Colors.transparent,
+          color: widget.isVisible
+              ? Colors.black.withOpacity(0.7)
+              : Colors.transparent,
           child: Center(
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 40),
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
-                ),
-              ],
-            ),
-            child: widget.isVisible
-                ? Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Lottie Animation - AI Robot or custom
-                      Lottie.network(
-                        widget.lottieUrl ?? 
-                        'https://assets2.lottiefiles.com/packages/lf20_xyadoh9h.json',
-                        width: 200,
-                        height: 200,
-                        fit: BoxFit.contain,
-                        repeat: true,
-                        animate: true,
-                        errorBuilder: (context, error, stackTrace) {
-                          // Fallback to custom animated widget
-                          return const _AILoadingAnimation();
-                        },
-                      ),
-                      const SizedBox(height: 24),
-                      // Message
-                      Text(
-                        widget.message,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 40),
+              padding: const EdgeInsets.all(32),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: widget.isVisible
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Lottie Animation - AI Robot or custom
+                        Lottie.network(
+                          widget.lottieUrl ??
+                              'https://assets2.lottiefiles.com/packages/lf20_xyadoh9h.json',
+                          width: 200,
+                          height: 200,
+                          fit: BoxFit.contain,
+                          repeat: true,
+                          animate: true,
+                          errorBuilder: (context, error, stackTrace) {
+                            // Fallback to custom animated widget
+                            return const _AILoadingAnimation();
+                          },
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Vui lòng đợi trong giây lát...',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey.shade600,
+                        const SizedBox(height: 24),
+                        // Message
+                        Text(
+                          widget.message,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
                         ),
-                      ),
-                    ],
-                  )
-                : const SizedBox.shrink(),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Vui lòng đợi trong giây lát...',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ],
+                    )
+                  : const SizedBox.shrink(),
             ),
           ),
         ),

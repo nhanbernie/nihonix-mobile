@@ -27,7 +27,7 @@ sealed class ExerciseSessionModel with _$ExerciseSessionModel {
       if (value is String) return int.tryParse(value) ?? 0;
       return 0;
     }
-    
+
     return ExerciseSessionModel(
       sessionId: json['session_id'] as String? ?? '',
       topicId: json['topic_id'] as String? ?? '',
@@ -38,8 +38,9 @@ sealed class ExerciseSessionModel with _$ExerciseSessionModel {
       vocabularyCount: parseInt(json['vocabulary_count']),
       grammarCount: parseInt(json['grammar_count']),
       exercises: (json['exercises'] as List?)
-          ?.map((e) => ExerciseModel.fromJson(e as Map<String, dynamic>))
-          .toList() ?? [],
+              ?.map((e) => ExerciseModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 
@@ -71,4 +72,3 @@ sealed class ExerciseSessionModel with _$ExerciseSessionModel {
     );
   }
 }
-

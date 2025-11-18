@@ -64,7 +64,7 @@ class _QuizPlayPageState extends ConsumerState<QuizPlayPage> {
         print('  - Exercise Type: ${session.exerciseType}');
         print('  - Total Exercises: ${session.totalExercises}');
         print('  - Exercises Count: ${session.exercises.length}');
-        
+
         setState(() {
           _exerciseSession = session;
           _isGenerating = false;
@@ -72,7 +72,7 @@ class _QuizPlayPageState extends ConsumerState<QuizPlayPage> {
           _currentQuestionIndex = 0;
           _selectedAnswers.clear();
         });
-        
+
         // Show success message if exercises were generated
         if (session.exercises.isNotEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -148,7 +148,8 @@ class _QuizPlayPageState extends ConsumerState<QuizPlayPage> {
     // Get display info based on quiz type
     final isFillBlank = widget.quizType == 'fill_blank';
     final title = isFillBlank ? 'Điền vào chỗ trống' : 'Trắc nghiệm';
-    final icon = isFillBlank ? Icons.edit_note_rounded : Icons.checklist_rounded;
+    final icon =
+        isFillBlank ? Icons.edit_note_rounded : Icons.checklist_rounded;
     final color = isFillBlank ? AppColors.accent2 : AppColors.accent1;
 
     return Scaffold(
@@ -170,16 +171,18 @@ class _QuizPlayPageState extends ConsumerState<QuizPlayPage> {
                 ? 'AI đang tạo bài tập điền vào chỗ trống...'
                 : 'AI đang tạo bài tập trắc nghiệm...',
             isVisible: _isGenerating,
-            lottieUrl: 'https://assets5.lottiefiles.com/packages/lf20_jcikwtux.json', // Nice AI animation
+            lottieUrl:
+                'https://assets5.lottiefiles.com/packages/lf20_jcikwtux.json', // Nice AI animation
           ),
         ],
       ),
     );
   }
 
-  Widget _buildExerciseContent(BuildContext context, Color color, IconData icon, String title) {
+  Widget _buildExerciseContent(
+      BuildContext context, Color color, IconData icon, String title) {
     final session = _exerciseSession!;
-    
+
     if (session.exercises.isEmpty) {
       return _buildEmptyState(context, color, icon, title);
     }
@@ -277,13 +280,15 @@ class _QuizPlayPageState extends ConsumerState<QuizPlayPage> {
                     icon: const Icon(Icons.arrow_back_rounded),
                     label: const Text('Trước'),
                     style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: AppSizes.s16),
+                      padding:
+                          const EdgeInsets.symmetric(vertical: AppSizes.s16),
                       side: BorderSide(color: color),
                       foregroundColor: color,
                     ),
                   ),
                 ),
-              if (_currentQuestionIndex > 0) const SizedBox(width: AppSizes.s12),
+              if (_currentQuestionIndex > 0)
+                const SizedBox(width: AppSizes.s12),
               Expanded(
                 child: ElevatedButton.icon(
                   onPressed: _selectedAnswers[_currentQuestionIndex] != null
@@ -302,7 +307,9 @@ class _QuizPlayPageState extends ConsumerState<QuizPlayPage> {
                         : Icons.check_rounded,
                   ),
                   label: Text(
-                    _currentQuestionIndex < totalQuestions - 1 ? 'Tiếp' : 'Hoàn thành',
+                    _currentQuestionIndex < totalQuestions - 1
+                        ? 'Tiếp'
+                        : 'Hoàn thành',
                   ),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: AppSizes.s16),
@@ -319,7 +326,8 @@ class _QuizPlayPageState extends ConsumerState<QuizPlayPage> {
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, Color color, IconData icon, String title) {
+  Widget _buildEmptyState(
+      BuildContext context, Color color, IconData icon, String title) {
     return Padding(
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top + 64 + AppSizes.s12,
@@ -420,7 +428,8 @@ class _QuizPlayPageState extends ConsumerState<QuizPlayPage> {
 
                   // Subtitle
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.s32),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: AppSizes.s32),
                     child: Text(
                       'Hiện tại chưa có bài tập cho chủ đề này.\nSử dụng AI để tạo bài tập tự động!',
                       textAlign: TextAlign.center,
@@ -452,7 +461,9 @@ class _QuizPlayPageState extends ConsumerState<QuizPlayPage> {
                       ],
                     ),
                     child: ElevatedButton.icon(
-                      onPressed: _isGenerating ? null : _showCountBottomSheetAndGenerate,
+                      onPressed: _isGenerating
+                          ? null
+                          : _showCountBottomSheetAndGenerate,
                       icon: const Icon(Icons.auto_awesome_rounded, size: 24),
                       label: const Text(
                         'Tạo bằng AI',

@@ -5,7 +5,8 @@ import '../../data/repositories/onboarding_repository_impl.dart';
 import '../../domain/repositories/onboarding_repository.dart';
 import '../../domain/usecases/update_user_level.dart';
 
-final onboardingDataSourceProvider = Provider<OnboardingRemoteDataSource>((ref) {
+final onboardingDataSourceProvider =
+    Provider<OnboardingRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return OnboardingRemoteDataSource.fromDio(apiClient.dio);
 });
@@ -20,7 +21,8 @@ final updateUserLevelUseCaseProvider = Provider<UpdateUserLevel>((ref) {
   return UpdateUserLevel(repository);
 });
 
-final updateUserLevelProvider = FutureProvider.family<void, String>((ref, levelCode) async {
+final updateUserLevelProvider =
+    FutureProvider.family<void, String>((ref, levelCode) async {
   final useCase = ref.watch(updateUserLevelUseCaseProvider);
   await useCase(levelCode);
 });

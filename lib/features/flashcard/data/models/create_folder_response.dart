@@ -11,7 +11,7 @@ class CreateFolderResponse {
   final String message;
   final FlashcardFolderModel data;
   final dynamic errors;
-  
+
   @JsonKey(name: 'statusCode')
   final int statusCode;
 

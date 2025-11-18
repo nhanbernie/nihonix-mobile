@@ -14,4 +14,3 @@ sealed class UpdateProfileRequest with _$UpdateProfileRequest {
     String? language,
   }) = _UpdateProfileRequest;
 }
-

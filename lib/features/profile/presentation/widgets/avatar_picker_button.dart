@@ -55,7 +55,7 @@ class AvatarPickerButton extends StatelessWidget {
                   : _buildPlaceholder(),
             ),
           ),
-          
+
           // Camera icon overlay
           Positioned(
             right: 0,
@@ -114,7 +114,7 @@ class AvatarPickerButton extends StatelessWidget {
                     ),
               ),
               const SizedBox(height: 20),
-              
+
               // Camera option
               ListTile(
                 leading: Container(
@@ -132,7 +132,7 @@ class AvatarPickerButton extends StatelessWidget {
                 subtitle: const Text('Sử dụng camera'),
                 onTap: () => Navigator.pop(context, ImageSource.camera),
               ),
-              
+
               // Gallery option
               ListTile(
                 leading: Container(
@@ -150,7 +150,7 @@ class AvatarPickerButton extends StatelessWidget {
                 subtitle: const Text('Chọn ảnh có sẵn'),
                 onTap: () => Navigator.pop(context, ImageSource.gallery),
               ),
-              
+
               // Cancel button
               const SizedBox(height: 10),
               TextButton(
@@ -171,11 +171,11 @@ class AvatarPickerButton extends StatelessWidget {
   Future<void> _pickImage(BuildContext context, ImageSource source) async {
     try {
       final ImagePicker picker = ImagePicker();
-      
+
       // Pick image với resize ngay
       final XFile? pickedFile = await picker.pickImage(
         source: source,
-        maxWidth: 512,  // Resize về 512x512 luôn
+        maxWidth: 512, // Resize về 512x512 luôn
         maxHeight: 512,
         imageQuality: 85,
       );
@@ -185,7 +185,6 @@ class AvatarPickerButton extends StatelessWidget {
       // Callback với file đã pick (không crop)
       onImageSelected(File(pickedFile.path));
     } catch (e) {
-      
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

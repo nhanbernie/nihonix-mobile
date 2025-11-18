@@ -42,7 +42,7 @@ class AuthInterceptor extends Interceptor {
   final AuthPathsConfig _paths;
   final List<String> _retryIdempotentMethods;
   final int _maxRetries;
-  
+
   /// Reference to Dio instance for retrying requests
   Dio? _dio;
 
@@ -96,10 +96,8 @@ class AuthInterceptor extends Interceptor {
         final accessToken = await _tokenStore.readAccessToken();
         if (accessToken != null && accessToken.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $accessToken';
-        } else {
-        }
-      } else {
-      }
+        } else {}
+      } else {}
 
       handler.next(options);
     } catch (e) {
@@ -249,7 +247,6 @@ class AuthInterceptor extends Interceptor {
       if (refreshToken == null || refreshToken.isEmpty) {
         throw UnauthorizedException(message: 'Không tìm thấy refresh token');
       }
-      
 
       // Gọi API refresh token
       final tokens = await _authRemote.refreshToken(refreshToken);

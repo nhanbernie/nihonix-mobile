@@ -8,7 +8,8 @@ import '../../domain/repositories/vocab_set_detail_repository.dart';
 import '../../domain/usecases/get_vocab_set_detail.dart';
 
 // Repository Provider
-final vocabSetDetailRepositoryProvider = Provider<VocabSetDetailRepository>((ref) {
+final vocabSetDetailRepositoryProvider =
+    Provider<VocabSetDetailRepository>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   final api = VocabSetApi(apiClient.dio);
   final dataSource = VocabSetRemoteDataSource(api);
@@ -16,14 +17,15 @@ final vocabSetDetailRepositoryProvider = Provider<VocabSetDetailRepository>((ref
 });
 
 // UseCase Provider
-final getVocabSetDetailUseCaseProvider = Provider<GetVocabSetDetailUseCase>((ref) {
+final getVocabSetDetailUseCaseProvider =
+    Provider<GetVocabSetDetailUseCase>((ref) {
   final repository = ref.watch(vocabSetDetailRepositoryProvider);
   return GetVocabSetDetailUseCase(repository);
 });
 
 // State Provider
-final vocabSetDetailProvider = FutureProvider.family<VocabSetDetail, String>((ref, id) async {
+final vocabSetDetailProvider =
+    FutureProvider.family<VocabSetDetail, String>((ref, id) async {
   final useCase = ref.watch(getVocabSetDetailUseCaseProvider);
   return await useCase(id);
 });
-

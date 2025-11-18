@@ -29,4 +29,3 @@ class PracticeRepositoryImpl implements PracticeRepository {
     );
   }
 }
-

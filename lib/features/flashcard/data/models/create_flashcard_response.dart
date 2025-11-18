@@ -32,12 +32,12 @@ class CreateFlashcardResponse {
 class CreateFlashcardData {
   @JsonKey(name: 'set_id')
   final String setId;
-  
+
   @JsonKey(name: 'set_name')
   final String setName;
-  
+
   final int created;
-  
+
   final List<FlashcardModel> cards;
 
   const CreateFlashcardData({

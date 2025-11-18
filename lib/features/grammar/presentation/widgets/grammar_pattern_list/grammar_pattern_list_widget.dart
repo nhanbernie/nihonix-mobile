@@ -60,4 +60,3 @@ class GrammarPatternListWidget extends StatelessWidget {
     );
   }
 }
-

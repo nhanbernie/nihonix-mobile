@@ -24,9 +24,7 @@ class GrammarPatternCard extends StatelessWidget {
           color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isDark
-                ? const Color(0xFF3A3A3A)
-                : const Color(0xFFE8E8E8),
+            color: isDark ? const Color(0xFF3A3A3A) : const Color(0xFFE8E8E8),
             width: 1,
           ),
           boxShadow: [
@@ -51,7 +49,7 @@ class GrammarPatternCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            
+
             // Romaji
             Text(
               pattern.patternRomaji,
@@ -68,7 +66,9 @@ class GrammarPatternCard extends StatelessWidget {
               pattern.getExplanation('vi'),
               style: TextStyle(
                 fontSize: 15,
-                color: isDark ? Colors.white.withOpacity(0.87) : Colors.black87,
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.87)
+                    : Colors.black.withValues(alpha: 0.87),
                 height: 1.4,
               ),
               maxLines: 2,
@@ -116,4 +116,3 @@ class GrammarPatternCard extends StatelessWidget {
     );
   }
 }
-

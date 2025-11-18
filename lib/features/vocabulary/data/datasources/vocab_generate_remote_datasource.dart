@@ -30,7 +30,7 @@ class VocabGenerateRemoteDataSource {
       final itemsList = data['items'] as List<dynamic>;
       final items = itemsList.map((item) {
         final json = item as Map<String, dynamic>;
-        
+
         // Parse examples
         final examplesList = json['examples'] as List<dynamic>? ?? [];
         final examples = examplesList.map((ex) {
@@ -73,4 +73,3 @@ class VocabGenerateRemoteDataSource {
     }
   }
 }
-

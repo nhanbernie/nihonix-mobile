@@ -1,30 +1,53 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Environment Configuration
 class EnvConfig {
-  static String get apiBaseUrl {
-    final envUrl = dotenv.env['API_BASE_URL'];
-    if (envUrl != null && envUrl.isNotEmpty) {
-      return envUrl;
+  String get apiBaseUrl {
+    const defineUrl = String.fromEnvironment('API_BASE_URL', defaultValue: '');
+    if (defineUrl.isNotEmpty) {
+      return defineUrl;
     }
+
+    // final envUrl = dotenv.env['API_BASE_URL'];
+    // if (envUrl != null && envUrl.isNotEmpty) {
+    //   return envUrl;
+    // }
 
     return 'https://nihonix-server.onrender.com/api';
   }
 
-  static int get apiTimeout =>
-      int.tryParse(dotenv.env['API_TIMEOUT'] ?? '60000') ??
-      60000; 
+  int get apiTimeout =>
+      int.tryParse(
+        const String.fromEnvironment(
+          'API_TIMEOUT',
+          defaultValue: '',
+        ),
+      ) ??
+      // int.tryParse(dotenv.env['API_TIMEOUT'] ?? '') ??
+      60000;
 
-  static String get appEnv => dotenv.env['APP_ENV'] ?? 'development';
+  String get appEnv => const String.fromEnvironment(
+        'APP_ENV',
+        defaultValue: '',
+      ).isNotEmpty
+          ? const String.fromEnvironment('APP_ENV', defaultValue: 'development')
+          : /*dotenv.env['APP_ENV'] ??*/ 'development';
 
-  static bool get enableDebug =>
-      dotenv.env['ENABLE_DEBUG']?.toLowerCase() == 'true';
+  bool get enableDebug {
+    final defineValue =
+        const String.fromEnvironment('ENABLE_DEBUG', defaultValue: '');
+    if (defineValue.isNotEmpty) {
+      return defineValue.toLowerCase() == 'true';
+    }
 
-  static bool get isDevelopment => appEnv == 'development';
-  static bool get isProduction => appEnv == 'production';
+    return (/*dotenv.env['ENABLE_DEBUG'] ?? */ 'false').toLowerCase() == 'true';
+  }
+
+  bool get isDevelopment => appEnv == 'development';
+  bool get isProduction => appEnv == 'production';
 
   // Print config (debug only)
-  static void printConfig() {
+  void printConfig() {
     if (enableDebug) {
       print('🔧 Environment: $appEnv');
       print('🌐 API URL: $apiBaseUrl');

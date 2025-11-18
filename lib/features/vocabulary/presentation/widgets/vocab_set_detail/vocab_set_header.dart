@@ -36,7 +36,7 @@ class VocabSetHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          
+
           // Topic and Count
           Row(
             children: [
@@ -73,4 +73,3 @@ class VocabSetHeader extends StatelessWidget {
     );
   }
 }
-

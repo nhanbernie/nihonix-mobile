@@ -5,4 +5,3 @@ abstract class OnboardingRepository {
   /// Returns updated User object
   Future<User> updateUserLevel(String levelCode);
 }
-

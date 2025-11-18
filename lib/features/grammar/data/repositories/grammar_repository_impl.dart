@@ -20,8 +20,8 @@ class GrammarRepositoryImpl implements GrammarRepository {
   }
 
   @override
-  Future<List<GrammarPattern>> getGrammarPatterns(String grammarSubTopicSlug) async {
+  Future<List<GrammarPattern>> getGrammarPatterns(
+      String grammarSubTopicSlug) async {
     return await _remoteDataSource.getGrammarPatterns(grammarSubTopicSlug);
   }
 }
-

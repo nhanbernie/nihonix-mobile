@@ -66,4 +66,3 @@ class LanguageSettingsPage extends StatelessWidget {
     );
   }
 }
-

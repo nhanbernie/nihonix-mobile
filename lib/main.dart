@@ -22,7 +22,7 @@ void main() async {
   // await dotenv.load(fileName: ".env.production");
 
   // Print config (chỉ hiện khi ENABLE_DEBUG=true)
-  EnvConfig.printConfig();
+  EnvConfig().printConfig();
 
   // Set system UI overlay style (status bar & navigation bar)
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);

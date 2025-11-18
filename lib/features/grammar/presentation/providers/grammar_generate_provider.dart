@@ -60,7 +60,7 @@ class GrammarGenerateNotifier extends Notifier<GrammarGenerateState> {
         result: result,
         clearError: true,
       );
-      
+
       return result; // Return result
     } catch (e) {
       state = state.copyWith(
@@ -68,7 +68,7 @@ class GrammarGenerateNotifier extends Notifier<GrammarGenerateState> {
         error: e.toString(),
         clearResult: true,
       );
-      
+
       return null; // Return null on error
     }
   }
@@ -82,4 +82,3 @@ final grammarGenerateProvider =
     NotifierProvider<GrammarGenerateNotifier, GrammarGenerateState>(
   GrammarGenerateNotifier.new,
 );
-

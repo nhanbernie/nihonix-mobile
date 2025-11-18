@@ -12,25 +12,27 @@ class VocabSetRemoteDataSource {
   Future<List<VocabFolder>> getVocabSetsByTopic(String topicId) async {
     try {
       final response = await _api.getVocabSetsByTopic(topicId);
-      
+
       final responseData = response.data as Map<String, dynamic>;
       final data = responseData['data'] as List<dynamic>?;
-      
+
       if (data == null) {
         return [];
       }
-      
+
       // Map API response to VocabFolder
       return data.map((item) {
         final json = item as Map<String, dynamic>;
         final title = json['title'] as Map<String, dynamic>?;
-        
+
         return VocabFolder(
           id: json['id'] as String? ?? '',
-          name: title?['en'] as String? ?? title?['vi'] as String? ?? 'Untitled',
+          name:
+              title?['en'] as String? ?? title?['vi'] as String? ?? 'Untitled',
           topicName: '', // Not in API response
           wordCount: json['items_count'] as int? ?? 0,
-          createdAt: DateTime.tryParse(json['created_at'] as String? ?? '') ?? DateTime.now(),
+          createdAt: DateTime.tryParse(json['created_at'] as String? ?? '') ??
+              DateTime.now(),
           description: json['description'] as String?,
           isAiGenerated: true,
         );
@@ -43,10 +45,10 @@ class VocabSetRemoteDataSource {
   Future<VocabSetDetail> getVocabSetById(String id) async {
     try {
       final response = await _api.getVocabSetById(id);
-      
+
       final responseData = response.data as Map<String, dynamic>;
       final data = responseData['data'] as Map<String, dynamic>;
-      
+
       // Parse topic
       final topicJson = data['topic'] as Map<String, dynamic>;
       final topic = VocabSetTopic(
@@ -59,12 +61,12 @@ class VocabSetRemoteDataSource {
         iconCode: topicJson['icon_code'] as int?,
         order: topicJson['order'] as int? ?? 0,
       );
-      
+
       // Parse items
       final itemsList = data['items'] as List<dynamic>? ?? [];
       final items = itemsList.map((item) {
         final json = item as Map<String, dynamic>;
-        
+
         // Parse examples
         final examplesList = json['examples'] as List<dynamic>? ?? [];
         final examples = examplesList.map((ex) {
@@ -91,7 +93,7 @@ class VocabSetRemoteDataSource {
           order: json['order'] as int? ?? 0,
         );
       }).toList();
-      
+
       return VocabSetDetail(
         id: data['id'] as String? ?? '',
         topicId: data['topic_id'] as String? ?? '',
@@ -99,8 +101,10 @@ class VocabSetRemoteDataSource {
         title: Map<String, String>.from(data['title'] as Map? ?? {}),
         description: data['description'] as String?,
         order: data['order'] as int? ?? 0,
-        createdAt: DateTime.tryParse(data['created_at'] as String? ?? '') ?? DateTime.now(),
-        updatedAt: DateTime.tryParse(data['updated_at'] as String? ?? '') ?? DateTime.now(),
+        createdAt: DateTime.tryParse(data['created_at'] as String? ?? '') ??
+            DateTime.now(),
+        updatedAt: DateTime.tryParse(data['updated_at'] as String? ?? '') ??
+            DateTime.now(),
         topic: topic,
         items: items,
       );
@@ -109,4 +113,3 @@ class VocabSetRemoteDataSource {
     }
   }
 }
-

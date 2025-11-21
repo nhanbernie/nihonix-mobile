@@ -75,15 +75,15 @@ class AppBottomNavBar extends StatelessWidget {
     const neuLightShadowDark = Color(0xFF3A3A3A);
     const neuDarkShadowLight = Color(0xFFBCBCBC);
     const neuDarkShadowDark = Color(0xFF1A1A1A);
-    const neuBorderColorLight = Color(0xFFCECECE);
-    const neuBorderColorDark = Color(0xFF353535);
+    // const neuBorderColorLight = Color(0xFFCECECE);
+    // const neuBorderColorDark = Color(0xFF353535);
     const neuIconColorLight = Color(0xFF4D4D4D);
     const neuIconColorDark = Color(0xFF9E9E9E);
 
     final neuBgColor = isDark ? neuBgColorDark : neuBgColorLight;
     final neuLightShadow = isDark ? neuLightShadowDark : neuLightShadowLight;
     final neuDarkShadow = isDark ? neuDarkShadowDark : neuDarkShadowLight;
-    final neuBorderColor = isDark ? neuBorderColorDark : neuBorderColorLight;
+    // final neuBorderColor = isDark ? neuBorderColorDark : neuBorderColorLight;
     final neuIconColor = isDark ? neuIconColorDark : neuIconColorLight;
 
     return GestureDetector(

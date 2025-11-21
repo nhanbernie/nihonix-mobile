@@ -105,7 +105,8 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                     'Học tiếng Nhật hiệu quả',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: isDark
-                              ? AppColors.onBackgroundDark.withValues(alpha: 0.7)
+                              ? AppColors.onBackgroundDark
+                                  .withValues(alpha: 0.7)
                               : AppColors.onBackground.withValues(alpha: 0.7),
                         ),
                   ),

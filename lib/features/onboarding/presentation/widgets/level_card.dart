@@ -33,10 +33,12 @@ class LevelCard extends StatelessWidget {
     const neuBgColorDark = Color(0xFF2A2A2A);
     final neuBgColor = isDark ? neuBgColorDark : neuBgColorLight;
 
-    final neuDarkShadow =
-        isDark ? Colors.black.withValues(alpha: 0.5) : Colors.black.withValues(alpha: 0.2);
-    final neuLightShadow =
-        isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.8);
+    final neuDarkShadow = isDark
+        ? Colors.black.withValues(alpha: 0.5)
+        : Colors.black.withValues(alpha: 0.2);
+    final neuLightShadow = isDark
+        ? Colors.white.withValues(alpha: 0.05)
+        : Colors.white.withValues(alpha: 0.8);
 
     return Material(
       color: Colors.transparent,
@@ -126,7 +128,8 @@ class LevelCard extends StatelessWidget {
                                 : (isDark
                                     ? AppColors.onBackgroundDark
                                         .withValues(alpha: 0.7)
-                                    : AppColors.onBackground.withValues(alpha: 0.7)),
+                                    : AppColors.onBackground
+                                        .withValues(alpha: 0.7)),
                           ),
                     ),
                   ],

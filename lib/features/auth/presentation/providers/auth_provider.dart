@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:nihonix/core/exceptions/network_exceptions.dart';
 
 import '../../domain/entities/user.dart';
 import 'auth_di.dart'; // Provides: loginUseCaseProvider, logoutUseCaseProvider, getCurrentUserUseCaseProvider
@@ -154,7 +155,6 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  /// Update the current user's levelCode locally without calling the server.
   /// This helps route guards and UI update immediately after onboarding
   /// when the server update succeeded but fetching current user may fail
   /// transiently.
@@ -167,28 +167,20 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  /// Update the current user data
-  /// Used after profile update to sync auth state
-  /// IMPORTANT: Only updates user field, keeps isAuthenticated and token intact
   void updateUser(User updatedUser) {
-    print(
-        '🔵 BEFORE updateUser: isAuth=${state.isAuthenticated}, token=${state.accessToken?.substring(0, 20)}..., user=${state.user?.name}');
     state = state.copyWith(
       user: updatedUser,
-      // Explicitly keep isAuthenticated and accessToken from current state
     );
-    print(
-        '🟢 AFTER updateUser: isAuth=${state.isAuthenticated}, token=${state.accessToken?.substring(0, 20)}..., user=${state.user?.name}');
   }
 
   String _mapErrorToMessage(Object error) {
-    if (error.toString().contains('NoInternetException')) {
+    if (error is NoInternetException) {
       return 'Không có kết nối mạng';
-    } else if (error.toString().contains('UnauthorizedException')) {
+    } else if (error is UnauthorizedException) {
       return 'Email hoặc mật khẩu không đúng';
-    } else if (error.toString().contains('ValidationException')) {
-      return 'Dữ liệu không hợp lệ';
-    } else if (error.toString().contains('ServerException')) {
+    } else if (error is ValidationException) {
+      return error.message ?? 'Dữ liệu không hợp lệ';
+    } else if (error is ServerException) {
       return 'Lỗi máy chủ. Vui lòng thử lại sau';
     } else {
       return 'Đã xảy ra lỗi: ${error.toString()}';

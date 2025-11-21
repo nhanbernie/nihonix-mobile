@@ -263,7 +263,9 @@ class VocabItemDetailSheet extends ConsumerWidget {
               meaning,
               style: TextStyle(
                 fontSize: 16,
-                color: isDark ? Colors.white.withValues(alpha: 0.87) : Colors.black87,
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.87)
+                    : Colors.black87,
                 height: 1.4,
               ),
             ),

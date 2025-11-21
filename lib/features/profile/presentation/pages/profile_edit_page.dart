@@ -506,7 +506,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   decoration: BoxDecoration(
-                    color: isSelected ? color.withValues(alpha: 0.1) : Colors.white,
+                    color: isSelected
+                        ? color.withValues(alpha: 0.1)
+                        : Colors.white,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: isSelected ? color : Colors.grey.shade300,

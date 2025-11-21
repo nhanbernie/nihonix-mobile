@@ -195,7 +195,8 @@ class _LevelSelectionPageState extends ConsumerState<LevelSelectionPage> {
                       'Chọn trình độ phù hợp để chúng tôi gợi ý nội dung học tập',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: isDark
-                                ? AppColors.onBackgroundDark.withValues(alpha: 0.7)
+                                ? AppColors.onBackgroundDark
+                                    .withValues(alpha: 0.7)
                                 : AppColors.onBackground.withValues(alpha: 0.7),
                           ),
                       textAlign: TextAlign.center,

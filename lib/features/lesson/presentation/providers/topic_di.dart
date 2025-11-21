@@ -1,12 +1,12 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../../core/network/providers.dart';
+
+import 'package:nihonix/core/network/providers.dart';
 import '../../data/datasources/topic_api.dart';
 import '../../data/datasources/topic_remote_datasource.dart';
 import '../../data/repositories/topic_repository_impl.dart';
 import '../../domain/repositories/topic_repository.dart';
 import '../../domain/usecases/get_topics.dart';
-
 part 'topic_di.g.dart';
 
 // DataSource

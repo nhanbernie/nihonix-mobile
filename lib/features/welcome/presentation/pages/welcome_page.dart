@@ -194,7 +194,8 @@ class _DecorativeCurvesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppColors.primary.withValues(alpha: 0.08) // Ultra light orange curves
+      ..color =
+          AppColors.primary.withValues(alpha: 0.08) // Ultra light orange curves
       ..style = PaintingStyle.fill;
 
     // First curve (top)

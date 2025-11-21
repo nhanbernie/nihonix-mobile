@@ -88,7 +88,9 @@ class VocabItemCard extends ConsumerWidget {
               item.meaning['vi'] ?? item.meaning['en'] ?? '',
               style: TextStyle(
                 fontSize: 15,
-                color: isDark ? Colors.white.withValues(alpha: 0.87) : Colors.black87,
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.87)
+                    : Colors.black87,
                 height: 1.4,
               ),
             ),

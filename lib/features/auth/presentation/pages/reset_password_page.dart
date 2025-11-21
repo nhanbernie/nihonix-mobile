@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/router/route_constants.dart';
-import '../../../../core/validation/models/password.dart';
-import '../../../../core/validation/validation_errors.dart';
-import '../../../../shared/layouts/auth_layout.dart';
-import '../../../../shared/widgets/custom_button.dart';
-import '../../../../shared/widgets/custom_input_field.dart';
+import 'package:nihonix/core/constants/app_colors.dart';
+import 'package:nihonix/core/constants/app_sizes.dart';
+import 'package:nihonix/core/router/route_constants.dart';
+import 'package:nihonix/core/validation/models/password.dart';
+import 'package:nihonix/core/validation/validation_errors.dart';
+import 'package:nihonix/shared/layouts/auth_layout.dart';
+import 'package:nihonix/shared/widgets/custom_button.dart';
+import 'package:nihonix/shared/widgets/custom_input_field.dart';
 import '../providers/forgot_password_provider.dart';
 
 class ResetPasswordPage extends ConsumerStatefulWidget {

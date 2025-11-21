@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_sizes.dart';
+import 'package:nihonix/core/constants/app_colors.dart';
+import 'package:nihonix/core/constants/app_sizes.dart';
 import '../../domain/entities/flashcard.dart';
 import '../providers/set_cards_provider.dart';
 

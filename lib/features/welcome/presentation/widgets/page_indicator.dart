@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors.dart';
+import 'package:nihonix/core/constants/app_colors.dart';
 
 /// Page indicator (dots) widget
 class PageIndicator extends StatelessWidget {

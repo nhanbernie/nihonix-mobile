@@ -3,15 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-import '../../../../core/l10n/locale_keys.dart';
-import '../../../../core/router/route_constants.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/validation/models/username.dart';
-import '../../../../core/validation/models/password.dart';
-import '../../../../core/validation/models/email.dart';
-import '../../../../core/validation/validation_errors.dart';
-import '../../../../shared/widgets/custom_input_field.dart';
-import '../../../../shared/layouts/auth_layout.dart';
+import 'package:nihonix/core/l10n/locale_keys.dart';
+import 'package:nihonix/core/router/route_constants.dart';
+import 'package:nihonix/core/constants/app_colors.dart';
+import 'package:nihonix/core/validation/models/username.dart';
+import 'package:nihonix/core/validation/models/password.dart';
+import 'package:nihonix/core/validation/models/email.dart';
+import 'package:nihonix/core/validation/validation_errors.dart';
+import 'package:nihonix/shared/widgets/custom_input_field.dart';
+import 'package:nihonix/shared/layouts/auth_layout.dart';
 import '../widgets/social_login_buttons.dart';
 import '../providers/auth_provider.dart';
 

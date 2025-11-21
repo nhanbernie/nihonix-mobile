@@ -3,14 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_sizes.dart';
-import '../../../../shared/widgets/common_app_bar.dart';
-import '../../../../shared/widgets/level_success_dialog.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
-import '../../../onboarding/presentation/providers/onboarding_providers.dart';
-import '../providers/profile_provider.dart';
-import '../widgets/avatar_picker_button.dart';
+
+import 'package:nihonix/core/constants/app_colors.dart';
+import 'package:nihonix/core/constants/app_sizes.dart';
+
+import 'package:nihonix/shared/widgets/common_app_bar.dart';
+import 'package:nihonix/shared/widgets/level_success_dialog.dart';
+
+import 'package:nihonix/features/auth/presentation/providers/auth_provider.dart';
+import 'package:nihonix/features/onboarding/presentation/providers/onboarding_providers.dart';
+import 'package:nihonix/features/profile/presentation/providers/profile_provider.dart';
+import 'package:nihonix/features/profile/presentation/widgets/avatar_picker_button.dart';
 
 class ProfileEditPage extends ConsumerStatefulWidget {
   const ProfileEditPage({super.key});

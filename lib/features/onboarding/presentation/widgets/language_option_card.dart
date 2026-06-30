@@ -40,7 +40,8 @@ class LanguageOptionCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(30),
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
           padding: const EdgeInsets.symmetric(
             horizontal: AppSizes.s24,
             vertical: AppSizes.s20,
@@ -92,9 +93,10 @@ class LanguageOptionCard extends StatelessWidget {
 
               // Language name
               Expanded(
-                child: Text(
-                  languageName,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                child: AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
                         fontWeight: FontWeight.w600,
                         color: isSelected
                             ? Colors.white
@@ -102,16 +104,26 @@ class LanguageOptionCard extends StatelessWidget {
                                 ? AppColors.onBackgroundDark
                                 : AppColors.onBackground),
                       ),
+                  child: Text(languageName),
                 ),
               ),
 
               // Check icon if selected
-              if (isSelected)
-                const Icon(
-                  Icons.check_circle,
-                  color: Colors.white,
-                  size: 28,
+              AnimatedOpacity(
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+                opacity: isSelected ? 1.0 : 0.0,
+                child: AnimatedScale(
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                  scale: isSelected ? 1.0 : 0.0,
+                  child: const Icon(
+                    Icons.check_circle,
+                    color: Colors.white,
+                    size: 28,
+                  ),
                 ),
+              ),
             ],
           ),
         ),

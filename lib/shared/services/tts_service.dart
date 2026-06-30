@@ -50,6 +50,7 @@ class TtsService {
 
       // Important: Set this BEFORE other settings for Android
       await _flutterTts.awaitSpeakCompletion(true);
+      await _flutterTts.setQueueMode(1);
       print('✅ awaitSpeakCompletion set');
 
       // Set Japanese language

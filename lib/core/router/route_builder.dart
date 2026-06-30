@@ -20,16 +20,8 @@ import 'package:nihonix/features/practice/presentation/pages/quiz/quiz_play_page
 import 'package:nihonix/features/practice/presentation/pages/quiz/quiz_result_page.dart';
 import 'package:nihonix/features/practice/domain/entities/exercise_session.dart';
 import 'package:nihonix/shared/layouts/main_layout.dart';
+import 'package:nihonix/shared/utils/material_icon_mapper.dart';
 import 'route_constants.dart';
-
-/// Helper to create IconData with const fontFamily for tree-shaking
-IconData _createMaterialIcon(int codePoint) {
-  return IconData(
-    codePoint,
-    fontFamily: 'MaterialIcons',
-    fontPackage: null,
-  );
-}
 
 List<RouteBase> buildAppRoutes() {
   return [
@@ -124,7 +116,10 @@ List<RouteBase> buildAppRoutes() {
         return TopicDetailPage(
           topicId: topicId,
           topicName: topicName,
-          topicIcon: _createMaterialIcon(iconCodePoint),
+          topicIcon: materialIconFromCodePoint(
+            iconCodePoint,
+            fallback: Icons.book_rounded,
+          ),
         );
       },
     ),
@@ -143,7 +138,10 @@ List<RouteBase> buildAppRoutes() {
         return VocabListPage(
           topicId: topicId,
           topicName: topicName,
-          topicIcon: _createMaterialIcon(iconCodePoint),
+          topicIcon: materialIconFromCodePoint(
+            iconCodePoint,
+            fallback: Icons.book_rounded,
+          ),
         );
       },
     ),
@@ -186,7 +184,10 @@ List<RouteBase> buildAppRoutes() {
         return GrammarListPage(
           topicId: topicId,
           topicName: topicName,
-          topicIcon: _createMaterialIcon(iconCodePoint),
+          topicIcon: materialIconFromCodePoint(
+            iconCodePoint,
+            fallback: Icons.book_rounded,
+          ),
         );
       },
     ),

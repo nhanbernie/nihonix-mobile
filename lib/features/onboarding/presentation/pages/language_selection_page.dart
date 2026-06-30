@@ -160,13 +160,21 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
           ),
         ),
         // Floating confirm button
-        floatingActionButton: _selectedLanguage != null && !_isLoading
-            ? Padding(
-                padding: const EdgeInsets.only(
-                  left: AppSizes.s24,
-                  right: AppSizes.s24,
-                  // bottom: AppSizes.s24, // Add bottom padding for system nav bar
-                ),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(
+              left: AppSizes.s24, right: AppSizes.s24, bottom: AppSizes.s16),
+          child: AnimatedSlide(
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeOut,
+            offset: _selectedLanguage != null && !_isLoading
+                ? Offset.zero
+                : const Offset(0, 1.2),
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeOut,
+              opacity: _selectedLanguage != null && !_isLoading ? 1.0 : 0.0,
+              child: IgnorePointer(
+                ignoring: _selectedLanguage == null || _isLoading,
                 child: SizedBox(
                   width: double.infinity,
                   height: 56,
@@ -199,8 +207,10 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                     ),
                   ),
                 ),
-              )
-            : null,
+              ),
+            ),
+          ),
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );

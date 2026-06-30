@@ -1,0 +1,31 @@
+# Configuration for build_runner
+# Ensures code generation runs in the correct order without conflicts
+
+targets:
+  $default:
+    builders:
+      # Riverpod generator
+      riverpod_generator:
+        generate_for:
+          - lib/**/*.dart
+
+      # Freezed generator
+      freezed:
+        generate_for:
+          - lib/**/*.dart
+
+      # JSON serialization
+      json_serializable:
+        generate_for:
+          - lib/**/*.dart
+        options:
+          # JSON serialization options
+          any_map: false
+          checked: false
+          create_factory: true
+          create_to_json: true
+          disallow_unrecognized_keys: false
+          explicit_to_json: false
+          field_rename: none
+          ignore_unannotated: false
+          include_if_null: true

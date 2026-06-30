@@ -20,17 +20,31 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final baseStyle = isOutlined
+        ? OutlinedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSizes.radiusXXLarge),
+            ),
+          )
+        : ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSizes.radiusXXLarge),
+            ),
+          );
+
+    final finalStyle = style != null ? baseStyle.merge(style) : baseStyle;
+
     if (isOutlined) {
       return OutlinedButton(
         onPressed: isLoading ? null : onPressed,
-        style: style,
+        style: finalStyle,
         child: _buildChild(),
       );
     }
 
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,
-      style: style,
+      style: finalStyle,
       child: _buildChild(),
     );
   }
@@ -72,7 +86,7 @@ class CustomElevatedButton extends StatelessWidget {
     final defaultStyle = ElevatedButton.styleFrom(
       minimumSize: const Size(double.infinity, AppSizes.buttonHeight),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        borderRadius: BorderRadius.circular(AppSizes.radiusXXLarge),
       ),
     );
 
@@ -124,7 +138,7 @@ class CustomOutlinedButton extends StatelessWidget {
     final defaultStyle = OutlinedButton.styleFrom(
       minimumSize: const Size(double.infinity, AppSizes.buttonHeight),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        borderRadius: BorderRadius.circular(AppSizes.radiusXXLarge),
       ),
     );
 

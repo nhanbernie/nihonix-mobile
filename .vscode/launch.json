@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Flutter Dev (dart-define)",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "args": [
+        "--dart-define=API_BASE_URL=https://nonornamentally-oppressible-kindra.ngrok-free.dev/api",
+        "--dart-define=API_TIMEOUT=60000",
+        "--dart-define=APP_ENV=development",
+        "--dart-define=ENABLE_DEBUG=true"
+      ]
+    },
+    {
+      "name": "Flutter Prod (dart-define)",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "args": [
+        "--dart-define=API_BASE_URL=https://nihonix-server.onrender.com/api",
+        "--dart-define=API_TIMEOUT=60000",
+        "--dart-define=APP_ENV=development",
+        "--dart-define=ENABLE_DEBUG=true"
+      ]
+    }
+  ]
+}
+

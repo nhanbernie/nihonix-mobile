@@ -1,76 +1,33 @@
 import 'package:go_router/go_router.dart';
-import 'package:flutter/material.dart';
-import '../../features/home/presentation/pages/home_page.dart';
-import '../../features/auth/presentation/pages/login_page.dart';
-import '../../features/profile/presentation/pages/profile_page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'route_constants.dart';
+import 'route_builder.dart';
+import 'route_guard.dart';
+import 'router_refresh_notifier.dart';
 
-/// App routes configuration using GoRouter
+/// Main router orchestrator for the app
 class AppRouter {
-  static const String home = '/';
-  static const String login = '/login';
-  static const String profile = '/profile';
+  /// Creates a GoRouter that refreshes when auth state changes
+  /// Use this in main.dart with ConsumerWidget/ConsumerStatefulWidget
+  static GoRouter createRouter(WidgetRef ref) {
+    return GoRouter(
+      initialLocation: AppRoutes.splash,
+      refreshListenable: RouterRefreshNotifier(ref),
+      redirect: handleRouteGuard,
+      routes: buildAppRoutes(),
+      errorBuilder: buildErrorPage,
+      observers: [FlutterSmartDialog.observer],
+    );
+  }
 
+  // Keep static router for backward compatibility
+  // Note: This won't refresh automatically. Use createRouter in main.dart instead
   static final GoRouter router = GoRouter(
-    initialLocation: home,
-    routes: [
-      // Home route
-      GoRoute(
-        path: home,
-        name: 'home',
-        builder: (context, state) => const HomePage(),
-      ),
-
-      // Auth routes
-      GoRoute(
-        path: login,
-        name: 'login',
-        builder: (context, state) => const LoginPage(),
-      ),
-
-      // Profile route
-      GoRoute(
-        path: profile,
-        name: 'profile',
-        builder: (context, state) {
-          // Get userId from query parameters
-          final userId = state.uri.queryParameters['userId'] ?? '1';
-          return ProfilePage(userId: int.tryParse(userId) ?? 1);
-        },
-      ),
-    ],
-
-    // Error handling
-    errorBuilder: (context, state) => Scaffold(
-      appBar: AppBar(
-        title: const Text('Lỗi'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Trang không tồn tại',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Đường dẫn: ${state.uri}',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => context.go(home),
-              child: const Text('Về trang chủ'),
-            ),
-          ],
-        ),
-      ),
-    ),
+    initialLocation: AppRoutes.splash,
+    redirect: handleRouteGuard,
+    routes: buildAppRoutes(),
+    errorBuilder: buildErrorPage,
+    observers: [FlutterSmartDialog.observer],
   );
 }

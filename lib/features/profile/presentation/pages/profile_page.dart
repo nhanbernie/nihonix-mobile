@@ -1,157 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/constants/app_strings.dart';
-import '../../../../core/constants/app_sizes.dart';
+import 'package:nihonix/core/constants/app_colors.dart';
+import 'package:nihonix/core/constants/app_sizes.dart';
+import 'package:nihonix/core/router/route_constants.dart';
+import 'package:nihonix/core/theme/theme_provider.dart';
+import 'package:nihonix/features/auth/presentation/providers/auth_provider.dart';
+import '../widgets/profile_header.dart';
+import '../widgets/profile_action_button.dart';
 
-class ProfilePage extends StatelessWidget {
-  final int userId;
-
-  const ProfilePage({
-    super.key,
-    required this.userId,
-  });
+class ProfilePage extends ConsumerWidget {
+  const ProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('${AppStrings.profile} #$userId'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Chức năng đang phát triển!')),
-              );
-            },
-            icon: const Icon(Icons.edit),
-            tooltip: AppStrings.edit,
-          ),
-        ],
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authProvider);
+    final user = authState.user;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(AppSizes.s16),
-        child: Column(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(
           children: [
-            // Profile header
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(AppSizes.s20),
+            // Fixed Header + Profile + Progress (không cuộn)
+            ProfileHeader(user: user),
+
+            // Scrollable Action Buttons
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s24),
                 child: Column(
                   children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      child: Text(
-                        userId.toString(),
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
                     const SizedBox(height: AppSizes.s16),
-                    Text(
-                      'User #$userId',
-                      style: Theme.of(context).textTheme.headlineSmall,
+                    ProfileActionButton(
+                      icon: Icons.edit_outlined,
+                      label: 'Sửa thông tin',
+                      onTap: () => context.push(AppRoutes.profileEdit),
                     ),
-                    const SizedBox(height: AppSizes.s8),
-                    Text(
-                      'user$userId@example.com',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
+                    const SizedBox(height: AppSizes.s12),
+                    ProfileActionButton(
+                      icon: Icons.dark_mode_outlined,
+                      label: 'Chế độ tối',
+                      onTap: () =>
+                          ref.read(themeProvider.notifier).toggleTheme(),
                     ),
+                    const SizedBox(height: AppSizes.s12),
+                    ProfileActionButton(
+                      icon: Icons.logout,
+                      label: 'Đăng xuất',
+                      onTap: () => _handleLogout(context, ref),
+                      isDestructive: true,
+                    ),
+                    const SizedBox(height: AppSizes.s24),
                   ],
                 ),
-              ),
-            ),
-
-            const SizedBox(height: AppSizes.s24),
-
-            // Profile info
-            Expanded(
-              child: ListView(
-                children: [
-                  _buildInfoTile(
-                    context,
-                    icon: Icons.person,
-                    title: 'Tên đầy đủ',
-                    subtitle: 'Nguyễn Văn A',
-                  ),
-                  _buildInfoTile(
-                    context,
-                    icon: Icons.phone,
-                    title: 'Số điện thoại',
-                    subtitle: '+84 123 456 789',
-                  ),
-                  _buildInfoTile(
-                    context,
-                    icon: Icons.location_on,
-                    title: 'Địa chỉ',
-                    subtitle: 'Hà Nội, Việt Nam',
-                  ),
-                  _buildInfoTile(
-                    context,
-                    icon: Icons.cake,
-                    title: 'Ngày sinh',
-                    subtitle: '01/01/1990',
-                  ),
-                  _buildInfoTile(
-                    context,
-                    icon: Icons.work,
-                    title: 'Nghề nghiệp',
-                    subtitle: 'Flutter Developer',
-                  ),
-
-                  const SizedBox(height: AppSizes.s24),
-
-                  // Action buttons
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Chỉnh sửa profile!')),
-                      );
-                    },
-                    icon: const Icon(Icons.edit),
-                    label: const Text(AppStrings.edit),
-                  ),
-
-                  const SizedBox(height: AppSizes.s12),
-
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text(AppStrings.logout),
-                          content:
-                              const Text('Bạn có chắc chắn muốn đăng xuất?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => context.pop(),
-                              child: const Text(AppStrings.cancel),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                context.pop(); // Close dialog
-                                context.go('/'); // Go to home
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('Đã đăng xuất!')),
-                                );
-                              },
-                              child: const Text(AppStrings.logout),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.logout),
-                    label: const Text(AppStrings.logout),
-                  ),
-                ],
               ),
             ),
           ],
@@ -160,27 +70,33 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoTile(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String subtitle,
-  }) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: AppSizes.s8),
-      child: ListTile(
-        leading: Icon(
-          icon,
-          color: Theme.of(context).colorScheme.primary,
-        ),
-        title: Text(title),
-        subtitle: Text(subtitle),
-        onTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Chỉnh sửa $title')),
-          );
-        },
+  Future<void> _handleLogout(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Đăng xuất'),
+        content: const Text('Bạn có chắc chắn muốn đăng xuất?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Hủy'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.error,
+            ),
+            child: const Text('Đăng xuất'),
+          ),
+        ],
       ),
     );
+
+    if (confirmed == true && context.mounted) {
+      await ref.read(authProvider.notifier).logout();
+      if (context.mounted) {
+        context.go(AppRoutes.login);
+      }
+    }
   }
 }

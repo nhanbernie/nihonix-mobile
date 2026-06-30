@@ -1,0 +1,10 @@
+{
+  "unknown_error": "不明なエラーが発生しました",
+  "network_error": "ネットワークエラー。接続を確認してください。",
+  "server_error": "サーバーエラー。後でもう一度お試しください。",
+  "validation_error": "入力内容を確認してください",
+  "not_found": "見つかりません",
+  "unauthorized": "不正なアクセス",
+  "forbidden": "アクセスが禁止されています"
+}
+
